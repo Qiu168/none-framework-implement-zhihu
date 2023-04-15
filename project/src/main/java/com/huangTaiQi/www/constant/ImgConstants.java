@@ -11,13 +11,13 @@ public class ImgConstants {
     public static final int WEIGHT = 100;
     public static final int HEIGHT = 40;
     /**
-     * 验证码中的字符数
+     * 图形验证码中的字符数
      */
     public static final int TEST_NUMS=4;
     /**
      * 验证码数组
      */
-    public static final String CODES = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHIJKMNPQRSTUVWXYZ";
+    public static final String CODES = "123456789abcdefghijkmnopqrstuvwxyzABCDEFGHIJKMNPQRSTUVWXYZ123456789";
 
     /**
      * 字体数组
