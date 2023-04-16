@@ -1,0 +1,158 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>用户中心-KuangStudy</title>
+    <link rel="stylesheet" href="bootstrap.css">
+    <style>
+        #table-title tr th{
+            border: none;
+        }
+    </style>
+</head>
+<body style="background: #f2f2f2;">
+
+<div class="top">top</div>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="../js/axios.js"></script>
+<script src="../js/common.js"></script>
+
+<script type="text/javascript">
+    //在js中引入
+    $(document).ready(function () {
+        $('.top').load('header.html');
+
+    });
+</script>
+
+<main role="main" class="container">
+
+    <div class="row">
+
+        <div th:replace="~{user/index::userShowPanel}"></div>
+
+        <div class="col-md-9 blog-main">
+
+            <div class="my-3 p-3 bg-white rounded shadow-sm">
+
+                <form class="needs-validation" novalidate="" th:action="@{'/userinfo/update/'+${session.loginUser.getUid()}}" method="post">
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="nickname">用户昵称</label>
+                            <input type="text" th:value="${userInfo.getNickname()}" name="nickname" class="form-control" id="nickname" placeholder="遇见狂神说" required="">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="realname">真实姓名</label>
+                            <input type="text" th:value="${userInfo.getRealname()}" name="realname" class="form-control" id="realname" placeholder="xxxx" required="">
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="qq">QQ</label>
+                            <input type="text" th:value="${userInfo.getQq()}" name="qq" class="form-control" id="qq" placeholder="遇见狂神说" required="">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label for="wechat">WeChat</label>
+                            <input type="text" th:value="${userInfo.getWechat()}" name="wechat" class="form-control" id="wechat" placeholder="xxxx" required="">
+                        </div>
+                    </div>
+
+                    <input type="file" accept="image/*" onchange="previewFile()"><br>
+                    <img src="" height="200" alt="Image preview" id="preview">
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="email">邮箱</label>
+                            <input type="email" th:value="${userInfo.getEmail()}" name="email" class="form-control" id="email" placeholder="kuangshen@qq.com">
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="phone">手机</label>
+                            <input type="text" th:value="${userInfo.getPhone()}" name="phone" class="form-control" id="phone" placeholder="123 3333 2222">
+                        </div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="work">工作</label>
+                        <input type="text" th:value="${userInfo.getWork()}" name="work" class="form-control" id="work" placeholder="Java高级程序员">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="address">地址</label>
+                        <input type="text" th:value="${userInfo.getAddress()}" name="address" class="form-control" id="address" placeholder="中国 重庆">
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="hobby">爱好(使用英文逗号隔开)</label>
+                        <input type="text" th:value="${userInfo.getHobby()}" name="hobby" class="form-control" id="hobby" placeholder="代码,唱歌,游戏">
+                    </div>
+
+                    <div class="mb-3">
+                        <label>自我介绍</label>
+                        <textarea  th:text="${userInfo.getIntro()}" type="text" name="introduce" id="introduce" class="form-control"></textarea>
+                    </div>
+
+                    <hr class="mb-4">
+
+                    <button class="btn btn-primary btn-lg btn-block" type="submit"> 更新资料 </button>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</main>
+
+<script>
+    function previewFile() {
+        const preview = document.getElementById('preview');
+        const file = document.querySelector('input[type=file]').files[0];
+        const reader = new FileReader();
+
+        reader.addEventListener("load", function () {
+            preview.src = reader.result;
+            // 将上传的图片发送到后端
+            uploadImage(reader.result);
+        }, false);
+
+        if (file) {
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function uploadImage(imageData) {
+        axios({
+            method: 'post',
+            url: '/upload',
+            headers: { 'Content-Type': 'application/json' },
+            data: { imageData: imageData }
+        }).then(function (resp) {
+            console.log(resp);
+            // do something after image uploaded
+        });
+    }
+    axios({
+        method: 'get',
+        url:'/project_war/user/me'
+    }).then(function (resp){
+        document.getElementById("nickname").value=resp.data.username;
+        document.getElementById("introduce").value=resp.data.introduce;
+        document.getElementById("email").value=resp.data.email;
+    })
+</script>
+
+
+
+
+
+
+
+
+
+</body>
+</html>

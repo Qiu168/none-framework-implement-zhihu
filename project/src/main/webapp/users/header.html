@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>cat</title>
+    <link rel="stylesheet" href="bootstrap.css">
+</head>
+<body>
+<script src="../js/axios.js"></script>
+<script src="../js/common.js"></script>
+
+<nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background-color: #ffffff;box-shadow: 0px -2px 10px #d0cccc;">
+    <div class="container">
+        <a class="navbar-brand" href="#">CAT</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">首页</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">问答</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">动态</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">聊天室</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">公告</a>
+                </li>
+            </ul>
+            <div class="d-flex align-items-center">
+                <div id="isLogin" style="display: none">
+                    <a class="btn btn-sm btn-primary" href="login.html">登录</a>
+                </div>
+                <div id="userInfo" style="display:none ">
+                    <div class="dropdown">
+                        <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                            <img id="avatar" style="width: 30px;height:30px;border-radius: 50%;" alt="">
+                            <span id="username"></span>
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                            <li><a class="dropdown-item" href="#">个人中心</a></li>
+                            <li><a class="dropdown-item" href="#">更新资料</a></li>
+                            <li><a class="dropdown-item" href="#">头像上传</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#">注销</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</nav>
+<script>
+    (function() {
+        axios({
+            method: 'get',
+            url: '/project_war/user/me'
+        }).then(function(resp) {
+            if (resp.data!=null) {
+                document.getElementById("userInfo").style.display = '';
+                document.getElementById("avatar").src = resp.data.avatar;
+                document.getElementById("username").innerHTML = resp.data.username;
+            } else {
+                document.getElementById("isLogin").style.display = '';
+            }
+        })
+    })();
+</script>
+</body>
+</html>
