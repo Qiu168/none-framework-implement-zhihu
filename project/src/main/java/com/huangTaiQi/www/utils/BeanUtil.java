@@ -111,7 +111,7 @@ public class BeanUtil {
                     if(value==null){
                         map.put(key, null);
                     } else{
-                        map.put(key, Serializer.serialize(value));
+                        map.put(key, value.toString());
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -130,13 +130,20 @@ public class BeanUtil {
         for (Map.Entry<String, String> entry : map.entrySet()) {
             String fieldName = entry.getKey();
             String value = entry.getValue();
+            //beanToMap时会把bean的class放在map中
             if("class".equals(fieldName)){
                 continue;
             }
             if (value != null) {
                 Field field = bean.getClass().getDeclaredField(fieldName);
                 field.setAccessible(true);
-                field.set(bean, Serializer.deserialize(value));
+                if(field.getType()==Long.class){
+                    field.set(bean,Long.parseLong(value));
+                } else if (field.getType() == Boolean.class) {
+                    field.set(bean,Boolean.parseBoolean(value));
+                } else {
+                    field.set(bean,value);
+                }
             }
         }
     }
