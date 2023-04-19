@@ -63,7 +63,6 @@ public class UserControllerImpl extends BaseController implements IUserControlle
         String rePassword = request.getParameter("repassword");
         //验证，注册
         String message = userService.register(email, emailCode, password, rePassword);
-        response.setContentType("text/html;charset=utf-8");
         //返回信息
         response.setContentType("text/html;charset=utf-8");
         response.getWriter().write(message);
@@ -98,5 +97,17 @@ public class UserControllerImpl extends BaseController implements IUserControlle
         response.getWriter().write(json);
     }
 
+    public void resetPassword(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, NoSuchAlgorithmException {
+        //获取
+        String email = request.getParameter("email");
+        String emailCode = request.getParameter("code");
+        String password = request.getParameter("password");
+        String rePassword = request.getParameter("repassword");
+        //验证，注册
+        String message = userService.resetPassword(email, emailCode, password, rePassword);
+        //返回信息
+        response.setContentType("text/html;charset=utf-8");
+        response.getWriter().write(message);
+    }
 
 }
