@@ -14,6 +14,7 @@ import com.my_framework.www.beans.BeanDefinitionReader;
 import com.my_framework.www.beans.BeanWrapper;
 import com.my_framework.www.context.ApplicationContext;
 import com.my_framework.www.utils.PropsUtil;
+import com.my_framework.www.utils.StringUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -149,8 +150,15 @@ public class ApplicationContextImpl implements ApplicationContext {
         try {
             Class<?> clazz = Class.forName(className);
             if(clazz.isAnnotationPresent(Service.class)){
-                //如果是service，生成代理对象(Transaction)
-                instance = ServiceProxyFactory.getProxy(clazz);
+                //如果是service,检查是否有被@Transaction注释的方法
+                Method[] methods= clazz.getMethods();
+                for (Method method : methods) {
+                    if (method.isAnnotationPresent(Transaction.class)) {
+                        //如果有，代理
+                        instance = ServiceProxyFactory.getProxy(clazz);
+                        break;
+                    }
+                }
             }else {
                 instance = clazz.newInstance();
             }
@@ -197,11 +205,15 @@ public class ApplicationContextImpl implements ApplicationContext {
      * @param beanWrapper bean的实例
      */
     private void populateBean(String beanName, BeanDefinition beanDefinition, BeanWrapper beanWrapper) {
-
         Class<?> clazz = beanWrapper.getWrappedClass();
         //获得所有的成员变量
         Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
+        Class<?> superclass = clazz.getSuperclass();
+        Field[] fields1 = superclass.getDeclaredFields();
+        Field[] result = new Field[fields.length + fields1.length];
+        System.arraycopy(fields, 0, result, 0, fields.length);
+        System.arraycopy(fields1, 0, result, fields.length, fields1.length);
+        for (Field field : result) {
             //如果没有被Autowired注解的成员变量则直接跳过
             if (!field.isAnnotationPresent(Autowired.class)) {
                 continue;
@@ -217,8 +229,21 @@ public class ApplicationContextImpl implements ApplicationContext {
             //强制访问该成员变量
             field.setAccessible(true);
             try {
-                if (factoryBeanInstanceCache.get(autowiredBeanName) == null) {
-                    logger.log(Level.SEVERE,"1111111null");
+                String autowiredBeanName1 = StringUtil.getBeanName(autowiredBeanName);
+                BeanDefinition definition = beanDefinitionMap.get(autowiredBeanName1);
+                if(definition!=null){
+                    if (factoryBeanInstanceCache.get(autowiredBeanName) == null) {
+                        //被注入的成员变量还没有实例化
+                        logger.log(Level.INFO,"实例化成员变量");
+                        Object instance = instantiateBean(beanName, definition);
+                        //2.把这个对象封装到BeanWrapper中
+                        BeanWrapper beanWrapper1 = new BeanWrapper(instance);
+                        //3.把BeanWrapper保存到IOC容器中去
+                        //注册一个类名（首字母小写，如helloService）
+                        factoryBeanInstanceCache.put(autowiredBeanName, beanWrapper1);
+                    }
+                }else {
+                    //此成员变量不是ioc控制的
                     continue;
                 }
                 //将容器中的实例注入到成员变量中
@@ -239,6 +264,6 @@ public class ApplicationContextImpl implements ApplicationContext {
     @Override
     public <T> T getBean(Class<T> requiredType) {
         String beanName=requiredType.getName();
-        return requiredType.cast(beanName);
+        return requiredType.cast(getBean(beanName));
     }
 }
