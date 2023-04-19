@@ -1,10 +1,10 @@
-package com.huangTaiQi.www.utils.pool;
+package com.my_framework.www.pool;
 
 
 
 
 
-import com.huangTaiQi.www.utils.pool.config.DataSourceConfig;
+import com.my_framework.www.pool.config.DataSourceConfig;
 
 import java.sql.*;
 import java.util.Timer;
@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @author 14629
  */
 public class ImplConnectionPool implements IntfConnectionPool {
-    private static final Logger logger = Logger.getLogger("com.HuangTaiQi.www.pool.ImplConnectionPool");
+    private static final Logger logger = Logger.getLogger(ImplConnectionPool.class.getName());
     private final DataSourceConfig config;
     private final AtomicInteger currentActive =new AtomicInteger(0);
     private final Vector<Connection> freePools=new Vector<>();

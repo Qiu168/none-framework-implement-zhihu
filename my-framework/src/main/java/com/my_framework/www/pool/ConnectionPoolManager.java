@@ -1,8 +1,8 @@
-package com.huangTaiQi.www.utils.pool;
+package com.my_framework.www.pool;
 
 
 
-import com.huangTaiQi.www.utils.pool.config.DataSourceConfig;
+import com.my_framework.www.pool.config.DataSourceConfig;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -16,12 +16,12 @@ import java.util.logging.Logger;
  */
 public class ConnectionPoolManager {
 
-    private static DataSourceConfig config = new DataSourceConfig();
+    private static final DataSourceConfig CONFIG = new DataSourceConfig();
     private static ImplConnectionPool connectionPool;
-    private static Logger logger = Logger.getLogger("com.HuangTaiQi.www.pool.ConnectionPoolManager");
+    private static final Logger logger = Logger.getLogger(ConnectionPoolManager.class.getName());
     static {
         try {
-            connectionPool = new ImplConnectionPool(config);
+            connectionPool = new ImplConnectionPool(CONFIG);
         } catch (SQLException | ClassNotFoundException e) {
             logger.log(Level.SEVERE,"mes,e={0}",e.getMessage());
         }

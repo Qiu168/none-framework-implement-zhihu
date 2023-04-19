@@ -1,4 +1,4 @@
-package com.huangTaiQi.www.utils.pool.config;
+package com.my_framework.www.pool.config;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Properties;

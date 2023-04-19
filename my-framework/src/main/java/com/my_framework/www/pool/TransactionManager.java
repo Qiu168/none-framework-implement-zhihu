@@ -1,9 +1,12 @@
-package com.huangTaiQi.www.utils;
+package com.my_framework.www.pool;
 
 import java.sql.Connection;
 import java.sql.SQLException;
 
 
+/**
+ * @author 14629
+ */
 public class TransactionManager {
     private final Connection connection;
 

@@ -1,4 +1,4 @@
-package com.huangTaiQi.www.utils.pool;
+package com.my_framework.www.pool;
 
 import java.sql.Connection;
 

@@ -1,9 +1,6 @@
-package com.huangTaiQi.www.utils;
+package com.my_framework.www.pool;
 
 
-
-
-import com.huangTaiQi.www.utils.pool.ConnectionPoolManager;
 
 import java.sql.Connection;
 import java.sql.SQLException;
@@ -12,6 +9,7 @@ import java.sql.SQLException;
  * 管理connection和事务
  * @author 14629
  */
+
 public class DataBaseUtil {
 
     private static final ThreadLocal<Connection> TL = new ThreadLocal<>();
@@ -50,4 +48,6 @@ public class DataBaseUtil {
             TL.remove();
         }
     }
+
+
 }
