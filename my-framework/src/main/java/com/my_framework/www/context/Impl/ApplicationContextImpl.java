@@ -56,6 +56,7 @@ public class ApplicationContextImpl implements ApplicationContext {
         List<BeanDefinition> beanDefinitions = reader.loadBeanDefinitions();
         for (BeanDefinition beanDefinition : beanDefinitions) {
             logger.log(Level.INFO,beanDefinition.getFactoryBeanName());
+            logger.log(Level.INFO,beanDefinition.getBeanClassName());
         }
         //3、注册，把配置信息放到容器里面(伪IOC容器)
         doRegisterBeanDefinition(beanDefinitions);
@@ -107,33 +108,9 @@ public class ApplicationContextImpl implements ApplicationContext {
         factoryBeanInstanceCache.put(beanDefinition.getBeanClassName(), beanWrapper);
         //4.注入
         populateBean(beanName, new BeanDefinition(), beanWrapper);
-        //5.替换被代理的对象
-        //proxyReplace(beanDefinition,beanWrapper);
         return this.factoryBeanInstanceCache.get(beanName).getWrappedInstance();
     }
 
-    private void proxyReplace(BeanDefinition beanDefinition, BeanWrapper beanWrapper) {
-        Class<?> wrappedClass = beanWrapper.getWrappedClass();
-        if(wrappedClass.isAnnotationPresent(Service.class)){
-            //如果是service，生成代理对象(Transaction)
-            Method[] methods= wrappedClass.getMethods();
-            for (Method method : methods) {
-                if(method.isAnnotationPresent(Transaction.class)){
-                    //有被Transaction注释的方法
-                    Object proxy=ServiceProxyFactory.getProxy(wrappedClass);
-                    //替换factoryBeanInstanceCache中的被代理类
-                    beanWrapper.setWrappedObject(proxy);
-                    //注册一个类名（首字母小写，如helloService）
-                    factoryBeanInstanceCache.put(beanDefinition.getFactoryBeanName(), beanWrapper);
-                    //注册一个全类名（如com.huangTaiQi.www.HelloService）
-                    factoryBeanInstanceCache.put(beanDefinition.getBeanClassName(), beanWrapper);
-                    //不用再查看其他方法了
-                    break;
-                }
-            }
-
-        }
-    }
 
     private Object getSingleton(String beanName) {
         if(this.factoryBeanInstanceCache.containsKey(beanName)){
@@ -221,7 +198,6 @@ public class ApplicationContextImpl implements ApplicationContext {
             Autowired autowired = field.getAnnotation(Autowired.class);
             //拿到需要注入的类名
             String autowiredBeanName = autowired.value().trim();
-
             if ("".equals(autowiredBeanName)) {
                 autowiredBeanName = field.getType().getName();
             }
@@ -232,15 +208,11 @@ public class ApplicationContextImpl implements ApplicationContext {
                 String autowiredBeanName1 = StringUtil.getBeanName(autowiredBeanName);
                 BeanDefinition definition = beanDefinitionMap.get(autowiredBeanName1);
                 if(definition!=null){
+                    //此成员变量是ioc控制的，但是还未实例化
                     if (factoryBeanInstanceCache.get(autowiredBeanName) == null) {
                         //被注入的成员变量还没有实例化
                         logger.log(Level.INFO,"实例化成员变量");
-                        Object instance = instantiateBean(beanName, definition);
-                        //2.把这个对象封装到BeanWrapper中
-                        BeanWrapper beanWrapper1 = new BeanWrapper(instance);
-                        //3.把BeanWrapper保存到IOC容器中去
-                        //注册一个类名（首字母小写，如helloService）
-                        factoryBeanInstanceCache.put(autowiredBeanName, beanWrapper1);
+                        getBean(autowiredBeanName1);
                     }
                 }else {
                     //此成员变量不是ioc控制的

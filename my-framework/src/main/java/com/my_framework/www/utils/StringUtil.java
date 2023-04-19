@@ -30,4 +30,13 @@ public class StringUtil {
         return str.split(regex);
     }
 
+    /**
+     * 从全类名中得到类名
+     * @param name
+     * @return
+     */
+    public static String getBeanName(String name) {
+        return toLowerFirstCase(name.substring(name.lastIndexOf('.') + 1));
+    }
+
 }
