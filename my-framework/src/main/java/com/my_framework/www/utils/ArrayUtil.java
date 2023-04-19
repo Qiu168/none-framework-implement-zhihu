@@ -4,7 +4,7 @@ package com.my_framework.www.utils;
  
 /**
  * desc : 数组工具类
- * Created by Lon on 2018/1/25.
+ * @author 14629
  */
 public final class ArrayUtil {
  

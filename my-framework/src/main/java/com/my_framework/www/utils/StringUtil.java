@@ -32,8 +32,8 @@ public class StringUtil {
 
     /**
      * 从全类名中得到类名
-     * @param name
-     * @return
+     * @param name 全类名
+     * @return 首字母小写的类名
      */
     public static String getBeanName(String name) {
         return toLowerFirstCase(name.substring(name.lastIndexOf('.') + 1));

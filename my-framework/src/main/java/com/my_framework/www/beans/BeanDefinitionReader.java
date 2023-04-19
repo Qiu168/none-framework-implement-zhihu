@@ -29,17 +29,16 @@ public class BeanDefinitionReader {
 
     private Set<Class<?>> registerBeanClasses = new HashSet<>();
 
-    public BeanDefinitionReader(String... locations) {
+    public BeanDefinitionReader(String location) {
         try (
                 //1.定位，通过URL定位找到配置文件，然后转换为文件流
              InputStream is = this.getClass().getClassLoader().
-                     getResourceAsStream(locations[0].replace("classpath:", ""))) {
+                     getResourceAsStream(location)) {
             //2.加载，保存为properties
             config.load(is);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         //3.扫描，扫描资源文件(class)，并保存到集合中
         registerBeanClasses = ClassUtil.getClassSet(config.getProperty(SCAN_PACKAGE));
     }
