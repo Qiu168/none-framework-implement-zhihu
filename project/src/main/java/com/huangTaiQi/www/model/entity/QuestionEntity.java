@@ -14,8 +14,17 @@ public class QuestionEntity {
     private String title;
     private String content;
     private Integer categoryId;
+    private Long answerCount;
     private Timestamp createTime;
     private Timestamp updateTime;
+
+    public Long getAnswerCount() {
+        return answerCount;
+    }
+
+    public void setAnswerCount(Long answerCount) {
+        this.answerCount = answerCount;
+    }
 
     public Long getId() {
         return id;

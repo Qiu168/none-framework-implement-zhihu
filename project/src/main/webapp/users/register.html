@@ -9,7 +9,7 @@
 </head>
 <body class="text-center">
 <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
-<form class="form-signin" action="/project_war/user/register" method="post">
+<form class="form-signin" action="/project_war/user/resetPassword" method="post">
     <img class="mb-4" src="../img/logo.png" alt="" width="72" height="72">
     <h1 class="h3 mb-3 font-weight-normal">注册</h1>
 
@@ -28,11 +28,13 @@
 
     <button class="btn btn-lg btn-primary btn-block mt-3" type="submit">注 册</button>
     <p class="clearfix">
-        <a href="login.html" class="float-right">已有账号？去登录</a>
+        <a href="login.html" class="float-right">已有账号？去登录</a><br>
+        <a href="findPassword.html" class="float-right">忘记密码</a><br>
     </p>
 
 </form>
 <script src="../js/axios.js"></script>
+<script src="../js/common.js"></script>
 <script>
     function sendEmail() {
         let email = document.getElementById("email").value;
@@ -75,7 +77,8 @@
             {
                 if(this.responseText=="true"){
                     //如果邮箱已存在
-                    document.getElementById("message").innerHTML="该邮箱已注册";
+                }else {
+                    document.getElementById("message").innerHTML="该邮箱未注册";
                 }
             }
         }

@@ -64,6 +64,16 @@ public class BaseDao {
         }
         return list.size()==0?null:list;
     }
+
+
+    public <T> T selectOne(String sql, Class<T> cls, Object... params) throws Exception {
+        List<T> list = this.selectByParams(sql, cls, params);
+        if(list==null||list.isEmpty()){
+            return null;
+        }else{
+            return list.get(0);
+        }
+    }
     private String getFieldName(String name){
         StringBuilder builder=new StringBuilder();
         char[] chars = name.toCharArray();

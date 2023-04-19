@@ -46,5 +46,26 @@ public interface UserService {
      */
     String register(String email, String emailCode, String password, String rePassword) throws SQLException, NoSuchAlgorithmException;
 
+    /**
+     * 登录
+     * @param usernameOrEmail 用户名或邮箱
+     * @param password 密码
+     * @param imgCode 图形验证码
+     * @param code 验证码
+     * @return 信息
+     * @throws Exception 异常
+     */
     String login(String usernameOrEmail, String password, String imgCode, String code) throws Exception;
+
+    /**
+     * 重置密码
+     * @param email email
+     * @param emailCode 邮箱验证码
+     * @param password 重置后的密码
+     * @param rePassword 重复输入
+     * @return 信息
+     * @throws NoSuchAlgorithmException 异常
+     * @throws SQLException 异常
+     */
+    String resetPassword(String email, String emailCode, String password, String rePassword) throws NoSuchAlgorithmException, SQLException;
 }

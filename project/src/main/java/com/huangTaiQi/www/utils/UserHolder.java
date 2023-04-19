@@ -2,28 +2,36 @@ package com.huangTaiQi.www.utils;
 
 import com.huangTaiQi.www.model.dto.UserDTO;
 
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
+
 
 /**
- * 本来使用tl的但是，存进去之后取不出来，暂时没发现是上面bug所以用map先代替
  * @author 14629
  */
 public class UserHolder {
-    private static final Map<Integer,UserDTO> TL = new HashMap<>(1);
+    /**
+     * 存User
+     */
+    private static final ThreadLocal<UserDTO> USR_INFO = new ThreadLocal<>();
+    private static final ThreadLocal<Map<Integer, Boolean>> USER_RIGHT = new ThreadLocal<>();
 
     public static void saveUser(UserDTO user){
-
-        TL.put(1,user);
+        USR_INFO.set(user);
     }
-
+    public static void saveUserRight(UserDTO user){
+        USR_INFO.set(user);
+    }
     public static UserDTO getUser(){
-        return TL.get(1);
+        return USR_INFO.get();
+    }
+    public static Map<Integer,Boolean> getUserRight(){
+        return USER_RIGHT.get();
     }
 
     public static void removeUser(){
-        TL.remove(1);
+        USR_INFO.remove();
+    }
+    public static void removeUserRight(){
+        USER_RIGHT.remove();
     }
 }

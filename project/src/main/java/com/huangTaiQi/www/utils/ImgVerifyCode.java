@@ -1,13 +1,13 @@
 package com.huangTaiQi.www.utils;
 
-import com.huangTaiQi.www.constant.ImgConstants;
+
 
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.OutputStream;
-import java.util.Random;
+import java.security.SecureRandom;
 
 import static com.huangTaiQi.www.constant.ImgConstants.*;
 
@@ -16,19 +16,15 @@ import static com.huangTaiQi.www.constant.ImgConstants.*;
  */
 public class ImgVerifyCode {
 
-
-
     /**
      *  用来保存验证码的文本内容
      */
     private String text;
     /**
+     * 使用线程安全的 SecureRandom 生成随机数
      * 获取随机数对象
      */
-    private final Random r = new Random();
-
-
-
+    private final SecureRandom r = new SecureRandom();
 
     /**
      * 获取随机的颜色
@@ -146,8 +142,7 @@ public class ImgVerifyCode {
     /**
      * 将验证码图片写出的方法
      */
-    public static void output(BufferedImage image, OutputStream out) throws IOException
-    {
+    public static void output(BufferedImage image, OutputStream out) throws IOException {
         ImageIO.write(image, "JPEG", out);
     }
 }

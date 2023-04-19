@@ -21,7 +21,10 @@ public class SQLBuilder {
         whereClause.add("?");
         return this;
     }
-
+    public SQLBuilder update(String column) {
+        columns.add(column);
+        return this;
+    }
     public SQLBuilder select(String... columns) {
         for (String column : columns) {
             this.columns.add(column);

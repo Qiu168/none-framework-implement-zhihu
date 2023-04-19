@@ -2,10 +2,11 @@ package com.huangTaiQi.www.utils;
 
 import java.util.regex.Pattern;
 
+
 /**
- * @author 虎哥
+ * @author 14629
  */
-public class RegexPatterns {
+public class RegexUtils {
     /**
      * 手机号正则
      */

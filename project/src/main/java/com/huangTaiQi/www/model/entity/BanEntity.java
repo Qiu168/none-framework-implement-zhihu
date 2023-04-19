@@ -4,7 +4,7 @@ package com.huangTaiQi.www.model.entity;
  * @author 14629
  */
 @SuppressWarnings("ALL")
-public class Ban {
+public class BanEntity {
     private Long id;
     private Long userId;
     private Long rightId;

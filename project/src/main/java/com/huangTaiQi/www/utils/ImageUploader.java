@@ -13,6 +13,9 @@ import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.http.HttpServletRequest;
 
+/**
+ * @author 14629
+ */
 public class ImageUploader {
 
     /**

@@ -3,7 +3,7 @@ package com.huangTaiQi.www.dao.impl;
 import com.huangTaiQi.www.dao.BaseDao;
 import com.huangTaiQi.www.dao.IUserDao;
 import com.huangTaiQi.www.model.entity.UserEntity;
-import com.huangTaiQi.www.utils.DataBaseUtil;
+import com.my_framework.www.pool.DataBaseUtil;
 import com.huangTaiQi.www.utils.RandomUtils;
 import com.huangTaiQi.www.utils.sql.SQLBuilder;
 import com.my_framework.www.annotation.Repository;
@@ -11,7 +11,6 @@ import com.my_framework.www.annotation.Repository;
 
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.List;
 
 /**
  * @author 14629
@@ -21,20 +20,23 @@ public class UserDao implements IUserDao {
     private final Connection connection = DataBaseUtil.getConnection();
     BaseDao baseDao=new BaseDao(connection);
 
+    @Override
     public void setEmailAndPassword(String email, String password) throws SQLException {
-        String sql=new SQLBuilder("user").insert("email").insert("password")
-                .insert("username").buildInsert();
+        String sql=new SQLBuilder("user")
+                .insert("email")
+                .insert("password")
+                .insert("username")
+                .buildInsert();
         baseDao.updateCommon(sql,email,password,"user_"+ RandomUtils.getRandomString(6));
     }
 
+    @Override
     public UserEntity selectByEmail(String email) throws Exception {
-        String sql=new SQLBuilder("user").select("*").where("email").buildSelect();
-        List<UserEntity> userEntities = baseDao.selectByParams(sql, UserEntity.class, email);
-        if(userEntities==null||userEntities.isEmpty()){
-            return null;
-        }else{
-            return userEntities.get(0);
-        }
+        String sql=new SQLBuilder("user")
+                .select("*")
+                .where("email")
+                .buildSelect();
+        return baseDao.selectOne(sql, UserEntity.class, email);
     }
 
     @Override
@@ -44,12 +46,7 @@ public class UserDao implements IUserDao {
                 .where("email")
                 .where("password")
                 .buildSelect();
-        List<UserEntity> userEntities = baseDao.selectByParams(sql, UserEntity.class, email,encode);
-        if(userEntities==null||userEntities.isEmpty()){
-            return null;
-        }else{
-            return userEntities.get(0);
-        }
+        return baseDao.selectOne(sql, UserEntity.class, email,encode);
     }
 
     @Override
@@ -59,11 +56,15 @@ public class UserDao implements IUserDao {
                 .where("username")
                 .where("password")
                 .buildSelect();
-        List<UserEntity> userEntities = baseDao.selectByParams(sql, UserEntity.class, username,encode);
-        if(userEntities==null||userEntities.isEmpty()){
-            return null;
-        }else{
-            return userEntities.get(0);
-        }
+        return baseDao.selectOne(sql, UserEntity.class, username,encode);
+    }
+
+    @Override
+    public void alterPassword(String email, String encode) throws SQLException {
+        String sql=new SQLBuilder("user")
+                .update("password")
+                .where("email")
+                .buildUpdate();
+        baseDao.updateCommon(sql,encode,email);
     }
 }

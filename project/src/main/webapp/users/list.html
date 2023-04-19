@@ -48,6 +48,7 @@
             margin-right: 10px;
         }
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
 </head>
 <body style="background: #f2f2f2;">
 
@@ -62,84 +63,66 @@
         $('.top').load('header.html');
     });
 </script>
+<div id="app" >
 <m>
-
         <label for="search-box"></label><input type="text" id="search-box" placeholder="Search...">
-        <button id="search-btn">搜索</button>
-
+        <button id="search-btn" @click="searchByTitle">搜索</button>
 </m>
-<script>
-    document.getElementById("search-btn").onclick=function () {
-        let search = document.getElementById("search-box").value;
-        axios({
-
-        })
-    }
-</script>
 <main role="main" class="container">
     <div class="row">
         <div class="col-md-9 blog-main">
-
             <div class="my-3 p-3 bg-white rounded shadow-sm">
+                <div id="a" @load="Paging" >
+                    <h6 class="border-bottom border-gray pb-2 mb-0">
+                        Q&A 此页累计：
+                        <span >{{questions.length}}</span>
+                    </h6>
 
-                <h6 class="border-bottom border-gray pb-2 mb-0">
-                    Q&A 累计：
-                    <span >pageParam.getTotal()</span>
-                    <span class="float-right" th:if="${!#strings.isEmpty(thisCategoryName)}">
-                        <a th:href="@{/question}">全部</a>
-                        /
-                        <span th:text="${thisCategoryName}">类名</span>
-                    </span>
-                </h6>
-
-                <div th:each="question:${questionList}" class="media text-muted pt-3">
-                    <!-- 头像 -->
-                    <img th:src="${question.getAuthorAvatar()}" style="border-radius: 5px " width="32" height="32">
-                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray" style="margin-left: 5px">
-                        <!-- 标题 -->
-                        <a th:text="${question.getTitle()}"
-                           th:href="@{'/question/read/'+${question.getQid()}}"
-                           class="text-dark font-weight-bold text-decoration-none d-block">
-                        </a>
-                        <!-- 状态 -->
-                        <span th:text="${question.getStatus()==0?'未解决':'已解决'}"
-                              th:class="${question.getStatus()==0?'badge badge-warning':'badge badge-info'}">
-                        </span>
-                        <!-- 浏览量 -->
-                        <span>
-                            <svg class="bi bi-eye-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-  <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
-  <path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
-</svg>
-                            浏览量
-                        </span>
-                        <!-- 时间 -->
-                        <span th:text="${#dates.format(question.getGmtUpdate(),'yyyy-MM-dd')}"
-                              class="badge badge-light float-right">time
-                        </span>
-                    </p>
+                    <div v-for="question in questions" :key="question.id" class="media text-muted pt-3">
+                        <!-- 头像 -->
+                        <img :src="question.avatar" alt="avatar" style="border-radius: 5px " width="32" height="32">
+                        <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray" style="margin-left: 5px">
+                            <!-- 标题 -->
+                            <a :href="'/question/read/' + question.id"
+                               class="text-dark font-weight-bold text-decoration-none d-block">{{ question.title }}
+                            </a>
+                            <!-- 状态 -->
+                            <span :class="question.answerCount == 0 ? 'badge badge-warning' : 'badge badge-info'">
+        {{ question.answerCount == 0 ? '暂时还没有人回答' : '已有'+question.answerCount+'人回答此问题' }}
+      </span>
+                            <!-- 浏览量 -->
+                            <span>
+        <svg class="bi bi-eye-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+          <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+          <path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+        </svg>
+        类型id
+        <span>{{ question.categoryId }}</span>
+      </span>
+                            <!-- 时间 -->
+                            <span class="badge badge-light float-right">{{ question.updateTime }}</span>
+                        </p>
+                    </div>
+                    <nav aria-label="Page navigation example" class="mt-4">
+                        <ul class="pagination justify-content-center pagination-sm">
+                            <li :class="{ 'page-item': true, 'disabled': pageParam.current!==1 }">
+                                <a class="page-link" @click.prevent="previousPage" disabled="pageParam.current!==1">Previous</a>
+                            </li>
+                            <li v-if="pageParam.current!==1" class="page-item">
+                                <a class="page-link" @click.prevent="changePage(pageParam.current - 1)">{{ pageParam.current - 1 }}</a>
+                            </li>
+                            <li class="page-item active">
+                                <a class="page-link">{{ pageParam.current }}</a>
+                            </li>
+                            <li v-if="pageParam.current!==pageParam.total/pageParam.pageSize+pageParam.total%pageParam.pageSize" class="page-item">
+                                <a class="page-link" @click.prevent="changePage(pageParam.current + 1)">{{ pageParam.current + 1 }}</a>
+                            </li>
+                            <li :class="{ 'page-item': true, 'disabled': pageParam.current!==pageParam.total/pageParam.pageSize+pageParam.total%pageParam.pageSize }">
+                                <a class="page-link" @click.prevent="nextPage" disabled="pageParam.current!==pageParam.total/pageParam.pageSize+pageParam.total%pageParam.pageSize">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
                 </div>
-
-                <!--分页-->
-                <nav aria-label="Page navigation example" class="mt-4">
-                    <ul class="pagination justify-content-center pagination-sm">
-                        <li th:class="${pageParam.hasPrevious()==true?'page-item':'page-item disabled'}">
-                            <a class="page-link" th:href="@{'/question/'+${pageParam.getCurrent()-1}+'/10'}" tabindex="">Previous</a>
-                        </li>
-                        <li class="page-item" th:if="${pageParam.hasPrevious()}">
-                            <a class="page-link" th:href="@{'/question/'+${pageParam.getCurrent()-1}+'/10'}" th:text="${pageParam.getCurrent()-1}"></a>
-                        </li>
-                        <li class="page-item active">
-                            <a class="page-link" th:href="@{'/question/'+${pageParam.getCurrent()}+'/10'}" th:text="${pageParam.getCurrent()}"></a>
-                        </li>
-                        <li class="page-item" th:if="${pageParam.hasNext()}">
-                            <a class="page-link" th:href="@{'/question/'+${pageParam.getCurrent()+1}+'/10'}" th:text="${pageParam.getCurrent()+1}"></a>
-                        </li>
-                        <li th:class="${pageParam.hasNext()==true?'page-item':'page-item disabled'}">
-                            <a class="page-link"  th:href="@{'/question/'+${pageParam.getCurrent()+1}+'/10'}" >Next</a>
-                        </li>
-                    </ul>
-                </nav>
 
             </div>
 
@@ -149,7 +132,7 @@
 
             <div class="my-3 rounded">
                 <p class="mb-0">
-                    <a th:href="@{/question/write}" class="btn btn-primary btn-sm btn-block" style="color: white">发布问题</a>
+                    <a href="write.html" class="btn btn-primary btn-sm btn-block" style="color: white">发布问题</a>
                 </p>
             </div>
 
@@ -158,9 +141,12 @@
             </div>
 
             <div class="p-4 my-3 bg-white rounded">
-                <a th:href="@{'/question/category/'+${category.getId()}+'/1/10'}"
-                   th:each="category:${categoryList}" th:text="${category.getCategory()}"
-                   class="badge badge-pill badge-primary mr-1"></a>
+<!--                种类查询-->
+                <a v-for="category in categories"
+                   @click="searchByCategoryId(category.categoryId)"
+                   class="badge badge-pill badge-primary mr-1">
+                    {{category.name}}
+                </a>
             </div>
 
             <div class="p-4 my-3 bg-white rounded">
@@ -170,11 +156,86 @@
                 </ol>
             </div>
         </aside>
-
     </div>
 
-</main>
 
+</main>
+</div>
 
 </body>
 </html>
+<script>
+    function getTotal (condition){
+        axios({
+            method: 'get',
+            url:'url/getQuestionCount?'+condition
+        }).then(function (resp) {
+            return resp.data;
+        })
+        return 0;
+    }
+   new Vue({
+        el: '#app',
+        data: {
+            pageParam: {
+                current: 1,
+                pageSize: 5,
+                total:0
+            },
+            questions: [],
+            categories:[]
+        },
+        methods: {
+            Paging: function() {
+                axios({
+                    method:'get',
+                    url:'/api/articles?page='+this.pageParam.current+'&size='+this.pageParam.pageSize
+                }).then(function(response) {
+                    this.questions = response.data;
+                    this.pageParam.total=getTotal("");
+                }).catch(function(error) {
+                    console.log(error);
+                });
+            },
+            changePage: function(page) {
+                this.pageParam.current = page;
+                this.Paging();
+            },
+            previousPage: function() {
+                if (this.pageParam.current>1) {
+                    this.pageParam.current--;
+                    this.Paging();
+                }
+            },
+            nextPage: function() {
+                if (this.pageParam.current<this.pageParam.total) {
+                    this.pageParam.current++;
+                    this.Paging();
+                }
+            },
+            searchByTitle:function () {
+                let title = document.getElementById("search-box").value;
+                title='&title='+title;
+                axios({
+                    method:'get',
+                    url:'url?page='+this.pageParam.current+'&size='+this.pageParam.pageSize+title
+                }).then(function (resp) {
+                    this.questions=resp.data;
+                    this.current=1;
+                    this.pageParam.total=getTotal(title);
+                })
+            },
+            searchByCategoryId:function (categoryId) {
+                categoryId='&categoryId='+categoryId;
+                axios({
+                    method:'get',
+                    url:'url?page='+this.pageParam.current+'&size='+this.pageParam.pageSize+categoryId
+                }).then(function (resp) {
+                    this.questions=resp.data;
+                    this.current=1;
+                    this.pageParam.total=getTotal(categoryId);
+                })
+            }
+        }
+    });
+</script>

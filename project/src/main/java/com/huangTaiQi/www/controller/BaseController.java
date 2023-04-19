@@ -1,16 +1,12 @@
 package com.huangTaiQi.www.controller;
 
-//import com.my_framework.www.context.ApplicationContext;
-//import com.my_framework.www.context.Impl.ApplicationContextImpl;
-
-import com.my_framework.www.context.ApplicationContext;
 import com.my_framework.www.context.Impl.ApplicationContextImpl;
 
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
+
 import java.lang.reflect.Method;
 import java.lang.reflect.Parameter;
 import java.sql.SQLException;
@@ -66,6 +62,7 @@ public class BaseController extends HttpServlet {
                     resp.sendRedirect("http://localhost:8080/project_war/html/error/404.html");
                 } else {
                     logger.log(Level.WARNING,"An error occurred in "+cls.getName()+" e = {0}", e);
+                    resp.sendRedirect("http://localhost:8080/project_war/html/error/404.html");
                 }
 
             }catch (IOException ex){
