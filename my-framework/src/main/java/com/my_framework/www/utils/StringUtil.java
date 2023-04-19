@@ -23,5 +23,11 @@ public class StringUtil {
         chars[0] += 32;
         return String.valueOf(chars);
     }
+    /**
+     * 分开字符
+     */
+    public static String[] splitString(String str, String regex){
+        return str.split(regex);
+    }
 
 }

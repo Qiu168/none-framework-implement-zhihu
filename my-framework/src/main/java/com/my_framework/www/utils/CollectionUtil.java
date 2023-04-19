@@ -2,6 +2,9 @@ package com.my_framework.www.utils;
 
 import java.util.*;
 
+/**
+ * @author 14629
+ */
 public class CollectionUtil {
     
     /**
@@ -12,7 +15,9 @@ public class CollectionUtil {
     public static boolean isEmpty(Collection<?> collection) {
         return collection == null || collection.isEmpty();
     }
-    
+    public static boolean isNotEmpty(Collection<?> collection) {
+        return !isEmpty(collection);
+    }
     /**
      * 判断Map是否为空
      * @param map map
@@ -21,7 +26,9 @@ public class CollectionUtil {
     public static boolean isEmpty(Map<?, ?> map) {
         return map == null || map.isEmpty();
     }
-    
+    public static boolean isNotEmpty(Map<?, ?> map) {
+        return !isEmpty(map);
+    }
     /**
      * 将数组转为List
      * @param array 数组
