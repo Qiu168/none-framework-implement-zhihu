@@ -1,6 +1,9 @@
 package com.my_framework.www.context.Impl;
 
+import com.my_framework.www.Transaction.ServiceProxyFactory;
 import com.my_framework.www.annotation.Autowired;
+import com.my_framework.www.annotation.Service;
+import com.my_framework.www.annotation.Transaction;
 import com.my_framework.www.aop.AopProxy;
 import com.my_framework.www.aop.CglibAopProxy;
 import com.my_framework.www.aop.JdkDynamicAopProxy;
@@ -13,12 +16,13 @@ import com.my_framework.www.context.ApplicationContext;
 import com.my_framework.www.utils.PropsUtil;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
-
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -26,12 +30,13 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ApplicationContextImpl implements ApplicationContext {
 
+    private final Logger logger= Logger.getLogger(ApplicationContextImpl.class.getName());
     /**
      * 配置文件路径
      */
     private final String configLocation;
     private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
-    private Map<String, BeanWrapper> factoryBeanInstanceCache = new ConcurrentHashMap<>();
+    private final Map<String, BeanWrapper> factoryBeanInstanceCache = new ConcurrentHashMap<>();
 
 
     public ApplicationContextImpl(String configLocation) {
@@ -48,6 +53,9 @@ public class ApplicationContextImpl implements ApplicationContext {
         BeanDefinitionReader reader = new BeanDefinitionReader(this.configLocation);
         //2、加载配置文件，扫描相关的类，把它们封装成BeanDefinition
         List<BeanDefinition> beanDefinitions = reader.loadBeanDefinitions();
+        for (BeanDefinition beanDefinition : beanDefinitions) {
+            logger.log(Level.INFO,beanDefinition.getFactoryBeanName());
+        }
         //3、注册，把配置信息放到容器里面(伪IOC容器)
         doRegisterBeanDefinition(beanDefinitions);
         //4、把不是延时加载的类，提前初始化
@@ -87,23 +95,43 @@ public class ApplicationContextImpl implements ApplicationContext {
             return instance;
         }
         BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-
         //1.调用反射初始化Bean
         instance = instantiateBean(beanName, beanDefinition);
-
         //2.把这个对象封装到BeanWrapper中
         BeanWrapper beanWrapper = new BeanWrapper(instance);
-
         //3.把BeanWrapper保存到IOC容器中去
         //注册一个类名（首字母小写，如helloService）
         factoryBeanInstanceCache.put(beanName, beanWrapper);
         //注册一个全类名（如com.huangTaiQi.www.HelloService）
         factoryBeanInstanceCache.put(beanDefinition.getBeanClassName(), beanWrapper);
-
         //4.注入
         populateBean(beanName, new BeanDefinition(), beanWrapper);
-
+        //5.替换被代理的对象
+        //proxyReplace(beanDefinition,beanWrapper);
         return this.factoryBeanInstanceCache.get(beanName).getWrappedInstance();
+    }
+
+    private void proxyReplace(BeanDefinition beanDefinition, BeanWrapper beanWrapper) {
+        Class<?> wrappedClass = beanWrapper.getWrappedClass();
+        if(wrappedClass.isAnnotationPresent(Service.class)){
+            //如果是service，生成代理对象(Transaction)
+            Method[] methods= wrappedClass.getMethods();
+            for (Method method : methods) {
+                if(method.isAnnotationPresent(Transaction.class)){
+                    //有被Transaction注释的方法
+                    Object proxy=ServiceProxyFactory.getProxy(wrappedClass);
+                    //替换factoryBeanInstanceCache中的被代理类
+                    beanWrapper.setWrappedObject(proxy);
+                    //注册一个类名（首字母小写，如helloService）
+                    factoryBeanInstanceCache.put(beanDefinition.getFactoryBeanName(), beanWrapper);
+                    //注册一个全类名（如com.huangTaiQi.www.HelloService）
+                    factoryBeanInstanceCache.put(beanDefinition.getBeanClassName(), beanWrapper);
+                    //不用再查看其他方法了
+                    break;
+                }
+            }
+
+        }
     }
 
     private Object getSingleton(String beanName) {
@@ -120,12 +148,16 @@ public class ApplicationContextImpl implements ApplicationContext {
         Object instance = null;
         try {
             Class<?> clazz = Class.forName(className);
-            instance = clazz.newInstance();
-            //获取AOP配置
+            if(clazz.isAnnotationPresent(Service.class)){
+                //如果是service，生成代理对象(Transaction)
+                instance = ServiceProxyFactory.getProxy(clazz);
+            }else {
+                instance = clazz.newInstance();
+            }
+            //获取AOP配置,FIXME：因为还有许多bug所以暂时未使用此功能，例如不能代理有依赖注入的对象
             AdvisedSupport config = getAopConfig();
             config.setTargetClass(clazz);
             config.setTarget(instance);
-
             //符合PointCut的规则的话，将创建代理对象
             if(config.pointCutMatch()) {
                 //创建代理
@@ -137,7 +169,7 @@ public class ApplicationContextImpl implements ApplicationContext {
         return instance;
     }
     private AopProxy createProxy(AdvisedSupport config) {
-        Class targetClass = config.getTargetClass();
+        Class<?> targetClass = config.getTargetClass();
         //如果接口数量 > 0则使用JDK原生动态代理
         if(targetClass.getInterfaces().length > 0){
             return new JdkDynamicAopProxy(config);
@@ -167,7 +199,6 @@ public class ApplicationContextImpl implements ApplicationContext {
     private void populateBean(String beanName, BeanDefinition beanDefinition, BeanWrapper beanWrapper) {
 
         Class<?> clazz = beanWrapper.getWrappedClass();
-
         //获得所有的成员变量
         Field[] fields = clazz.getDeclaredFields();
         for (Field field : fields) {
@@ -175,19 +206,19 @@ public class ApplicationContextImpl implements ApplicationContext {
             if (!field.isAnnotationPresent(Autowired.class)) {
                 continue;
             }
-
             Autowired autowired = field.getAnnotation(Autowired.class);
             //拿到需要注入的类名
             String autowiredBeanName = autowired.value().trim();
+
             if ("".equals(autowiredBeanName)) {
                 autowiredBeanName = field.getType().getName();
             }
-
+            logger.log(Level.INFO,beanWrapper.getWrappedInstance().getClass()+"  autowired:"+autowiredBeanName);
             //强制访问该成员变量
             field.setAccessible(true);
-
             try {
                 if (factoryBeanInstanceCache.get(autowiredBeanName) == null) {
+                    logger.log(Level.SEVERE,"1111111null");
                     continue;
                 }
                 //将容器中的实例注入到成员变量中
