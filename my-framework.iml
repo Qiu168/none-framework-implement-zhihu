@@ -7,11 +7,11 @@
           <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/my-framework/web/WEB-INF/web.xml" />
         </descriptors>
         <webroots>
-          <root url="file://$MODULE_DIR$/my-framework/web" relative="/" />
+          <root url="file://$MODULE_DIR$/my-framework/src/main/webapp" relative="/" />
         </webroots>
         <sourceRoots>
-          <root url="file://$MODULE_DIR$/my-framework/src/main/resources" />
           <root url="file://$MODULE_DIR$/my-framework/src/main/java" />
+          <root url="file://$MODULE_DIR$/my-framework/src/main/resources" />
           <root url="file://$MODULE_DIR$/my-framework/target/generated-sources/annotations" />
         </sourceRoots>
       </configuration>

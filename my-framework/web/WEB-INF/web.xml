@@ -9,6 +9,7 @@
         <servlet-name>myMVC</servlet-name>
         <!--配置Servlet-->
         <servlet-class>com.my_framework.www.webmvc.DispatcherServlet</servlet-class>
+<!--        容器只有在创建servlet实例时才会读文件中的init-param, 并且在servlet一生中只读一次。-->
         <init-param>
             <param-name>contextConfigLocation</param-name>
             <!--指定配置文件路径-->

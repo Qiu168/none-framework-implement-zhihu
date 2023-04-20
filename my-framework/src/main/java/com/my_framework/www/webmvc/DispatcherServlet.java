@@ -7,7 +7,7 @@ import com.my_framework.www.annotation.Controller;
 import com.my_framework.www.annotation.RequestMapping;
 import com.my_framework.www.context.Impl.ApplicationContextImpl;
 
-import javax.servlet.ServletConfig;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,20 +22,9 @@ import java.util.regex.Pattern;
  */
 public class DispatcherServlet extends HttpServlet {
 
-    /**
-     * 配置文件地址，从web.xml中获取
-     */
-    private static final String CONTEXT_CONFIG_LOCATION = "contextConfigLocation";
-    private final Map<HandlerMapping, HandlerAdapter> handlerAdapters = new HashMap<>();
-    private final List<HandlerMapping> handlerMappings = new ArrayList<>();
+    private static final Map<HandlerMapping, HandlerAdapter> handlerAdapters = new HashMap<>();
+    private static final List<HandlerMapping> handlerMappings = new ArrayList<>();
 
-    @Override
-    public void init(ServletConfig config) {
-        //1、初始化ApplicationContext
-        ApplicationContextImpl context = new ApplicationContextImpl(config.getInitParameter(CONTEXT_CONFIG_LOCATION));
-        //2、初始化Spring MVC
-        initStrategies(context);
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -59,7 +48,7 @@ public class DispatcherServlet extends HttpServlet {
     /**
      * 初始化策略
      */
-    protected void initStrategies(ApplicationContextImpl context) {
+    public static void initStrategies(ApplicationContextImpl context) {
         //handlerMapping，必须实现
         initHandlerMappings(context);
         //初始化参数适配器，必须实现
@@ -67,7 +56,7 @@ public class DispatcherServlet extends HttpServlet {
     }
 
 
-    private void initHandlerMappings(ApplicationContextImpl context) {
+    private static void initHandlerMappings(ApplicationContextImpl context) {
         //获取ioc容器的类名
         String[] beanNames = context.getBeanDefinitionNames();
         try {
@@ -96,7 +85,7 @@ public class DispatcherServlet extends HttpServlet {
                     // 像 /api/v1/users 或者/api/v1/users/123 这样的URL 都会被匹配到路径 /api/v1/users/*
                     String regex = ("/" + baseUrl + "/" + requestMapping.value().replaceAll("\\*", ".*")).replaceAll("/+", "/");
                     Pattern pattern = Pattern.compile(regex);
-                    this.handlerMappings.add(new HandlerMapping(controller, method, pattern));
+                    handlerMappings.add(new HandlerMapping(controller, method, pattern));
                     System.out.println("Mapped " + regex + "," + method);
                 }
             }
@@ -106,10 +95,10 @@ public class DispatcherServlet extends HttpServlet {
     }
 
 
-    private void initHandlerAdapters() {
+    private static void initHandlerAdapters() {
         //一个HandlerMapping对应一个HandlerAdapter
-        for (HandlerMapping handlerMapping : this.handlerMappings) {
-            this.handlerAdapters.put(handlerMapping,HandlerAdapter.getAdapter());
+        for (HandlerMapping handlerMapping : handlerMappings) {
+            handlerAdapters.put(handlerMapping,HandlerAdapter.getAdapter());
         }
     }
 
@@ -132,14 +121,14 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     private HandlerMapping getHandler(HttpServletRequest req) {
-        if (this.handlerMappings.isEmpty()) {
+        if (handlerMappings.isEmpty()) {
             return null;
         }
 
         String url = req.getRequestURI();
         String contextPath = req.getContextPath();
         url = url.replace(contextPath, "").replaceAll("/+", "/");
-        for (HandlerMapping handler : this.handlerMappings) {
+        for (HandlerMapping handler : handlerMappings) {
             Matcher matcher = handler.getPattern().matcher(url);
             //如果没有匹配上继续下一个匹配
             if (!matcher.matches()) {
@@ -150,10 +139,10 @@ public class DispatcherServlet extends HttpServlet {
         return null;
     }
     private HandlerAdapter getHandlerAdapter(HandlerMapping handler) {
-        if (this.handlerAdapters.isEmpty()) {
+        if (handlerAdapters.isEmpty()) {
             return null;
         }
-        return this.handlerAdapters.get(handler);
+        return handlerAdapters.get(handler);
     }
 
 }    
