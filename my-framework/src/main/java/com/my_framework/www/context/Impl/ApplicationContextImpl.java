@@ -1,6 +1,6 @@
 package com.my_framework.www.context.Impl;
 
-import com.my_framework.www.Transaction.ServiceProxyFactory;
+import com.my_framework.www.transaction.ServiceProxyFactory;
 import com.my_framework.www.annotation.Autowired;
 import com.my_framework.www.annotation.Service;
 import com.my_framework.www.annotation.Transaction;
@@ -21,7 +21,9 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.IntFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -237,5 +239,11 @@ public class ApplicationContextImpl implements ApplicationContext {
     public <T> T getBean(Class<T> requiredType) {
         String beanName=requiredType.getName();
         return requiredType.cast(getBean(beanName));
+    }
+
+    public String[] getBeanDefinitionNames() {
+
+        Set<String> strings = beanDefinitionMap.keySet();
+        return strings.stream().toArray(value -> new String[0]);
     }
 }
