@@ -63,11 +63,11 @@ public class BeanDefinitionReader {
                         //2、自定义名字（这里暂不考虑）
                         //3、接口注入
                         result.add(doCreateBeanDefinition(StringUtil.toLowerFirstCase(beanClass.getSimpleName()), beanClass.getName()));
-                        Class<?>[] interfaces = beanClass.getInterfaces();
-                        for (Class<?> i : interfaces) {
-                            //接口和实现类之间的关系也需要封装，作用是可以用接口名获取实现类
-                            result.add(doCreateBeanDefinition(i.getName(), beanClass.getName()));
-                        }
+//                        Class<?>[] interfaces = beanClass.getInterfaces();
+//                        for (Class<?> i : interfaces) {
+//                            //接口和实现类之间的关系也需要封装，作用是可以用接口名获取实现类
+//                            result.add(doCreateBeanDefinition(i.getName(), beanClass.getName()));
+//                        }
                         break;
                     }
                 }
