@@ -18,12 +18,8 @@ import com.my_framework.www.utils.StringUtil;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.function.IntFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -242,8 +238,6 @@ public class ApplicationContextImpl implements ApplicationContext {
     }
 
     public String[] getBeanDefinitionNames() {
-
-        Set<String> strings = beanDefinitionMap.keySet();
-        return strings.stream().toArray(value -> new String[0]);
+        return beanDefinitionMap.keySet().toArray(new String[beanDefinitionMap.size()]);
     }
 }

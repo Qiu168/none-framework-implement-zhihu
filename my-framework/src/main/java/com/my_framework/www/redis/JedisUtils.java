@@ -1,6 +1,5 @@
 package com.my_framework.www.redis;
 
-import com.my_framework.www.redis.JedisPoolFactory;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.Transaction;
 
@@ -37,12 +36,12 @@ public class JedisUtils {
         Transaction multi = jedis.multi();
         TRAN.set(multi);
     }
-    public static void commitTransaction() throws SQLException {
+    public static void commitTransaction() {
         TRAN.get().exec();
         TRAN.remove();
     }
 
-    public static void rollbackTransaction() throws SQLException {
+    public static void rollbackTransaction() {
         TRAN.get().discard();
         TRAN.remove();
     }

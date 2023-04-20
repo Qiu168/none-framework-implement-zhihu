@@ -5,8 +5,7 @@ import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
 
 import java.time.Duration;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+
 
 /**
  * TODO:事务
@@ -14,7 +13,6 @@ import java.util.logging.Logger;
  */
 public class JedisPoolFactory {
     private static final JedisPool JEDIS_POOL;
-    private static final Logger logger= Logger.getLogger(JedisPoolFactory.class.getName());
 
     static {
         JedisPoolConfig jedisPoolConfig=new JedisPoolConfig();
