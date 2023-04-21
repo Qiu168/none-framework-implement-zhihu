@@ -1,6 +1,9 @@
 package com.huangTaiQi.www.filter;
 
 
+import com.my_framework.www.context.Impl.ApplicationContextImpl;
+import com.my_framework.www.webmvc.DispatcherServlet;
+
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +19,10 @@ public class BaseFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
         LOGGER.info("BaseFilter initialized");
+        //1、初始化ApplicationContext，从web.xml中获取参数
+        ApplicationContextImpl context = new ApplicationContextImpl("application.properties");
+        //2、初始化Spring MVC
+        DispatcherServlet.initStrategies(context);
     }
 
     @Override
