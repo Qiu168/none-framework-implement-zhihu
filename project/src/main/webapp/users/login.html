@@ -54,8 +54,13 @@
         let password = document.getElementById("password").value;
         let imgCode = document.getElementById("imgCode").value;
         axios({
-            method:'get',
-            url:'/project_war/user/login?usernameOrEmail='+usernameOrEmail+'&password='+password+'&imgCode='+imgCode
+            method:'post',
+            url:'/project_war/user/login',
+            data: {
+                usernameOrEmail: usernameOrEmail,
+                password: password,
+                imgCode: imgCode
+            }
         }).then(function (resp) {
             console.log(resp);
             //如果是token
