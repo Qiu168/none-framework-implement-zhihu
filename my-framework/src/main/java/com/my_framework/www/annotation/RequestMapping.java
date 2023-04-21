@@ -10,4 +10,5 @@ import java.lang.annotation.*;
 @Documented
 public @interface RequestMapping {
     String value() default "";
+    String method() default "get";
 }
