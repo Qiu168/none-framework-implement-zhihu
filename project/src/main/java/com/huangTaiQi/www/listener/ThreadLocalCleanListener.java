@@ -18,7 +18,7 @@ public class ThreadLocalCleanListener implements ServletRequestListener {
         Field threadLocalsField = Thread.class.getDeclaredField("threadLocals");
         threadLocalsField.setAccessible(true);
         Object threadLocalsInThread = threadLocalsField.get(thread);
-        Class threadLocalMapClass = Class
+        Class<?> threadLocalMapClass = Class
                 .forName("java.lang.ThreadLocal$ThreadLocalMap");
         Method removeInThreadLocalMap = threadLocalMapClass.getDeclaredMethod(
                 "remove", ThreadLocal.class);
@@ -31,7 +31,7 @@ public class ThreadLocalCleanListener implements ServletRequestListener {
             Object entry = Array.get(table, i);
             Method getMethod = Reference.class.getDeclaredMethod("get");
             if (entry != null) {
-                ThreadLocal threadLocal = (ThreadLocal) getMethod.invoke(entry);
+                ThreadLocal<?> threadLocal = (ThreadLocal<?>) getMethod.invoke(entry);
                 removeInThreadLocalMap.invoke(threadLocalsInThread, threadLocal);
             }
         }

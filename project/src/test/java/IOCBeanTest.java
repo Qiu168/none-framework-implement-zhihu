@@ -1,5 +1,4 @@
 import com.huangTaiQi.www.service.impl.UserServiceImpl;
-import com.my_framework.www.annotation.Autowired;
 import com.my_framework.www.context.Impl.ApplicationContextImpl;
 import org.junit.Test;
 

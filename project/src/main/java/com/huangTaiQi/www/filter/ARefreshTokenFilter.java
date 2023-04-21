@@ -43,6 +43,7 @@ public class ARefreshTokenFilter extends BaseFilter{
         UserHolder.saveUser(user);
         // 刷新token有效期 TODO:刷新权限有效期
         jedis.expire(key, LOGIN_USER_TTL);
+        JedisUtils.close();
         return true;
     }
 

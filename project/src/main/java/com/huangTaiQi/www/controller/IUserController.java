@@ -21,37 +21,45 @@ public interface IUserController {
 
     /**
      * 发送邮箱验证码
+     * @param email 邮箱
+     * @param imgCode 验证码
      * @param request request
      * @param response response
      * @throws IOException 异常
      */
-    void sendEmail(HttpServletRequest request, HttpServletResponse response) throws IOException;
+    void sendEmail(String email, String imgCode, HttpServletRequest request, HttpServletResponse response) throws IOException;
 
     /**
      * 注册
-     * @param request request
+     * @param email 邮箱
+     * @param emailCode 验证码
+     * @param password 密码
+     * @param rePassword 密码
      * @param response response
      * @throws IOException 异常
      * @throws SQLException 异常
      * @throws NoSuchAlgorithmException 异常
      */
-    void register(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, NoSuchAlgorithmException;
-
+    void register(String email, String emailCode, String password, String rePassword, HttpServletResponse response) throws SQLException, IOException, NoSuchAlgorithmException;
     /**
      * 登录
+     * @param usernameOrEmail 用户名或邮箱
+     * @param password 密码
+     * @param imgCode 验证码
      * @param request request
      * @param response response
      * @throws Exception 异常
      */
-    void login(HttpServletRequest request, HttpServletResponse response) throws Exception;
+    void login(String usernameOrEmail, String password, String imgCode, HttpServletRequest request, HttpServletResponse response) throws Exception;
 
     /**
      * 检查此邮箱是否被注册
+     * @param email 邮箱
      * @param request request
      * @param response response
      * @throws Exception 异常
      */
-    void checkEmail(HttpServletRequest request, HttpServletResponse response) throws Exception;
+    void checkEmail(String email,HttpServletRequest request, HttpServletResponse response) throws Exception;
 
 
     /**
@@ -61,4 +69,17 @@ public interface IUserController {
      * @throws IOException 异常
      */
     void me(HttpServletRequest request, HttpServletResponse response) throws IOException;
+
+    /**
+     * 重置密码
+     * @param email 绑定的邮箱
+     * @param emailCode 邮箱验证码
+     * @param password 重置后的密码
+     * @param rePassword 第二次输入的密码
+     * @param response resp
+     * @throws SQLException 异常
+     * @throws IOException 异常
+     * @throws NoSuchAlgorithmException 异常
+     */
+    void resetPassword( String email, String emailCode, String password, String rePassword, HttpServletResponse response) throws SQLException, IOException, NoSuchAlgorithmException;
 }

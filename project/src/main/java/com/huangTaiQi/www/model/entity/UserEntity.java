@@ -1,6 +1,5 @@
 package com.huangTaiQi.www.model.entity;
 
-import com.huangTaiQi.www.controller.BaseController;
 
 import java.sql.Timestamp;
 

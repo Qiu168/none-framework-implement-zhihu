@@ -1,3 +1,4 @@
+import com.huangTaiQi.www.utils.ScanText;
 import com.huangTaiQi.www.utils.sql.SQLBuilder;
 import org.junit.Test;
 
@@ -15,8 +16,11 @@ public class StringTest {
 //        map.put(1,"123");
 //        map.put(1,"1456");
 //        System.out.println(map.get(1));
-        System.out.println(new SQLBuilder("user")
-                .where("email")
-                .buildDelete());
+        String s="dashbjkdlansbdkhjskalndjbkhhasojiopdkaanjbkjsckjkad";
+        String p="ojiopdk";
+        int i = ScanText.kmpSearch(s, p);
+        System.out.println(i);
+        String replace = s.replace(p, "123");
+        System.out.println(replace);
     }
 }

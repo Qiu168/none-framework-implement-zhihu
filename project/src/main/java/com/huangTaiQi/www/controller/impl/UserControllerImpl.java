@@ -2,7 +2,6 @@ package com.huangTaiQi.www.controller.impl;
 
 
 import com.alibaba.fastjson.JSON;
-import com.huangTaiQi.www.controller.BaseController;
 import com.huangTaiQi.www.controller.IUserController;
 import com.huangTaiQi.www.model.dto.UserDTO;
 import com.huangTaiQi.www.service.impl.UserServiceImpl;
@@ -10,7 +9,9 @@ import com.huangTaiQi.www.utils.ImgVerifyCode;
 import com.huangTaiQi.www.utils.UserHolder;
 import com.my_framework.www.annotation.Autowired;
 import com.my_framework.www.annotation.Controller;
-import javax.servlet.annotation.WebServlet;
+import com.my_framework.www.annotation.RequestMapping;
+import com.my_framework.www.annotation.RequestParam;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
@@ -28,13 +29,14 @@ import static com.huangTaiQi.www.constant.SessionConstants.IMG_CODE;
  * @author 14629
  */
 @Controller
-@WebServlet("/user/*")
-public class UserControllerImpl extends BaseController implements IUserController {
+@RequestMapping("user")
+public class UserControllerImpl implements IUserController {
 
     @Autowired
     UserServiceImpl userService;
 
     @Override
+    @RequestMapping("getImgVerifyCode")
     public void getImgVerifyCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //生成验证码，并将验证码存入session中
         BufferedImage image = userService.imgCode(request.getSession());
@@ -43,10 +45,12 @@ public class UserControllerImpl extends BaseController implements IUserControlle
         ImgVerifyCode.output(image,response.getOutputStream());
     }
 
-    @Override
-    public void sendEmail(HttpServletRequest request, HttpServletResponse response) throws IOException {
-        String email = request.getParameter("email");
-        String imgCode = request.getParameter("imgCode");
+
+    @RequestMapping("sendEmail")
+    public void sendEmail(@RequestParam("email") String email,
+                          @RequestParam("imgCode") String imgCode,
+                          HttpServletRequest request,
+                          HttpServletResponse response) throws IOException {
         //验证邮箱，验证验证码，发送邮件，成功后将邮箱验证码存入redis，返回信息
         String message = userService.sendEmail(email, imgCode, (String) request.getSession().getAttribute(IMG_CODE));
         //返回信息
@@ -54,13 +58,14 @@ public class UserControllerImpl extends BaseController implements IUserControlle
         response.getWriter().write(message);
     }
 
-    @Override
-    public void register(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, NoSuchAlgorithmException {
-        //获取
-        String email = request.getParameter("email");
-        String emailCode = request.getParameter("code");
-        String password = request.getParameter("password");
-        String rePassword = request.getParameter("repassword");
+
+    @RequestMapping("register")
+    public void register(@RequestParam("email") String email,
+                         @RequestParam("code") String emailCode,
+                         @RequestParam("password") String password,
+                         @RequestParam("repassword") String rePassword,
+                         HttpServletResponse response)
+            throws SQLException, IOException, NoSuchAlgorithmException {
         //验证，注册
         String message = userService.register(email, emailCode, password, rePassword);
         //返回信息
@@ -68,11 +73,12 @@ public class UserControllerImpl extends BaseController implements IUserControlle
         response.getWriter().write(message);
     }
 
-    @Override
-    public void login(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String usernameOrEmail = request.getParameter("usernameOrEmail");
-        String password = request.getParameter("password");
-        String imgCode = request.getParameter("imgCode");
+
+    @RequestMapping("login")
+    public void login(@RequestParam("usernameOrEmail") String usernameOrEmail,
+                      @RequestParam("password") String password,
+                      @RequestParam("imgCode") String imgCode,
+                      HttpServletRequest request, HttpServletResponse response) throws Exception {
         String code = (String) request.getSession().getAttribute(IMG_CODE);
         String message = userService.login(usernameOrEmail, password, imgCode, code);
         //返回信息
@@ -82,14 +88,15 @@ public class UserControllerImpl extends BaseController implements IUserControlle
     }
 
 
-    @Override
-    public void checkEmail(HttpServletRequest request, HttpServletResponse response) throws Exception {
-        String email = request.getParameter("email");
+
+    @RequestMapping("checkEmail")
+    public void checkEmail(@RequestParam("email") String email,HttpServletRequest request, HttpServletResponse response) throws Exception {
         boolean hasEmail = userService.hasEmail(email);
         response.getWriter().write(String.valueOf(hasEmail));
     }
 
     @Override
+    @RequestMapping("me")
     public void me(HttpServletRequest request, HttpServletResponse response) throws IOException {
         UserDTO user = UserHolder.getUser();
         String json = JSON.toJSONString(user);
@@ -97,12 +104,14 @@ public class UserControllerImpl extends BaseController implements IUserControlle
         response.getWriter().write(json);
     }
 
-    public void resetPassword(HttpServletRequest request, HttpServletResponse response) throws SQLException, IOException, NoSuchAlgorithmException {
-        //获取
-        String email = request.getParameter("email");
-        String emailCode = request.getParameter("code");
-        String password = request.getParameter("password");
-        String rePassword = request.getParameter("repassword");
+    @Override
+    @RequestMapping("resetPassword")
+    public void resetPassword(@RequestParam("email") String email,
+                              @RequestParam("code") String emailCode,
+                              @RequestParam("password") String password,
+                              @RequestParam("repassword") String rePassword,
+                              HttpServletResponse response)
+            throws SQLException, IOException, NoSuchAlgorithmException {
         //验证，注册
         String message = userService.resetPassword(email, emailCode, password, rePassword);
         //返回信息

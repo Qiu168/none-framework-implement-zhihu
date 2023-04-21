@@ -14,6 +14,8 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -22,9 +24,13 @@ import java.util.regex.Pattern;
  */
 public class DispatcherServlet extends HttpServlet {
 
-    private static final Map<HandlerMapping, HandlerAdapter> handlerAdapters = new HashMap<>();
-    private static final List<HandlerMapping> handlerMappings = new ArrayList<>();
+    private static Logger logger= Logger.getLogger(DispatcherServlet.class.getName());
+    private static volatile Map<HandlerMapping, HandlerAdapter> handlerAdapters = new HashMap<>();
+    private static volatile List<HandlerMapping> handlerMappings = new ArrayList<>();
 
+    public static List<HandlerMapping> getHandlerMappings() {
+        return handlerMappings;
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -34,6 +40,7 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
+            logger.log(Level.INFO,Thread.currentThread().toString());
             this.doDispatch(req, resp);
         } catch (Exception e) {
             resp.getWriter().write("500 Exception,Details:\r\n"
@@ -89,6 +96,9 @@ public class DispatcherServlet extends HttpServlet {
                     System.out.println("Mapped " + regex + "," + method);
                 }
             }
+            logger.log(Level.INFO,Thread.currentThread().toString());
+            logger.log(Level.INFO,handlerMappings.toString());
+            System.out.println(handlerMappings);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -102,7 +112,7 @@ public class DispatcherServlet extends HttpServlet {
         }
     }
 
-    private void doDispatch(HttpServletRequest req, HttpServletResponse resp) throws Exception {
+    public void doDispatch(HttpServletRequest req, HttpServletResponse resp) throws Exception {
         //1、通过从request中拿到URL，去匹配一个HandlerMapping
         HandlerMapping handler = getHandler(req);
         if (handler == null) {
@@ -121,6 +131,8 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     private HandlerMapping getHandler(HttpServletRequest req) {
+        logger.log(Level.INFO,handlerMappings.toString());
+        System.out.println(handlerMappings);
         if (handlerMappings.isEmpty()) {
             return null;
         }
