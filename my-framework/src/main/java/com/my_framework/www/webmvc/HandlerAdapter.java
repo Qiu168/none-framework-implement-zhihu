@@ -1,12 +1,14 @@
 package com.my_framework.www.webmvc;
 
 
-
+import com.alibaba.fastjson.*;
+import com.my_framework.www.annotation.RequestMapping;
 import com.my_framework.www.annotation.RequestParam;
 import com.my_framework.www.utils.CastUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.sql.SQLException;
@@ -32,6 +34,8 @@ public class HandlerAdapter {
     }
 
     public void handle(HttpServletRequest request, HttpServletResponse response, HandlerMapping handlerMapping) {
+        //获取请求方法类型
+        String method = handlerMapping.getMethod().getAnnotation(RequestMapping.class).method();
         //把方法的形参列表和request的参数列表所在顺序进行一一对应
         Map<String, Integer> paramIndexMapping = new HashMap<>();
         //提取方法中加了注解的参数
@@ -59,8 +63,26 @@ public class HandlerAdapter {
             }
         }
 
+        String postMethod="post";
         //获取提交表单数据
-        Map<String, String[]> params = request.getParameterMap();
+        Map<String, String[]> params;
+        if (postMethod.equalsIgnoreCase(method)) {
+            //获取请求体
+            StringBuilder sb = new StringBuilder();
+            try (BufferedReader reader = request.getReader()) {
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                }
+            } catch (IOException e) {
+                logger.log(Level.SEVERE,e.getMessage());
+            }
+            //将请求体中的json字符串解析为Map
+            params = JSON.parseObject(sb.toString(), new TypeReference<Map<String, String[]>>() {});
+        } else {
+            //get请求直接获取参数
+            params = request.getParameterMap();
+        }
 
         //controller的方法实参列表
         Object[] paramValues = new Object[paramsTypes.length];
