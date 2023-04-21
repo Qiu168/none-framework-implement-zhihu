@@ -24,13 +24,10 @@ import java.util.regex.Pattern;
  */
 public class DispatcherServlet extends HttpServlet {
 
-    private static Logger logger= Logger.getLogger(DispatcherServlet.class.getName());
-    private static volatile Map<HandlerMapping, HandlerAdapter> handlerAdapters = new HashMap<>();
-    private static volatile List<HandlerMapping> handlerMappings = new ArrayList<>();
+    private static final Logger logger= Logger.getLogger(DispatcherServlet.class.getName());
+    private static final Map<HandlerMapping, HandlerAdapter> handlerAdapters = new HashMap<>();
+    private static final List<HandlerMapping> handlerMappings = new ArrayList<>();
 
-    public static List<HandlerMapping> getHandlerMappings() {
-        return handlerMappings;
-    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -80,6 +77,7 @@ public class DispatcherServlet extends HttpServlet {
                     RequestMapping requestMapping = clazz.getAnnotation(RequestMapping.class);
                     baseUrl = requestMapping.value();
                 }
+                baseUrl = getSuperRequestMapping(clazz, baseUrl);
                 //获取Method的url配置
                 Method[] methods = clazz.getMethods();
                 for (Method method : methods) {
@@ -96,14 +94,22 @@ public class DispatcherServlet extends HttpServlet {
                     System.out.println("Mapped " + regex + "," + method);
                 }
             }
-            logger.log(Level.INFO,Thread.currentThread().toString());
-            logger.log(Level.INFO,handlerMappings.toString());
-            System.out.println(handlerMappings);
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
-
+    private static String getSuperRequestMapping(Class<?> clazz, String baseUrl) {
+        Class<?> superClass = clazz.getSuperclass();
+        if (superClass != null && superClass.isAnnotationPresent(RequestMapping.class)) {
+            RequestMapping controllerMapping = superClass.getAnnotation(RequestMapping.class);
+            if (controllerMapping != null) {
+                String parentMapping = controllerMapping.value();
+                baseUrl = parentMapping + "/" + baseUrl;
+            }
+            baseUrl = getSuperRequestMapping(superClass, baseUrl);
+        }
+        return baseUrl;
+    }
 
     private static void initHandlerAdapters() {
         //一个HandlerMapping对应一个HandlerAdapter
@@ -131,8 +137,6 @@ public class DispatcherServlet extends HttpServlet {
     }
 
     private HandlerMapping getHandler(HttpServletRequest req) {
-        logger.log(Level.INFO,handlerMappings.toString());
-        System.out.println(handlerMappings);
         if (handlerMappings.isEmpty()) {
             return null;
         }
