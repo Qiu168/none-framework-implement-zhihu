@@ -30,7 +30,8 @@
 
 
     <p class="clearfix">
-        <a href="register.html" class="float-right">没有账号？去注册</a>
+        <a href="register.html" class="float-right">没有账号？去注册</a><br>
+        <a href="findPassword.html" class="float-right">忘记密码</a><br>
     </p>
 </div>
 
@@ -39,7 +40,7 @@
     function getCodeImg(){
         axios({
             method: 'post',
-            url:'/project_war/user/getImgVerifyCode?'+new Date().getTime(),
+            url:'/project_war_exploded/api/home/getImgVerifyCode?'+new Date().getTime(),
             responseType:'blob'
         }).then(function (resp) {
             console.log(resp);
@@ -55,7 +56,7 @@
         let imgCode = document.getElementById("imgCode").value;
         axios({
             method:'post',
-            url:'/project_war/user/login',
+            url:'/project_war_exploded/api/home/login',
             data: {
                 usernameOrEmail: usernameOrEmail,
                 password: password,
