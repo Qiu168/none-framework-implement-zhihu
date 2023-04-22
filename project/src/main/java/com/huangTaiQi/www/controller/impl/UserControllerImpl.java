@@ -2,15 +2,14 @@ package com.huangTaiQi.www.controller.impl;
 
 
 import com.alibaba.fastjson.JSON;
+import com.huangTaiQi.www.controller.BaseController;
 import com.huangTaiQi.www.controller.IUserController;
 import com.huangTaiQi.www.model.dto.UserDTO;
 import com.huangTaiQi.www.service.impl.UserServiceImpl;
 import com.huangTaiQi.www.utils.ImgVerifyCode;
 import com.huangTaiQi.www.utils.UserHolder;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Controller;
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
+import com.my_framework.www.annotation.*;
+
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,8 +19,7 @@ import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 
 
-
-
+import static com.huangTaiQi.www.constant.RegexConstants.EMAIL_REGEX;
 import static com.huangTaiQi.www.constant.SessionConstants.IMG_CODE;
 
 
@@ -29,14 +27,14 @@ import static com.huangTaiQi.www.constant.SessionConstants.IMG_CODE;
  * @author 14629
  */
 @Controller
-@RequestMapping("user")
-public class UserControllerImpl implements IUserController {
+@RequestMapping(value = "home")
+public class UserControllerImpl extends BaseController implements IUserController {
 
     @Autowired
     UserServiceImpl userService;
 
     @Override
-    @RequestMapping("getImgVerifyCode")
+    @RequestMapping(value = "getImgVerifyCode")
     public void getImgVerifyCode(HttpServletRequest request, HttpServletResponse response) throws IOException {
         //生成验证码，并将验证码存入session中
         BufferedImage image = userService.imgCode(request.getSession());
@@ -46,8 +44,9 @@ public class UserControllerImpl implements IUserController {
     }
 
 
-    @RequestMapping("sendEmail")
-    public void sendEmail(@RequestParam("email") String email,
+    @Override
+    @RequestMapping(value = "sendEmail")
+    public void sendEmail(@Pattern(regex = EMAIL_REGEX,message = "email") @RequestParam("email") String email,
                           @RequestParam("imgCode") String imgCode,
                           HttpServletRequest request,
                           HttpServletResponse response) throws IOException {
@@ -59,7 +58,8 @@ public class UserControllerImpl implements IUserController {
     }
 
 
-    @RequestMapping("register")
+    @Override
+    @RequestMapping(value = "register")
     public void register(@RequestParam("email") String email,
                          @RequestParam("code") String emailCode,
                          @RequestParam("password") String password,
@@ -73,8 +73,8 @@ public class UserControllerImpl implements IUserController {
         response.getWriter().write(message);
     }
 
-
-    @RequestMapping("login")
+    @Override
+    @RequestMapping(value = "login",method = "post")
     public void login(@RequestParam("usernameOrEmail") String usernameOrEmail,
                       @RequestParam("password") String password,
                       @RequestParam("imgCode") String imgCode,
@@ -88,15 +88,15 @@ public class UserControllerImpl implements IUserController {
     }
 
 
-
-    @RequestMapping("checkEmail")
+    @Override
+    @RequestMapping(value = "checkEmail")
     public void checkEmail(@RequestParam("email") String email,HttpServletRequest request, HttpServletResponse response) throws Exception {
         boolean hasEmail = userService.hasEmail(email);
         response.getWriter().write(String.valueOf(hasEmail));
     }
 
     @Override
-    @RequestMapping("me")
+    @RequestMapping(value = "me")
     public void me(HttpServletRequest request, HttpServletResponse response) throws IOException {
         UserDTO user = UserHolder.getUser();
         String json = JSON.toJSONString(user);
@@ -105,7 +105,7 @@ public class UserControllerImpl implements IUserController {
     }
 
     @Override
-    @RequestMapping("resetPassword")
+    @RequestMapping(value = "resetPassword")
     public void resetPassword(@RequestParam("email") String email,
                               @RequestParam("code") String emailCode,
                               @RequestParam("password") String password,
