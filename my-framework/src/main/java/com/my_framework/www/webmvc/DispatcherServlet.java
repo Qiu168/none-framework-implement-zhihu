@@ -8,6 +8,8 @@ import com.my_framework.www.annotation.RequestMapping;
 import com.my_framework.www.context.Impl.ApplicationContextImpl;
 
 
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -24,10 +26,19 @@ import java.util.regex.Pattern;
  */
 public class DispatcherServlet extends HttpServlet {
 
+    /**配置文件地址，从web.xml中获取*/
+    private static final String CONTEXT_CONFIG_LOCATION = "contextConfigLocation";
     private static final Logger logger= Logger.getLogger(DispatcherServlet.class.getName());
     private static final Map<HandlerMapping, HandlerAdapter> handlerAdapters = new HashMap<>();
     private static final List<HandlerMapping> handlerMappings = new ArrayList<>();
 
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+        //1、初始化ApplicationContext，从web.xml中获取参数
+        ApplicationContextImpl context = new ApplicationContextImpl(config.getInitParameter(CONTEXT_CONFIG_LOCATION));
+        //2、初始化Spring MVC
+        DispatcherServlet.initStrategies(context);
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -53,9 +64,9 @@ public class DispatcherServlet extends HttpServlet {
      * 初始化策略
      */
     public static void initStrategies(ApplicationContextImpl context) {
-        //handlerMapping，必须实现
+        //handlerMapping
         initHandlerMappings(context);
-        //初始化参数适配器，必须实现
+        //初始化参数适配器
         initHandlerAdapters();
     }
 
@@ -100,6 +111,7 @@ public class DispatcherServlet extends HttpServlet {
     }
     private static String getSuperRequestMapping(Class<?> clazz, String baseUrl) {
         Class<?> superClass = clazz.getSuperclass();
+        //这里的父类可以不用写controller注解
         if (superClass != null && superClass.isAnnotationPresent(RequestMapping.class)) {
             RequestMapping controllerMapping = superClass.getAnnotation(RequestMapping.class);
             if (controllerMapping != null) {
@@ -123,13 +135,14 @@ public class DispatcherServlet extends HttpServlet {
         HandlerMapping handler = getHandler(req);
         if (handler == null) {
             //没有找到handler返回404
-            resp.sendRedirect("http://localhost:8080/project_war/html/error/404.html");
+            resp.sendRedirect("http://localhost:8080/project_war_exploded/html/error/404.html");
             return;
         }
         //2、准备调用前的参数
         HandlerAdapter ha = getHandlerAdapter(handler);
+        //其实如果handler不为null，ha不可能为null
         if(ha==null){
-            resp.sendRedirect("http://localhost:8080/project_war/html/error/404.html");
+            resp.sendRedirect("http://localhost:8080/project_war_exploded/html/error/404.html");
             return;
         }
         //3、真正的调用controller的方法
