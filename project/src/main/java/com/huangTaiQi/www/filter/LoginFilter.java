@@ -6,10 +6,9 @@ import com.huangTaiQi.www.utils.UserHolder;
 
 import javax.servlet.FilterChain;
 
-import javax.servlet.ServletException;
+import javax.servlet.annotation.WebFilter;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,7 +16,7 @@ import java.util.List;
 /**
  * @author 14629
  */
-
+//@WebFilter("/api/user/*")
 public class LoginFilter extends BaseFilter{
     @Override
     protected boolean doBeforeProcessing(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws Exception {
@@ -32,7 +31,7 @@ public class LoginFilter extends BaseFilter{
             // 没有，需要拦截，设置状态码
             response.setStatus(401);
             // 拦截
-            response.sendRedirect("http://localhost:8080/project_war/html/error/404.html");
+            response.sendRedirect("http://localhost:8080/project_war_exploded/html/error/404.html");
             return false;
         }
         // 有用户，则放行

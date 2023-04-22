@@ -1,13 +1,12 @@
 package com.huangTaiQi.www.filter;
 
 
-import com.my_framework.www.context.Impl.ApplicationContextImpl;
-import com.my_framework.www.webmvc.DispatcherServlet;
 
 import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -19,10 +18,6 @@ public class BaseFilter implements Filter {
     @Override
     public void init(FilterConfig filterConfig) {
         LOGGER.info("BaseFilter initialized");
-        //1、初始化ApplicationContext，从web.xml中获取参数
-        ApplicationContextImpl context = new ApplicationContextImpl("application.properties");
-        //2、初始化Spring MVC
-        DispatcherServlet.initStrategies(context);
     }
 
     @Override
@@ -49,7 +44,7 @@ public class BaseFilter implements Filter {
         return true;
     }
 
-    protected void doAfterProcessing(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doAfterProcessing(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws SQLException {
         // 子类可以实现此方法，实现在处理请求后要执行的逻辑
     }
 
