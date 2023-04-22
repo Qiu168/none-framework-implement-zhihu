@@ -83,7 +83,7 @@ public class AdvisedSupport {
         try {
             //保存切面的所有通知方法
             Map<String, Method> aspectMethods = new HashMap<>();
-            Class aspectClass = Class.forName(this.config.getAspectClass());
+            Class<?> aspectClass = Class.forName(this.config.getAspectClass());
             for (Method m : aspectClass.getMethods()) {
                 aspectMethods.put(m.getName(), m);
             }
