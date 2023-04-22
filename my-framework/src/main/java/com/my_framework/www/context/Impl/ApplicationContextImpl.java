@@ -96,7 +96,7 @@ public class ApplicationContextImpl implements ApplicationContext {
         }
         BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
         //1.调用反射初始化Bean
-        instance = instantiateBean(beanName, beanDefinition);
+        instance = instantiateBean(beanDefinition);
         //2.把这个对象封装到BeanWrapper中
         BeanWrapper beanWrapper = new BeanWrapper(instance);
         //3.把BeanWrapper保存到IOC容器中去
@@ -105,7 +105,7 @@ public class ApplicationContextImpl implements ApplicationContext {
         //注册一个全类名（如com.huangTaiQi.www.HelloService）
         factoryBeanInstanceCache.put(beanDefinition.getBeanClassName(), beanWrapper);
         //4.注入
-        populateBean(beanName, new BeanDefinition(), beanWrapper);
+        populateBean(beanWrapper);
         return this.factoryBeanInstanceCache.get(beanName).getWrappedInstance();
     }
 
@@ -117,7 +117,7 @@ public class ApplicationContextImpl implements ApplicationContext {
         return null;
     }
 
-    private Object instantiateBean(String beanName, BeanDefinition beanDefinition) {
+    private Object instantiateBean(BeanDefinition beanDefinition) {
         //1、拿到要实例化的对象的类名
         String className = beanDefinition.getBeanClassName();
         //2、反射实例化，得到一个对象
@@ -175,11 +175,10 @@ public class ApplicationContextImpl implements ApplicationContext {
 
     /**
      * 注入bean
-     * @param beanName beanName
-     * @param beanDefinition bean的配置
+     *
      * @param beanWrapper bean的实例
      */
-    private void populateBean(String beanName, BeanDefinition beanDefinition, BeanWrapper beanWrapper) {
+    private void populateBean(BeanWrapper beanWrapper) {
         Class<?> clazz = beanWrapper.getWrappedClass();
         //获得所有的成员变量
         Field[] fields = clazz.getDeclaredFields();
