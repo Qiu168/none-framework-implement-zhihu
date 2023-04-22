@@ -2,15 +2,19 @@ package com.my_framework.www.webmvc;
 
 
 import com.alibaba.fastjson.*;
+import com.my_framework.www.annotation.Access;
+import com.my_framework.www.annotation.Pattern;
 import com.my_framework.www.annotation.RequestMapping;
 import com.my_framework.www.annotation.RequestParam;
 import com.my_framework.www.utils.CastUtil;
+import com.my_framework.www.utils.StringUtil;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -34,28 +38,49 @@ public class HandlerAdapter {
     }
 
     public void handle(HttpServletRequest request, HttpServletResponse response, HandlerMapping handlerMapping) {
+        Method method = handlerMapping.getMethod();
+        //TODO:权限管理
+        //是否有access注解
+        Access access = method.getAnnotation(Access.class);
+        if(access!=null){
+            if(!access.authority()){
+                //如果没有权限
+                try {
+                    response.setStatus(403);
+                    response.sendRedirect("");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
         //获取请求方法类型
-        String method = handlerMapping.getMethod().getAnnotation(RequestMapping.class).method();
+        String methodType = method.getAnnotation(RequestMapping.class).method();
         //把方法的形参列表和request的参数列表所在顺序进行一一对应
         Map<String, Integer> paramIndexMapping = new HashMap<>();
+        Map<Integer,String> verifyIndexMapping = new HashMap<>();
         //提取方法中加了注解的参数
         //把方法上的注解拿到，得到的是一个二维数组
         //因为一个参数可以有多个注解，而一个方法又有多个参数
-        Annotation[][] pa = handlerMapping.getMethod().getParameterAnnotations();
+        Annotation[][] pa = method.getParameterAnnotations();
         for (int i = 0; i < pa.length; i++) {
             for (Annotation a : pa[i]) {
                 if (a instanceof RequestParam) {
                     String paramName = ((RequestParam) a).value();
                     if (!"".equals(paramName.trim())) {
-                        //RequestParam参数不为空，代表要注入
+                        //RequestParam参数不为空，代表要注入，paramName代表前端传过来的参数名，i代表是第几个参数
                         paramIndexMapping.put(paramName, i);
                     }
+                }
+                //参数验证
+                if(a instanceof Pattern){
+                    String regex=((Pattern) a).regex();
+                    verifyIndexMapping.put(i,regex);
                 }
             }
         }
 
         //提取方法中的request和response参数
-        Class<?>[] paramsTypes = handlerMapping.getMethod().getParameterTypes();
+        Class<?>[] paramsTypes = method.getParameterTypes();
         for (int i = 0; i < paramsTypes.length; i++) {
             Class<?> type = paramsTypes[i];
             if (type == HttpServletRequest.class || type == HttpServletResponse.class) {
@@ -66,7 +91,7 @@ public class HandlerAdapter {
         String postMethod="post";
         //获取提交表单数据
         Map<String, String[]> params;
-        if (postMethod.equalsIgnoreCase(method)) {
+        if (postMethod.equalsIgnoreCase(methodType)) {
             //获取请求体
             StringBuilder sb = new StringBuilder();
             try (BufferedReader reader = request.getReader()) {
@@ -77,7 +102,7 @@ public class HandlerAdapter {
             } catch (IOException e) {
                 logger.log(Level.SEVERE,e.getMessage());
             }
-            //将请求体中的json字符串解析为Map
+            //将json字符串解析为Map
             params = JSON.parseObject(sb.toString(), new TypeReference<Map<String, String[]>>() {});
         } else {
             //get请求直接获取参数
@@ -93,11 +118,22 @@ public class HandlerAdapter {
                     .replaceAll("\\s", ",");
 
             if (!paramIndexMapping.containsKey(param.getKey())) {
-                //被RequestParam注解的参数没有这个param
+                //RequestParam注解里的参数名中没有这个param名称
                 continue;
             }
             //参数列表所在顺序
             int index = paramIndexMapping.get(param.getKey());
+            //校验参数
+            String regex = verifyIndexMapping.get(index);
+            if(StringUtil.isNotEmpty(regex) && !java.util.regex.Pattern.matches(regex, value)){
+                //不匹配,不访问接口
+                try {
+                    response.getWriter().write("");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                return;
+            }
             //类型转换
             paramValues[index] = parseStringValue(value, paramsTypes[index]);
         }
@@ -116,7 +152,7 @@ public class HandlerAdapter {
 
         //反射调用controller的方法
         try {
-            handlerMapping.getMethod().invoke(handlerMapping.getController(), paramValues);
+            method.invoke(handlerMapping.getController(), paramValues);
         } catch (Exception e) {
             Class<?> cls = handlerMapping.getController().getClass();
             handleException(e,cls,response);
@@ -144,10 +180,10 @@ public class HandlerAdapter {
                 // 处理 IO 异常
                 response.getWriter().write("系统繁忙，请稍后再试");
                 logger.log(Level.WARNING,"An error occurred in "+cls.getName()+" e = {0}", e.getMessage());
-                response.sendRedirect("http://localhost:8080/project_war/html/error/404.html");
+                response.sendRedirect("http://localhost:8080/project_war_exploded/html/error/404.html");
             } else {
                 logger.log(Level.WARNING,"An error occurred in "+cls.getName()+" e = {0}", e);
-                response.sendRedirect("http://localhost:8080/project_war/html/error/404.html");
+                response.sendRedirect("http://localhost:8080/project_war_exploded/html/error/404.html");
             }
         }catch (IOException ex){
             // 处理异常时出现异常
