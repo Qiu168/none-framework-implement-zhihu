@@ -1,5 +1,10 @@
 package com.my_framework.www.utils;
 
+
+import com.alibaba.fastjson.JSONObject;
+
+
+
 public class StringUtil {
     public static boolean isEmpty(String str){
         if (str != null){
@@ -39,4 +44,13 @@ public class StringUtil {
         return toLowerFirstCase(name.substring(name.lastIndexOf('.') + 1));
     }
 
+    public static String convertToJsonArray(String jsonString) {
+        JSONObject jsonObject = JSONObject.parseObject(jsonString);
+        JSONObject resultObject = new JSONObject();
+        for (String key : jsonObject.keySet()) {
+            String[] arr = new String[] {jsonObject.getString(key)};
+            resultObject.put(key, arr);
+        }
+        return resultObject.toJSONString();
+    }
 }
