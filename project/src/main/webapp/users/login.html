@@ -66,6 +66,7 @@
             console.log(resp);
             //如果是token
             if(reg.test(resp.data)){
+                //在页面会话结束时会被清除
                 sessionStorage.setItem("token",resp.data);
                 location.href='list.html'
             }

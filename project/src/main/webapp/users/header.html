@@ -8,7 +8,9 @@
 </head>
 <body>
 <script src="../js/axios.js"></script>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
 <script src="../js/common.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
 <nav class="navbar sticky-top navbar-expand-lg navbar-light" style="background-color: #ffffff;box-shadow: 0px -2px 10px #d0cccc;">
     <div class="container">
@@ -40,16 +42,16 @@
                 </div>
                 <div id="userInfo" style="display:none ">
                     <div class="dropdown">
-                        <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="#" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
+                        <a class="btn btn-sm btn-outline-secondary dropdown-toggle" href="index.html" role="button" id="dropdownMenuLink" data-bs-toggle="dropdown" aria-expanded="false">
                             <img id="avatar" style="width: 30px;height:30px;border-radius: 50%;" alt="">
                             <span id="username"></span>
                         </a>
                         <ul class="dropdown-menu" aria-labelledby="dropdownMenuLink">
-                            <li><a class="dropdown-item" href="#">个人中心</a></li>
-                            <li><a class="dropdown-item" href="#">更新资料</a></li>
-                            <li><a class="dropdown-item" href="#">头像上传</a></li>
+                            <li><a class="dropdown-item" href="index.html">个人中心</a></li>
+                            <li><a class="dropdown-item" href="settings.html">更新资料</a></li>
+                            <li><a class="dropdown-item" href="settings.html">头像上传</a></li>
                             <li><hr class="dropdown-divider"></li>
-                            <li><a class="dropdown-item" href="#">注销</a></li>
+                            <li><a class="dropdown-item" href="">注销</a></li>
                         </ul>
                     </div>
                 </div>
@@ -62,7 +64,7 @@
     (function() {
         axios({
             method: 'get',
-            url: '/project_war_exploded/home/me'
+            url: '/project_war_exploded/api/home/me'
         }).then(function(resp) {
             if (resp.data!=null) {
                 document.getElementById("userInfo").style.display = '';

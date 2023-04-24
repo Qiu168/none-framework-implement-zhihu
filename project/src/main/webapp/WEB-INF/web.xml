@@ -15,7 +15,7 @@
             <!--指定配置文件路径-->
             <param-value>application.properties</param-value>
         </init-param>
-        <load-on-startup>-1</load-on-startup>
+        <load-on-startup>1</load-on-startup>
     </servlet>
 
     <!--    < Servlet -mapping>将myMVC Servlet映射到URL模式/api/*，意味着/api/*的请求都将由该Servlet处理。-->
