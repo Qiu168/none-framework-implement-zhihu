@@ -6,6 +6,7 @@ package com.my_framework.www.webmvc;
 import com.my_framework.www.annotation.Controller;
 import com.my_framework.www.annotation.RequestMapping;
 import com.my_framework.www.context.Impl.ApplicationContextImpl;
+import com.my_framework.www.utils.StringUtil;
 
 
 import javax.servlet.ServletConfig;
@@ -98,8 +99,12 @@ public class DispatcherServlet extends HttpServlet {
                     }
                     //映射URL
                     RequestMapping requestMapping = method.getAnnotation(RequestMapping.class);
+                    String value = requestMapping.value();
+                    if(StringUtil.isEmpty(value)){
+                        value=method.getName();
+                    }
                     // 像 /api/v1/users 或者/api/v1/users/123 这样的URL 都会被匹配到路径 /api/v1/users/*
-                    String regex = ("/" + baseUrl + "/" + requestMapping.value().replaceAll("\\*", ".*")).replaceAll("/+", "/");
+                    String regex = ("/" + baseUrl + "/" + value.replaceAll("\\*", ".*")).replaceAll("/+", "/");
                     Pattern pattern = Pattern.compile(regex);
                     handlerMappings.add(new HandlerMapping(controller, method, pattern));
                     System.out.println("Mapped " + regex + "," + method);
