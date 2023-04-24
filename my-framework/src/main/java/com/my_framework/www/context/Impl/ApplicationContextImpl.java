@@ -134,15 +134,23 @@ public class ApplicationContextImpl implements ApplicationContext {
                         break;
                     }
                 }
-            }else {
+            }
+            if(instance==null){
+                //没有被代理的类直接实例化
                 instance = clazz.newInstance();
             }
-            //获取AOP配置,FIXME：因为还有许多bug所以暂时未使用此功能，例如不能代理有依赖注入的对象
+            //获取AOP配置
             AdvisedSupport config = getAopConfig();
             config.setTargetClass(clazz);
+            //这个instance应该被注入，否则成员变量为空
             config.setTarget(instance);
             //符合PointCut的规则的话，将创建代理对象
             if(config.pointCutMatch()) {
+                //把这个对象封装到BeanWrapper中
+                BeanWrapper beanWrapper = new BeanWrapper(instance);
+                //注入,不会重复注入，因为被代理类不会返回
+                populateBean(beanWrapper);
+                config.setTarget(beanWrapper.getWrappedInstance());
                 //创建代理
                 instance = createProxy(config).getProxy();
             }
