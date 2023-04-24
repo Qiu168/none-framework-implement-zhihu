@@ -1,6 +1,8 @@
 package com.huangTaiQi.www.utils.sql;
 
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class SQLBuilder {
@@ -26,14 +28,20 @@ public class SQLBuilder {
         return this;
     }
     public SQLBuilder select(String... columns) {
-        for (String column : columns) {
-            this.columns.add(column);
-        }
+        this.columns.addAll(Arrays.asList(columns));
+        return this;
+    }
+    public SQLBuilder count(String column) {
+        columns.add("count("+column+")");
         return this;
     }
 
     public SQLBuilder where(String condition) {
         whereClause.add(condition+" = ? ");
+        return this;
+    }
+    public SQLBuilder blurWhere(String condition) {
+        whereClause.add(condition+" LIKE = ? ");
         return this;
     }
 
@@ -101,4 +109,6 @@ public class SQLBuilder {
         }
         return sql.toString();
     }
+
+
 }
