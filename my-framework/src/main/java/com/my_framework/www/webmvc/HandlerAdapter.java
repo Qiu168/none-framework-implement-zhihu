@@ -103,7 +103,7 @@ public class HandlerAdapter {
                 logger.log(Level.SEVERE,e.getMessage());
             }
             //将json字符串解析为Map
-            params = JSON.parseObject(sb.toString(), new TypeReference<Map<String, String[]>>() {});
+            params = JSON.parseObject(StringUtil.convertToJsonArray(sb.toString()), new TypeReference<Map<String, String[]>>() {});
         } else {
             //get请求直接获取参数
             params = request.getParameterMap();
@@ -198,7 +198,7 @@ public class HandlerAdapter {
     private Object parseStringValue(String value, Class<?> paramsType) {
         if (String.class == paramsType) {
             return value;
-        }else if (int.class == paramsType) {
+        }else if (int.class == paramsType || Integer.class == paramsType) {
             return CastUtil.castInt(value);
         } else if (Double.class == paramsType) {
             return CastUtil.castDouble(value);
