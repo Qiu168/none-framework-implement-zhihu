@@ -1,5 +1,8 @@
 package com.huangTaiQi.www.controller;
 
+import com.my_framework.www.annotation.RequestMapping;
+import com.my_framework.www.annotation.RequestParam;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -82,4 +85,10 @@ public interface IUserController {
      * @throws NoSuchAlgorithmException 异常
      */
     void resetPassword( String email, String emailCode, String password, String rePassword, HttpServletResponse response) throws SQLException, IOException, NoSuchAlgorithmException;
+
+    @RequestMapping
+    void getUser(@RequestParam("username") String username, HttpServletResponse response) throws Exception;
+
+    @RequestMapping
+    void getUserById(@RequestParam("userId") String id, HttpServletResponse response) throws Exception;
 }

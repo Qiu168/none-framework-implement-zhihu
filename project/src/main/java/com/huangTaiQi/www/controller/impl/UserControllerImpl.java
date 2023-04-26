@@ -119,4 +119,20 @@ public class UserControllerImpl extends BaseController implements IUserControlle
         response.getWriter().write(message);
     }
 
+    @Override
+    @RequestMapping
+    public void getUser(@RequestParam("username") String username, HttpServletResponse response) throws Exception {
+        String users=userService.getUser(username);
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(users);
+    }
+
+    @Override
+    @RequestMapping
+    public void getUserById(@RequestParam("userId") String id, HttpServletResponse response) throws Exception {
+        String user=userService.getUserById(id);
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(user);
+    }
+
 }
