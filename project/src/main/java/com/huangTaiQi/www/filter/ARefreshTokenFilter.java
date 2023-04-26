@@ -2,6 +2,7 @@ package com.huangTaiQi.www.filter;
 
 import com.huangTaiQi.www.model.dto.UserDTO;
 import com.huangTaiQi.www.utils.*;
+import com.my_framework.www.pool.DataBaseUtil;
 import com.my_framework.www.redis.JedisUtils;
 import redis.clients.jedis.Jedis;
 
@@ -50,6 +51,7 @@ public class ARefreshTokenFilter extends BaseFilter{
     protected void doAfterProcessing(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws SQLException {
         //请求结束后移除ThreadLocal中的值，防止影响。（内存泄漏
         UserHolder.removeUser();
+        DataBaseUtil.close();
         JedisUtils.close();
     }
 }
