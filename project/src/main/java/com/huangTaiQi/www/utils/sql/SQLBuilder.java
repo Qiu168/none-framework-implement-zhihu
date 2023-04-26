@@ -41,7 +41,7 @@ public class SQLBuilder {
         return this;
     }
     public SQLBuilder blurWhere(String condition) {
-        whereClause.add(condition+" LIKE = ? ");
+        whereClause.add(condition+" LIKE  ? ");
         return this;
     }
 
