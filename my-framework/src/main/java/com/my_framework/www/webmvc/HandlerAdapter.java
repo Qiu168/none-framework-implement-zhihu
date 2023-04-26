@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 import java.sql.SQLException;
@@ -91,6 +92,11 @@ public class HandlerAdapter {
         String postMethod="post";
         //获取提交表单数据
         Map<String, String[]> params;
+        try {
+            request.setCharacterEncoding("utf-8");
+        } catch (UnsupportedEncodingException e) {
+            throw new RuntimeException(e);
+        }
         if (postMethod.equalsIgnoreCase(methodType)) {
             //获取请求体
             StringBuilder sb = new StringBuilder();
