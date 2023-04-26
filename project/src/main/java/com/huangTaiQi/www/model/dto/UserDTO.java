@@ -12,10 +12,37 @@ public class UserDTO {
     private String email;
     private String avatar;
     private String introduce;
+    private Long questionCount;
+    private Long answerCount;
+    private Long commentCount;
     private Long fans;
     private Long followee;
     private Long blacklist;
     private Boolean gender;
+
+    public Long getQuestionCount() {
+        return questionCount;
+    }
+
+    public void setQuestionCount(Long questionCount) {
+        this.questionCount = questionCount;
+    }
+
+    public Long getAnswerCount() {
+        return answerCount;
+    }
+
+    public void setAnswerCount(Long answerCount) {
+        this.answerCount = answerCount;
+    }
+
+    public Long getCommentCount() {
+        return commentCount;
+    }
+
+    public void setCommentCount(Long commentCount) {
+        this.commentCount = commentCount;
+    }
 
     public Long getId() {
         return id;
@@ -100,16 +127,19 @@ public class UserDTO {
     @Override
     public String toString() {
         return "UserDTO{" +
-                "id=" + id +'\n'+
-                ", roleId=" + roleId +'\n'+
-                ", username='" + username + '\'' +'\n'+
-                ", email='" + email + '\'' +'\n'+
-                ", avatar='" + avatar + '\'' +'\n'+
-                ", introduce='" + introduce + '\'' +'\n'+
-                ", fans=" + fans +'\n'+
-                ", followee=" + followee +'\n'+
-                ", blacklist=" + blacklist +'\n'+
-                ", gender=" + gender +'\n'+
+                "id=" + id +
+                ", roleId=" + roleId +
+                ", username='" + username + '\'' +
+                ", email='" + email + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", introduce='" + introduce + '\'' +
+                ", questionCount=" + questionCount +
+                ", answerCount=" + answerCount +
+                ", commentCount=" + commentCount +
+                ", fans=" + fans +
+                ", followee=" + followee +
+                ", blacklist=" + blacklist +
+                ", gender=" + gender +
                 '}';
     }
 }
