@@ -13,10 +13,19 @@ public class QuestionEntity {
     private String avatar;
     private String title;
     private String content;
+    private String categoryName;
     private Integer categoryId;
     private Long answerCount;
     private Timestamp createTime;
     private Timestamp updateTime;
+
+    public String getCategoryName() {
+        return categoryName;
+    }
+
+    public void setCategoryName(String categoryName) {
+        this.categoryName = categoryName;
+    }
 
     public Long getAnswerCount() {
         return answerCount;
