@@ -17,13 +17,16 @@ public class ThreadLocalCleanListener implements ServletRequestListener {
         Thread thread = Thread.currentThread();
         Field threadLocalsField = Thread.class.getDeclaredField("threadLocals");
         threadLocalsField.setAccessible(true);
+        //获取当前线程的threadLocals字段的值。
         Object threadLocalsInThread = threadLocalsField.get(thread);
+        //使用反射获取ThreadLocalMap类。
         Class<?> threadLocalMapClass = Class
                 .forName("java.lang.ThreadLocal$ThreadLocalMap");
         Method removeInThreadLocalMap = threadLocalMapClass.getDeclaredMethod(
                 "remove", ThreadLocal.class);
         removeInThreadLocalMap.setAccessible(true);
-
+        //ThreadLocalMap是一个哈希表，它的底层实现是一个Entry数组，每个Entry包含一个ThreadLocal实例以及该线程上保存的变量。
+        //ThreadLocalMap的table字段就是这个Entry数组。
         Field tableField = threadLocalMapClass.getDeclaredField("table");
         tableField.setAccessible(true);
         Object table = tableField.get(threadLocalsInThread);
@@ -31,6 +34,7 @@ public class ThreadLocalCleanListener implements ServletRequestListener {
             Object entry = Array.get(table, i);
             Method getMethod = Reference.class.getDeclaredMethod("get");
             if (entry != null) {
+                //获取到具体的ThreadLocal
                 ThreadLocal<?> threadLocal = (ThreadLocal<?>) getMethod.invoke(entry);
                 removeInThreadLocalMap.invoke(threadLocalsInThread, threadLocal);
             }
