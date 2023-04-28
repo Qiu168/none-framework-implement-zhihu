@@ -57,7 +57,7 @@ public class BeanDefinitionReader {
                 for (Annotation annotation : annotations) {
                     Class<? extends Annotation> annotationType = annotation.annotationType();
                     //只考虑被@Component注解的class
-                    if (annotationType.isAnnotationPresent(Component.class)) {
+                    if (annotationType.isAnnotationPresent(Component.class)||annotation instanceof Component) {
                         //beanName有三种情况:
                         //1、默认是类名首字母小写
                         //2、自定义名字（这里暂不考虑）
