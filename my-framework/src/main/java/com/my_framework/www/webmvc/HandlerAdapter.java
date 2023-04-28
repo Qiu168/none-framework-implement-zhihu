@@ -47,8 +47,7 @@ public class HandlerAdapter {
             if(!access.authority()){
                 //如果没有权限
                 try {
-                    response.setStatus(403);
-                    response.sendRedirect("");
+                    response.getWriter().write(access.message());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
@@ -171,6 +170,7 @@ public class HandlerAdapter {
                 logger.log(Level.SEVERE,"不正常的调用，可能方法名错误或调用私有方法！ " +
                         "An error occurred in BaseServlet e = {0}", e);
             }
+            //获取真正引起的异常
             Throwable cause = e.getCause();
             if (cause instanceof SQLException) {
                 if (e.getMessage().contains("doesn't exist")) {
@@ -199,7 +199,6 @@ public class HandlerAdapter {
 
     /**
      * request中接收的参数都是string类型的，需要转换为controller中实际的参数类型
-     * 暂时只支持string、int、double类型
      */
     private Object parseStringValue(String value, Class<?> paramsType) {
         if (String.class == paramsType) {
