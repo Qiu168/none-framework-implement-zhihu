@@ -21,16 +21,19 @@
         <div class="collapse navbar-collapse" id="navbarNav">
             <ul class="navbar-nav me-auto">
                 <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" href="#">首页</a>
+                    <a class="nav-link active" aria-current="page" href="list.html">首页</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">问答</a>
+                    <a class="nav-link" href="#">收藏</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">动态</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">聊天室</a>
+                    <a class="nav-link" href="chatrooms.html">聊天室</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">历史记录</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">公告</a>
@@ -61,6 +64,7 @@
 
 </nav>
 <script>
+    let id;
     (function() {
         axios({
             method: 'get',
@@ -70,6 +74,8 @@
                 document.getElementById("userInfo").style.display = '';
                 document.getElementById("avatar").src = resp.data.avatar;
                 document.getElementById("username").innerHTML = resp.data.username;
+                id = resp.data.id;
+                document.getElementById("dropdownMenuLink").href="index.html#"+id;
             } else {
                 document.getElementById("isLogin").style.display = '';
             }

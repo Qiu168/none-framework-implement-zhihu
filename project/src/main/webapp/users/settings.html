@@ -30,7 +30,7 @@
 
     <div class="row">
 
-        <div th:replace="~{user/index::userShowPanel}"></div>
+        <div th:replace="~{chatRoomUser/index::userShowPanel}"></div>
 
         <div class="col-md-9 blog-main">
 
@@ -39,8 +39,8 @@
                 <form class="needs-validation" novalidate="" th:action="@{'/userinfo/update/'+${session.loginUser.getUid()}}" method="post">
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="nickname">用户昵称</label>
-                            <input type="text" th:value="${userInfo.getNickname()}" name="nickname" class="form-control" id="nickname" placeholder="遇见狂神说" required="">
+                            <label for="username">用户昵称</label>
+                            <input type="text" th:value="${userInfo.getNickname()}" name="username" class="form-control" id="username" placeholder="遇见狂神说" required="">
                         </div>
                         <div class="col-md-6 mb-3">
                             <label for="realname">真实姓名</label>
@@ -138,9 +138,9 @@
     }
     axios({
         method: 'get',
-        url:'/project_war/user/me'
+        url:'/project_war/chatRoomUser/me'
     }).then(function (resp){
-        document.getElementById("nickname").value=resp.data.username;
+        document.getElementById("username").value=resp.data.username;
         document.getElementById("introduce").value=resp.data.introduce;
         document.getElementById("email").value=resp.data.email;
     })

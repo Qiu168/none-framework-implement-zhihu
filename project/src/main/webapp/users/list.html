@@ -66,7 +66,9 @@
 <div id="app" >
 <m>
         <label for="search-box"></label><input type="text" id="search-box" placeholder="Search...">
-        <button id="search-btn" @click="searchByTitle">搜索</button>
+        <button id="search-btn" onclick="searchByTitle()">搜索</button>
+    <label for="search-box"></label><input type="text" id="search-chatRoomUser" placeholder="Search...">
+        <button id="chatRoomUser-btn" onclick="searchUser()">搜索用户</button>
 </m>
 <main role="main" class="container">
     <div class="row">
@@ -74,7 +76,7 @@
             <div class="my-3 p-3 bg-white rounded shadow-sm">
                 <div id="a"  >
                     <h6 class="border-bottom border-gray pb-2 mb-0">
-                        Q&A 此页累计：
+                        Q&A 累计：
                         <span id="total"></span>
                     </h6>
 
@@ -105,19 +107,19 @@
                     </div>
                     <nav aria-label="Page navigation example" class="mt-4">
                         <ul class="pagination justify-content-center pagination-sm">
-                            <li :class="{ 'page-item': true, 'disabled': pageParam.current!==1 }">
+                            <li :class="{ 'page-item': true, 'disabled': current!==1 }">
                                 <a class="page-link" @click.prevent="previousPage" disabled="pageParam.current!==1">Previous</a>
                             </li>
-                            <li v-if="pageParam.current!==1" class="page-item">
-                                <a class="page-link" @click.prevent="changePage(pageParam.current - 1)">{{ pageParam.current - 1 }}</a>
+                            <li v-if="current!==1" class="page-item">
+                                <a class="page-link" @click="changePage(current - 1)">{{ current - 1 }}</a>
                             </li>
                             <li class="page-item active">
-                                <a class="page-link">{{ pageParam.current }}</a>
+                                <a class="page-link"> current </a>
                             </li>
-                            <li v-if="pageParam.current!==pageParam.total/pageParam.pageSize+pageParam.total%pageParam.pageSize" class="page-item">
-                                <a class="page-link" @click.prevent="changePage(pageParam.current + 1)">{{ pageParam.current + 1 }}</a>
+                            <li v-if="current!==total/pageSize+total%pageSize" class="page-item">
+                                <a class="page-link" @click="changePage(current + 1)">{{ current + 1 }}</a>
                             </li>
-                            <li :class="{ 'page-item': true, 'disabled': pageParam.current!==pageParam.total/pageParam.pageSize+pageParam.total%pageParam.pageSize }">
+                            <li :class="{ 'page-item': true, 'disabled': current!==total/pageSize+total%pageSize }">
                                 <a class="page-link" @click="nextPage" disabled="pageParam.current!==pageParam.total/pageParam.pageSize+pageParam.total%pageParam.pageSize">Next</a>
                             </li>
                         </ul>
@@ -140,16 +142,17 @@
                 <p class="mb-0"> 社区公约: <br> 提问内容描述一定要清楚，回答尽量靠近主题，禁止瞎水社区，违者暂停账号使用! </p>
             </div>
 
-            <div class="p-4 my-3 bg-white rounded">
+            <div id="cate" class="p-4 my-3 bg-white rounded">
 <!--                种类查询-->
-                <a v-for="category in categories"
-                   @click="searchByCategoryId(category.categoryId)"
+<!--                <a v-for="category in categories"-->
+                <a
+                   @click="searchByCategoryId(category.id)"
                    class="badge badge-pill badge-primary mr-1">
-                    {{category.name}}
+                    123
                 </a>
             </div>
 
-            <div class="p-4 my-3 bg-white rounded">
+            <div  class="p-4 my-3 bg-white rounded">
                 <h4 class="font-italic">友情链接</h4>
                 <ol class="list-unstyled">
                     <li><a href="https://www.bilibili.com">Bilibili</a></li>
@@ -158,7 +161,6 @@
         </aside>
     </div>
 
-
 </main>
 </div>
 
@@ -166,7 +168,11 @@
 </html>
 <script>
 
-let total="";
+let total=0;
+let questions;
+let categories;
+let current=1;
+let pageSize=5;
 function getTotal(condition) {
     return new Promise((resolve, reject) => {
         axios({
@@ -183,28 +189,97 @@ function getTotal(condition) {
     });
 }
 
-   new Vue({
-        el: '#app',
-        data: {
-            pageParam: {
-                current: 1,
-                pageSize: 5,
-                total:0
-            },
-            questions: [],
-            categories:[]
-        },
-        methods: {
-            Paging: function() {
+            function getQuestionType() {
+              axios({
+                  method:'get',
+                  url:'/project_war_exploded/api/question/getCategory'
+              }).then(function (resp){
+                  categories=resp.data;
+                  let table="";
+                  for (let i = 0; i < categories.length; i++) {
+                      let category= categories[i];
+                      table+= "               <a    onclick=\"searchByCategoryId("+category.id+")\"\n" +
+                          "                   class=\"badge badge-pill badge-primary mr-1\">\n" +
+                          category.name+"\n" +
+                          "                </a>"
+                  }
+                  document.getElementById("cate").innerHTML=table;
+              })
+            }
+            function Paging(){
                 axios({
                     method:'get',
-                    url:'/project_war_exploded/api/question/getQuestion?page='+this.pageParam.current+'&size='+this.pageParam.pageSize
+                    url:'/project_war_exploded/api/question/getQuestion?page='+current+'&size='+pageSize
                 }).then(function(response) {
-                    this.questions = response.data;
-                    console.log(this.questions)
+                    questions = response.data;
+                    console.log(questions)
                     let tableData="";
-                    for (let i = 0; i < this.questions.length; i++) {
-                        let question = this.questions[i];
+                    for (let i = 0; i < questions.length; i++) {
+                        let question = questions[i];
+                        tableData += "<a href="+ 'index.html#'+question.userId+"><img src="+question.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
+                            question.username+"</a>"+
+                            "                        <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\" style=\"margin-left: 5px\">\n" +
+                            "                            <a href="+'read.html#' + question.id+"\n" +
+                            "                               class=\"text-dark font-weight-bold text-decoration-none d-block\">"+ question.title +"\n" +
+                            "                            </a>\n" +
+                            "                            <span :class="+(question.answerCount == 0 ? 'badge badge-warning' : 'badge badge-info')+">\n" +
+                            (question.answerCount == 0 ? '暂时还没有人回答' : '已有'+question.answerCount+'人回答此问题')+"\n" +
+                            "      </span>\n" +
+                            "                            <span>\n" +
+                            "        <svg class=\"bi bi-eye-fill\" width=\"1em\" height=\"1em\" viewBox=\"0 0 16 16\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
+                            "          <path d=\"M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z\"/>\n" +
+                            "          <path fill-rule=\"evenodd\" d=\"M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z\"/>\n" +
+                            "        </svg>\n" +
+                            "        类型:\n" +
+                            "        <span>"+ question.categoryName +"</span>\n" +
+                            "      </span>\n" +
+                            "                            <span class=\"badge badge-light float-right\">"+ formatDate(question.updateTime) +"</span>\n" +
+                            "                        </p>"+"<br>";
+                    }
+                    document.getElementById("ques").innerHTML=tableData;
+                    getTotal('').then(total1 => {
+                        console.log("222222222="+total1); // 这里可以获取到返回值
+                        total=total1;
+                    }).catch(error => {
+                        console.error(error);
+                    });
+
+                    console.log(this.total)
+                    console.log("to"+total)
+
+                }).catch(function(error) {
+                    console.log(error);
+                });
+            }
+             function changePage(page) {
+                current = page;
+                this.Paging();
+            }
+             function previousPage() {
+                if (current>1) {
+                    current--;
+                    Paging();
+                }
+            }
+            function nextPage() {
+                if (current<total) {
+                    current++;
+                    Paging();
+                }
+            }
+            function searchByTitle() {
+                let title = document.getElementById("search-box").value;
+                current=1;
+                title='&title='+title;
+                axios({
+                    method:'get',
+                    url:'/project_war_exploded/api/question/getQuestionByTitle?page='+current+'&size='+pageSize+title
+                }).then(function (resp) {
+                    questions=resp.data;
+                    console.log(questions)
+                    let tableData="";
+                    for (let i = 0; i < questions.length; i++) {
+                        let question = questions[i];
                         tableData += "<img src="+question.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
                             question.username+
                             "                        <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\" style=\"margin-left: 5px\">\n" +
@@ -226,65 +301,84 @@ function getTotal(condition) {
                             "                        </p>"+"<br>";
                     }
                     document.getElementById("ques").innerHTML=tableData;
-                    getTotal('').then(total1 => {
+
+                    console.log(this.total)
+                    console.log("to"+total)
+                })
+            }
+            function searchByCategoryId(categoryId) {
+                categoryId='&categoryId='+categoryId;
+                current=1;
+                axios({
+                    method:'get',
+                    url:'/project_war_exploded/api/question/getQuestionByCategory?page='+current+'&size='+pageSize+categoryId
+                }).then(function (resp) {
+                    if(resp.data==null){
+                        alert("还没有问题哦")
+                        return;
+                    }
+                   questions=resp.data;
+                    console.log(this.questions)
+                    let tableData="";
+                    for (let i = 0; i < questions.length; i++) {
+                        let question = questions[i];
+                        tableData += "<img src="+question.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
+                            question.username+
+                            "                        <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\" style=\"margin-left: 5px\">\n" +
+                            "                            <a href="+'read.html#' + question.id+"\n" +
+                            "                               class=\"text-dark font-weight-bold text-decoration-none d-block\">"+ question.title +"\n" +
+                            "                            </a>\n" +
+                            "                            <span :class="+(question.answerCount == 0 ? 'badge badge-warning' : 'badge badge-info')+">\n" +
+                            (question.answerCount == 0 ? '暂时还没有人回答' : '已有'+question.answerCount+'人回答此问题')+"\n" +
+                            "      </span>\n" +
+                            "                            <span>\n" +
+                            "        <svg class=\"bi bi-eye-fill\" width=\"1em\" height=\"1em\" viewBox=\"0 0 16 16\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
+                            "          <path d=\"M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z\"/>\n" +
+                            "          <path fill-rule=\"evenodd\" d=\"M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z\"/>\n" +
+                            "        </svg>\n" +
+                            "        类型id\n" +
+                            "        <span>"+ question.categoryId +"</span>\n" +
+                            "      </span>\n" +
+                            "                            <span class=\"badge badge-light float-right\">"+ formatDate(question.updateTime) +"</span>\n" +
+                            "                        </p>"+"<br>";
+                    }
+                    document.getElementById("ques").innerHTML=tableData;
+                    getTotal('ByCategory',"categoryId="+(i+1)).then(total1 => {
                         console.log("222222222="+total1); // 这里可以获取到返回值
-                        this.total=getTotal("")
                         total=total1;
                     }).catch(error => {
                         console.error(error);
                     });
-
-                    console.log(this.total)
                     console.log("to"+total)
-
-                }).catch(function(error) {
-                    console.log(error);
-                });
-            },
-            changePage: function(page) {
-                this.pageParam.current = page;
-                this.Paging();
-            },
-            previousPage: function() {
-                if (this.pageParam.current>1) {
-                    this.pageParam.current--;
-                    this.Paging();
-                }
-            },
-            nextPage: function() {
-                if (this.pageParam.current<this.pageParam.total) {
-                    this.pageParam.current++;
-                    this.Paging();
-                }
-            },
-            searchByTitle:function () {
-                let title = document.getElementById("search-box").value;
-                title='&title='+title;
-                axios({
-                    method:'get',
-                    url:'/project_war_exploded/api/question/getQuestionByTitle?page='+this.pageParam.current+'&size='+this.pageParam.pageSize+title
-                }).then(function (resp) {
-                    this.questions=resp.data;
-                    this.current=1;
-                    this.total=getTotal("ByTitle");
-                })
-            },
-            searchByCategoryId:function (categoryId) {
-                categoryId='&categoryId='+categoryId;
-                axios({
-                    method:'get',
-                    url:'/project_war_exploded/api/question/getQuestionByCategory?page='+this.pageParam.current+'&size='+this.pageParam.pageSize+categoryId
-                }).then(function (resp) {
-                    this.questions=resp.data;
-                    this.current=1;
-                    this.total=getTotal("ByCategory");
                 })
             }
-        },
-       mounted: function () {
+
+       window.onload= function () {
            this.Paging();
+           this.getQuestionType();
        }
-    });
+
+function searchUser() {
+    let username = document.getElementById("search-chatRoomUser").value;
+    current=1;
+    axios({
+        method:'get',
+        url:'/project_war_exploded/api/home/getUser?username='+username
+    }).then(function (resp) {
+        let users = resp.data;
+        console.log(users)
+        let tableData="";
+        for (let i = 0; i < users.length; i++) {
+            let chatRoomUser = users[i];
+            tableData += "<a href="+'index.html#' + chatRoomUser.id+"><img src="+chatRoomUser.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
+                chatRoomUser.username+ "</a><br>";
+        }
+        document.getElementById("ques").innerHTML=tableData;
+
+        console.log(this.total)
+        console.log("to"+total)
+    })
+}
 function formatDate(timestamp) {
     const date = new Date(timestamp);
     const year = date.getFullYear();
