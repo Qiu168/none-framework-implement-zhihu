@@ -13,4 +13,5 @@ import java.lang.annotation.*;
 @Documented
 public @interface Access {
     boolean authority() default true;
+    String message() default "没有权限";
 }
