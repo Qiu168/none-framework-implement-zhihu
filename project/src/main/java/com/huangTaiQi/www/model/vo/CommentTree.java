@@ -3,10 +3,7 @@ package com.huangTaiQi.www.model.vo;
 
 import com.huangTaiQi.www.model.entity.CommentEntity;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -22,12 +19,23 @@ public  class CommentTree {
         this.roots.add(root);
     }
 
-    public List<CommentTreeNode> createCommentTree(List<CommentEntity> commentList){
+    public List<CommentTreeNode> createCommentTree(List<CommentEntity> commentList,String sortOrder){
         //根据topId分组
         Map<Long, List<CommentEntity>> longListMap = groupCommentsByTid(commentList);
         for (Map.Entry<Long, List<CommentEntity>> longListEntry : longListMap.entrySet()) {
-            //生成评论树
-            CommentTreeNode commentTreeNode = buildCommentTree(longListEntry.getValue());
+            // 排序并生成评论树
+            List<CommentEntity> sortedComments;
+            // 如果前端要求倒序
+            if ("DESC".equalsIgnoreCase(sortOrder)) {
+                sortedComments = longListEntry.getValue().stream()
+                        .sorted(Comparator.comparing(CommentEntity::getCommentTime).reversed())
+                        .collect(Collectors.toList());
+            } else { // 否则按时间正序排序
+                sortedComments = longListEntry.getValue().stream()
+                        .sorted(Comparator.comparing(CommentEntity::getCommentTime))
+                        .collect(Collectors.toList());
+            }
+            CommentTreeNode commentTreeNode = buildCommentTree(sortedComments);
             setRoot(commentTreeNode);
         }
         return roots;

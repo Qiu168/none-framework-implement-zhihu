@@ -16,6 +16,7 @@ public class CommentTreeNode {
     private String content;
     private String username;
     private String avatar;
+    private Long commentTime;
     private List<CommentTreeNode> children;
 
 
@@ -24,8 +25,9 @@ public class CommentTreeNode {
      */
     public CommentTreeNode() {
     }
-    public CommentTreeNode(Long id, String content,String username,String avatar) {
+    public CommentTreeNode(Long id, String content,String username,String avatar,Long commentTime) {
         this.username=username;
+        this.commentTime=commentTime;
         this.avatar=avatar;
         this.id = id;
         this.content = content;
@@ -37,6 +39,7 @@ public class CommentTreeNode {
         this.username=comment.getUsername();
         this.content=comment.getContent();
         this.id=comment.getId();
+        this.commentTime=comment.getCommentTime();
         this.children=new ArrayList<>();
     }
 
@@ -87,6 +90,14 @@ public class CommentTreeNode {
 
     public void setChildren(List<CommentTreeNode> children) {
         this.children = children;
+    }
+
+    public Long getCommentTime() {
+        return commentTime;
+    }
+
+    public void setCommentTime(Long commentTime) {
+        this.commentTime = commentTime;
     }
 }
 
