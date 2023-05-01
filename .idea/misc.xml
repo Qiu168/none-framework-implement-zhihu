@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="EntryPointsManager">
-    <list size="2">
+    <list size="3">
       <item index="0" class="java.lang.String" itemvalue="com.my_framework.www.annotation.Controller" />
-      <item index="1" class="java.lang.String" itemvalue="javax.websocket.server.ServerEndpoint" />
+      <item index="1" class="java.lang.String" itemvalue="com.my_framework.www.annotation.Repository" />
+      <item index="2" class="java.lang.String" itemvalue="javax.websocket.server.ServerEndpoint" />
     </list>
   </component>
   <component name="ExternalStorageConfigurationManager" enabled="true" />
