@@ -4,7 +4,7 @@ package com.huangTaiQi.www.chatroom.service;
 
 import com.alibaba.fastjson.JSON;
 import com.huangTaiQi.www.chatroom.center.UserCenter;
-import com.huangTaiQi.www.chatroom.core.IOnlineUserRegistry;
+import com.huangTaiQi.www.chatroom.core.IOnlineUser;
 import com.huangTaiQi.www.chatroom.dao.ChatRoomUserDao;
 import com.huangTaiQi.www.chatroom.dao.MessageDao;
 import com.huangTaiQi.www.chatroom.model.*;
@@ -27,7 +27,7 @@ import static com.huangTaiQi.www.chatroom.constants.ChatroomConstants.GROUP_USER
  * @author 14629
  */
 @Service
-public class ChatRoomUserService implements IOnlineUserRegistry {
+public class ChatRoomUserService implements IOnlineUser {
     private final UserCenter userCenter = UserCenter.getInstance();
     @Autowired
     ChatRoomUserDao chatRoomUserDao;

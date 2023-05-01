@@ -4,14 +4,13 @@ package com.huangTaiQi.www.chatroom.core;
 
 import com.huangTaiQi.www.chatroom.model.OnlineUser;
 
-import java.io.IOException;
 import java.sql.SQLException;
 
 
 /**
  * @author 14629
  */
-public interface IOnlineUserRegistry {
+public interface IOnlineUser {
     /**
      * 上线
      * @param user 用户

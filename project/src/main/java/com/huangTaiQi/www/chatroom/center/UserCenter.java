@@ -2,7 +2,7 @@ package com.huangTaiQi.www.chatroom.center;
 
 
 
-import com.huangTaiQi.www.chatroom.core.IOnlineUserRegistry;
+import com.huangTaiQi.www.chatroom.core.IOnlineUser;
 import com.huangTaiQi.www.chatroom.model.OnlineUser;
 
 import java.io.IOException;
@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * @author 14629
  */
-public class UserCenter implements IOnlineUserRegistry {
+public class UserCenter implements IOnlineUser {
     private UserCenter() {}
 
     private static final UserCenter instance = new UserCenter();
