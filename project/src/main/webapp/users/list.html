@@ -48,7 +48,7 @@
             margin-right: 10px;
         }
     </style>
-    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>
+<!--    <script src="https://cdn.jsdelivr.net/npm/vue@2.6.14"></script>-->
 </head>
 <body style="background: #f2f2f2;">
 
@@ -67,8 +67,8 @@
 <m>
         <label for="search-box"></label><input type="text" id="search-box" placeholder="Search...">
         <button id="search-btn" onclick="searchByTitle()">搜索</button>
-    <label for="search-box"></label><input type="text" id="search-chatRoomUser" placeholder="Search...">
-        <button id="chatRoomUser-btn" onclick="searchUser()">搜索用户</button>
+    <label for="search-box"></label><input type="text" id="search-user" placeholder="Search...">
+        <button id="user-btn" onclick="searchUser()">搜索用户</button>
 </m>
 <main role="main" class="container">
     <div class="row">
@@ -172,7 +172,7 @@ let total=0;
 let questions;
 let categories;
 let current=1;
-let pageSize=5;
+let pageSize=2;
 function getTotal(condition) {
     return new Promise((resolve, reject) => {
         axios({
@@ -219,7 +219,7 @@ function getTotal(condition) {
                         tableData += "<a href="+ 'index.html#'+question.userId+"><img src="+question.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
                             question.username+"</a>"+
                             "                        <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\" style=\"margin-left: 5px\">\n" +
-                            "                            <a href="+'read.html#' + question.id+"\n" +
+                            "                            <a href="+'readQuestion.html#' + question.id+"\n" +
                             "                               class=\"text-dark font-weight-bold text-decoration-none d-block\">"+ question.title +"\n" +
                             "                            </a>\n" +
                             "                            <span :class="+(question.answerCount == 0 ? 'badge badge-warning' : 'badge badge-info')+">\n" +
@@ -283,7 +283,7 @@ function getTotal(condition) {
                         tableData += "<img src="+question.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
                             question.username+
                             "                        <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\" style=\"margin-left: 5px\">\n" +
-                            "                            <a href="+'read.html#' + question.id+"\n" +
+                            "                            <a href="+'readQuestion.html#' + question.id+"\n" +
                             "                               class=\"text-dark font-weight-bold text-decoration-none d-block\">"+ question.title +"\n" +
                             "                            </a>\n" +
                             "                            <span :class="+(question.answerCount == 0 ? 'badge badge-warning' : 'badge badge-info')+">\n" +
@@ -294,8 +294,8 @@ function getTotal(condition) {
                             "          <path d=\"M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z\"/>\n" +
                             "          <path fill-rule=\"evenodd\" d=\"M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z\"/>\n" +
                             "        </svg>\n" +
-                            "        类型id\n" +
-                            "        <span>"+ question.categoryId +"</span>\n" +
+                            "        类型\n" +
+                            "        <span>"+ question.categoryName +"</span>\n" +
                             "      </span>\n" +
                             "                            <span class=\"badge badge-light float-right\">"+ formatDate(question.updateTime) +"</span>\n" +
                             "                        </p>"+"<br>";
@@ -325,7 +325,7 @@ function getTotal(condition) {
                         tableData += "<img src="+question.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
                             question.username+
                             "                        <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\" style=\"margin-left: 5px\">\n" +
-                            "                            <a href="+'read.html#' + question.id+"\n" +
+                            "                            <a href="+'' + question.id+"readAnswer.html#\n" +
                             "                               class=\"text-dark font-weight-bold text-decoration-none d-block\">"+ question.title +"\n" +
                             "                            </a>\n" +
                             "                            <span :class="+(question.answerCount == 0 ? 'badge badge-warning' : 'badge badge-info')+">\n" +
@@ -359,7 +359,7 @@ function getTotal(condition) {
        }
 
 function searchUser() {
-    let username = document.getElementById("search-chatRoomUser").value;
+    let username = document.getElementById("search-user").value;
     current=1;
     axios({
         method:'get',
@@ -369,9 +369,9 @@ function searchUser() {
         console.log(users)
         let tableData="";
         for (let i = 0; i < users.length; i++) {
-            let chatRoomUser = users[i];
-            tableData += "<a href="+'index.html#' + chatRoomUser.id+"><img src="+chatRoomUser.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
-                chatRoomUser.username+ "</a><br>";
+            let user = users[i];
+            tableData += "<a href="+'index.html#' + user.id+"><img src="+user.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
+                user.username+ "</a><br>";
         }
         document.getElementById("ques").innerHTML=tableData;
 

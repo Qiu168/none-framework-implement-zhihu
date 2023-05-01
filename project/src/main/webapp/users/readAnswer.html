@@ -1,0 +1,323 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>问答</title>
+    <link rel="stylesheet" href="bootstrap.css">
+    <style>
+        .nav-underline .nav-link {
+            padding-top: .75rem;
+            padding-bottom: .75rem;
+            font-size: .875rem;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body style="background: #f2f2f2;">
+
+<!-- 导航栏 -->
+<div class="top">top</div>
+<script src="../js/axios.js"></script>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="../js/common.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    //在js中引入
+    $(document).ready(function () {
+        $('.top').load('header.html');
+
+    });
+</script>
+
+<main role="main" class="container mt-3 p-3 bg-white rounded">
+    <div class="row">
+        <div class="col-md-12 blog-main">
+            <div class="blog-post">
+                <h2 class="blog-post-title" id="question-title">title</h2>
+                <p class="blog-post-meta">
+                    <span id="question-time">time</span>
+                    by
+                    <img id="question-avatar" src="#" alt="avatar" style="border-radius: 5px " width="32" height="32">
+                    <a id="question-username" href="#">
+                        username</a>
+                    <span>
+                        <svg class="bi bi-eye-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+<path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+<path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+</svg>
+                        回答数：<b id="answerCount">123</b>
+                    </span>
+                    <!-- 自己写的文章可以编辑和删除 -->
+                    <!-- HTML code -->
+<!--                    <a id="delete-question-btn" class="float-right" style="color: red">-->
+<!--                        <svg class="bi bi-x-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">-->
+<!--                            <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>-->
+<!--                            <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>-->
+<!--                            <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>-->
+<!--                        </svg>-->
+<!--                        删除-->
+<!--                    </a>-->
+<!--                    <a id="edit-question-btn" class="float-right mr-3">-->
+<!--                        <svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">-->
+<!--                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
+<!--                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>-->
+<!--                        </svg>-->
+<!--                        修改-->
+<!--                    </a>-->
+                </p>
+            </div>
+
+            <hr style="margin-top: 18px">
+            <h1 id="title"></h1>
+            <img id="answer-avatar" src="#" alt="avatar" style="border-radius: 5px " width="32" height="32">
+            <a id="answer-username" href="#">username</a><button id="follow">关注</button><br>
+            <!--文章主体内容-->
+            <div id="doc-content">
+               123456
+            </div>
+
+        </div>
+            点赞:<button id="like" style="float:right">123</button>
+        <button onclick="previousPage()"  id="pre">上一个回答</button>
+        <button onclick="nextPage()" id="aft">下一个回答</button>
+        <div class="col-md-12 blog-main" style="margin-top: 20px">
+            <hr>
+        </div>
+
+        <div class="col-md-12 blog-main" style="margin-top: 20px">
+            <form th:action="@{'/question/comment/'+${question.getQid()}}" method="post">
+                <div class="form-group">
+                    <textarea placeholder="评论" required name="content" class="form-control" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary float-right">提交评论</button>
+            </form>
+        </div>
+
+        <button onclick="ascGetComment()">时间顺序</button>
+        <button onclick="descGetComment()">时间逆序</button>
+        <div class="col-md-12 blog-main" style="margin-top: 20px">
+            <div class="my-3 p-3 bg-white rounded shadow-sm">
+                <h6 class="border-bottom border-gray pb-2 mb-0">评论列表</h6>
+
+                <div id="comment-list" class="media text-muted pt-3">
+                    <img src="" style="border-radius: 5px;margin-right: 5px " width="32" height="32">
+                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                        <strong class="d-block text-gray-dark" >username</strong>
+                        <span >content</span>
+                        <span  class="badge badge-light float-right">time</span>
+                    </p>
+                </div>
+            </div>
+        </div>
+        <div id="no-comment"  class="col-md-12 blog-main" style="display: none">
+            <div class="my-3 p-3 bg-white rounded shadow-sm">
+                <h6 class="pb-2 mb-0 text-center">emmm... 这里暂时还没有评论....</h6>
+            </div>
+        </div>
+    </div>
+
+
+</main>
+
+
+<script>
+    let answerCount;
+    let questionId;
+    let page=1;
+    let size=1;
+    let sortOrder="asc";
+    let answerId = window.location.hash.substring(1);
+    let answerUserId;
+    function getQuestion() {
+        axios({
+            method: 'get',
+            url:'/project_war_exploded/api/question/getQuestionByAnswerId?answerId='+answerId
+        }).then(function (resp){
+            let question = resp.data;
+            questionId=question.id;
+            document.getElementById("question-title").innerHTML=question.title;
+            document.getElementById("question-time").innerHTML=question.updateTime;
+            document.getElementById("answerCount").innerHTML=question.answerCount;
+            answerCount=question.answerCount;
+            document.getElementById("question-username").innerHTML=question.username;
+            document.getElementById("question-username").href='index.html#'+question.userId;
+            document.getElementById("question-avatar").src=question.avatar;
+        })
+    }
+    function getAnswerByAnswerId() {
+        axios({
+            method: 'get',
+            url:'/project_war_exploded/api/answer/getAnswerByAnswerId?answerId='+answerId
+        }).then(function (resp){
+            let answer = resp.data;
+            document.getElementById("title").innerHTML=answer.title;
+            document.getElementById("answer-avatar").innerHTML=answer.avatar;
+            document.getElementById("answer-username").innerHTML=answer.username;
+            document.getElementById("answer-username").href='index.html#'+answer.userId;
+            answerUserId=answer.userId;
+            document.getElementById("doc-content").innerHTML=answer.content;
+            document.getElementById("like").innerHTML=answer.likes;
+        })
+    }
+
+    function previousPage() {
+        if (page>1) {
+            page--;
+            getAnswerByQuestionId(page);
+        }
+    }
+    function nextPage() {
+        if (page<answerCount) {
+            page++;
+            getAnswerByQuestionId(page);
+        }
+    }
+
+    function getAnswerByQuestionId(page){
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/answer/getAnswerByQuestionId?id='+questionId+'&page='+page+"&size="+size
+        }).then(function (resp){
+            let answer = resp.data;
+            document.getElementById("title").innerHTML=answer.title;
+            document.getElementById("answer-avatar").innerHTML=answer.avatar;
+            document.getElementById("answer-username").innerHTML=answer.username;
+            document.getElementById("answer-username").href='index.html#'+answer.userId;
+            document.getElementById("doc-content").innerHTML=answer.content;
+            document.getElementById("like").innerHTML=answer.likes;
+            answerId=answer.id;
+        })
+    }
+    function descGetComment(){
+        sortOrder="DESC";
+        getCommentTree();
+    }
+    function ascGetComment(){
+        sortOrder="ASC";
+        getCommentTree();
+    }
+    function getCommentTree(){
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/comment/getComment?answerId='+answerId+"&sortOrder="+sortOrder
+        }).then(function (resp){
+            let commentTree=resp.data;
+            if(commentTree==null){
+                document.getElementById("no-comment").style.display="";
+            }else{
+                renderCommentTree(commentTree);
+            }
+        })
+    }
+
+    // 渲染评论树到页面
+    function renderCommentTree(commentTree, container = $('#comment-list'),parentName="") {
+        // 如果当前节点为空，直接返回
+        if (!commentTree || !commentTree.length) {
+            return;
+        }
+
+        // 遍历当前节点，将其渲染到页面中
+        const ul = $('<ul>');
+        commentTree.forEach(comment => {
+            const li = $('<li>');
+            li.append(
+                `<div onclick="comment(${comment.id})"><img src="${comment.avatar}" style="border-radius: 5px;margin-right: 5px " width="32" height="32">
+                <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+                    <strong class="d-block text-gray-dark">${comment.username}</strong>`+(parentName==""?"":('apply to' +parentName))+`
+                    <span>${comment.content}</span>
+                    <span class="badge badge-light float-right">`+formatDate(comment.commentTime)+`</span>
+                </p></div>`
+                +`<div id="comment-form-${comment.id}" style="display: none;">
+                   <div class="form-group">
+                     <textarea id="comment-content-${comment.id}" required name="content" class="form-control" rows="3"></textarea>
+                   </div>
+                   <button onclick="sendComment(${comment.id})" class="btn btn-primary float-right">回复评论</button>
+                  </div>`
+            );
+            renderCommentTree(comment.children, li,comment.username);
+            ul.append(li);
+        });
+        container.append(ul);
+    }
+    function comment(id){
+        document.getElementById("comment-form-"+id).style.display="";
+    }
+    function sendComment(id){
+        let innerHTML = document.getElementById("comment-content-"+id).innerHTML;
+        axios({
+            method:'post',
+            url:'/project_war_exploded/api/comment/sendComment',
+            data:{
+                content:innerHTML,
+                pid:id
+            }
+        }).then(function (resp){
+            alert("评论成功");
+        }).error(function (){
+            alert("失败")
+        })
+    }
+    // jQuery code
+    $(document).ready(function() {
+        // Delete question button click event
+        $('#delete-question-btn').on('click', function() {
+            if (!confirm('你确认要删除吗？')) return false;
+            $.ajax({
+                method: 'DELETE',
+                url: '/question/delete/' + authorId + '/' + questionId,
+                success: function(data) {
+                    // Handle success response
+                    console.log('Question deleted successfully');
+                },
+                error: function(jqXHR, textStatus, errorThrown) {
+                    // Handle error response
+                    console.log('Error deleting question:', errorThrown);
+                }
+            });
+        });
+
+        // Edit question button click event
+        $('#edit-question-btn').on('click', function() {
+            window.location.href = '/question/editor/' + authorId + '/' + questionId;
+        });
+    });
+    window.onload=function () {
+        getAnswerByAnswerId();
+        getQuestion();
+        getCommentTree();
+        isFollow();
+    }
+    document.getElementById("follow").onclick=function () {
+        follow();
+    }
+    function isFollow(){
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/follow/isFollowed?id='+userId
+        }).then(function (resp){
+            let data = resp.data;
+            console.log(data)
+            if(data.isSuccess=="true"){
+                document.getElementById("follow").innerHTML="已关注";
+            }
+        })
+    }
+    function follow() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/follow/follow?id='+answerUserId
+        }).then(function (resp){
+            let data = resp.data;
+            if(data.isSuccess=="true"){
+                document.getElementById("follow").innerHTML=data.message;
+            }else{
+                alert(data.message)
+            }
+        })
+    }
+</script>
+
+</body>
+</html>

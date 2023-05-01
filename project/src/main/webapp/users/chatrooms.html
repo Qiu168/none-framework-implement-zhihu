@@ -25,18 +25,20 @@
 <script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script>
     let id;
-    let token =sessionStorage.getItem("token");
+    let Token =sessionStorage.getItem("token");
   function getChatroom(){
       axios({
           method:'get',
-          url:"/project_war_exploded/api/chatroom/getChatroomByUid?uid="+id
+          url:"/project_war_exploded/api/chatroom/getChatroomByUid?uid="+id,
+          async:false
       }).then(function (resp){
           let chatRooms=resp.data;
           let html="";
           if(chatRooms==null){
               html="还没有群聊哦";
           }else{
-              for (let chatroom = 0; i < chatRooms.length; i++) {
+              for (let i = 0; i < chatRooms.length; i++) {
+                  let chatroom=chatRooms[i];
                   let href1="chatRoom.html#"+chatroom.id;
                   html+="<a href="+href1+">"+chatroom.name+"</a><br>"
               }
@@ -53,7 +55,7 @@
       }).then(function (resp){
           let data = resp.data;
           let href1="chatRoom.html#"+data.id;
-          innerHTML+="<a href="+href1+">"+data.name+"</a><br>";
+          innerHTML+="<a href="+href1+">群聊："+data.name+"</a><br>";
           document.getElementById("chatroom").innerHTML=innerHTML;
       })
   }
@@ -67,12 +69,13 @@
               location.href="login.html"
           }else{
               id=resp.data.id
+              getChatroom();
           }
       })
   }
   window.onload=function () {
       getUser();
-      getChatroom();
+
   }
 </script>
 </html>
