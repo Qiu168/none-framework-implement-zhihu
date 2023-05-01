@@ -61,7 +61,7 @@ public class ChatRoomUserDao {
 
     public List<Chatroom> getChatroomByUid(String uid) throws Exception {
         String sql=new SQLBuilder("chat_users A")
-                .select("A.chatroom_id")
+                .select("A.chatroom_id id")
                 .select("B.name")
                 .join("chatroom B","A.chatroom_id=B.id")
                 .buildSelect();
