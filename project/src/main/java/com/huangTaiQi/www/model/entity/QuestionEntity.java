@@ -9,6 +9,7 @@ import java.sql.Timestamp;
 public class QuestionEntity {
     private Long id;
     private Long userId;
+    private Integer state;
     private String username;
     private String avatar;
     private String title;
@@ -18,6 +19,14 @@ public class QuestionEntity {
     private Long answerCount;
     private Timestamp createTime;
     private Timestamp updateTime;
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
     public String getCategoryName() {
         return categoryName;

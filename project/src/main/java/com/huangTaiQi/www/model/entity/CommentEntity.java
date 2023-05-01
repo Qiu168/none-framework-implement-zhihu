@@ -6,14 +6,31 @@ package com.huangTaiQi.www.model.entity;
 @SuppressWarnings("ALL")
 public class CommentEntity {
     private Long id;
+    private Integer state;
     private Long answerId;
     private Long userId;
     private String username;
     private String avatar;
     private Long commentTime;
     private String content;
+
+    /**
+     * 父评论的id
+     */
     private Long pid;
+
+    /**
+     * 一级评论的id
+     */
     private Long topId;
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
     public Long getId() {
         return id;

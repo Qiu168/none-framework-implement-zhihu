@@ -6,12 +6,30 @@ package com.huangTaiQi.www.model.entity;
 @SuppressWarnings("ALL")
 public class AnswerEntity {
     private Long id;
+    private Long questionId;
     private Long userId;
+    private Integer state;
     private String username;
     private String avatar;
     private String title;
     private String content;
     private Long likes;
+
+    public Long getQuestionId() {
+        return questionId;
+    }
+
+    public void setQuestionId(Long questionId) {
+        this.questionId = questionId;
+    }
+
+    public Integer getState() {
+        return state;
+    }
+
+    public void setState(Integer state) {
+        this.state = state;
+    }
 
     public Long getId() {
         return id;
