@@ -68,4 +68,20 @@ public interface UserService {
      * @throws SQLException 异常
      */
     String resetPassword(String email, String emailCode, String password, String rePassword) throws NoSuchAlgorithmException, SQLException;
+
+    /**
+     * 根据用户名模糊搜索用户
+     * @param username 用户名
+     * @return 搜索出的用户集合
+     * @throws Exception 异常
+     */
+    String getUser(String username) throws Exception;
+
+    /**
+     * 根据id获取用户
+     * @param id id
+     * @return 用户
+     * @throws Exception 异常
+     */
+    String getUserById(String id) throws Exception;
 }

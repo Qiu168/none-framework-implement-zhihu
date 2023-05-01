@@ -1,5 +1,6 @@
 package com.huangTaiQi.www.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.huangTaiQi.www.dao.impl.UserDao;
 import com.huangTaiQi.www.model.dto.UserDTO;
 import com.huangTaiQi.www.model.entity.UserEntity;
@@ -18,15 +19,18 @@ import java.awt.image.BufferedImage;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 
 import static com.huangTaiQi.www.constant.ImgConstants.CODES;
 import static com.huangTaiQi.www.constant.JedisConstants.*;
 import static com.huangTaiQi.www.constant.MailConstants.MAIL_CONTENT;
 import static com.huangTaiQi.www.constant.MailConstants.MAIL_TITLE;
+import static com.huangTaiQi.www.constant.RegexConstants.*;
 import static com.huangTaiQi.www.constant.ResponseConstants.*;
 import static com.huangTaiQi.www.constant.SessionConstants.IMG_CODE;
 
@@ -37,12 +41,9 @@ import static com.huangTaiQi.www.constant.SessionConstants.IMG_CODE;
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    public UserDao userDao;
+    UserDao userDao;
+
     Logger logger= Logger.getLogger(UserServiceImpl.class.getName());
-    public UserDao getUserDao(){
-        return userDao;
-    }
-    public String str="123";
     public BufferedImage imgCode(HttpSession session) {
         //使用验证码类，生成验证码类对象
         ImgVerifyCode ivc = new ImgVerifyCode();
@@ -57,7 +58,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public String sendEmail(String email,String imgCode,String code){
         //校验邮箱，不正确返回错误信息
-        if (!RegexUtils.check(RegexUtils.EMAIL_REGEX,email)) {
+        if (!RegexUtils.check(EMAIL_REGEX,email)) {
             // 如果不符合，返回错误信息
             return WRONG_EMAIL;
         }
@@ -87,7 +88,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public boolean hasEmail(String email) throws Exception {
-        UserEntity userEntity = getUserDao().selectByEmail(email);
+        UserEntity userEntity = userDao.selectByEmail(email);
         return userEntity!=null;
     }
 
@@ -100,7 +101,7 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         //验证成功，存入数据进数据库
-        getUserDao().setEmailAndPassword(email, Md5Utils.encode(password));
+        userDao.setEmailAndPassword(email, Md5Utils.encode(password));
         return SUCCESS_REGISTER;
     }
 
@@ -112,12 +113,12 @@ public class UserServiceImpl implements UserService {
         if(imgCode ==null||!imgCode.equalsIgnoreCase(code)){
             return WRONG_CODE;
         }
-        if(RegexUtils.check(RegexUtils.EMAIL_REGEX,usernameOrEmail)){
+        if(RegexUtils.check(EMAIL_REGEX,usernameOrEmail)){
             //邮箱登录
-            user = getUserDao().selectByEmailAndPassword(usernameOrEmail, Md5Utils.encode(password));
+            user = userDao.selectByEmailAndPassword(usernameOrEmail, Md5Utils.encode(password));
         }else {
             //用户名登录
-            user=getUserDao().selectByUsernameAndPassword(usernameOrEmail, Md5Utils.encode(password));
+            user=userDao.selectByUsernameAndPassword(usernameOrEmail, Md5Utils.encode(password));
         }
         // 判断用户是否存在
         if (user == null) {
@@ -154,7 +155,7 @@ public class UserServiceImpl implements UserService {
             return user;
         }
         //验证成功，重置密码
-        getUserDao().alterPassword(email, Md5Utils.encode(password));
+        userDao.alterPassword(email, Md5Utils.encode(password));
         return SUCCESS_REGISTER;
     }
     private String verifyUser(String email, String emailCode, String password, String rePassword){
@@ -165,10 +166,24 @@ public class UserServiceImpl implements UserService {
             //验证码过期或错误,返回提示信息
             return WRONG_EMAIL_CODE;
         }
-        if(password==null||!RegexUtils.check(RegexUtils.PASSWORD_REGEX,password)|| !password.equals(rePassword)){
+        if(password==null||!RegexUtils.check(PASSWORD_REGEX,password)|| !password.equals(rePassword)){
             //检查密码是否为空，正则判断长度，是否两个密码相同
             return WRONG_PASSWORD;
         }
         return null;
+    }
+
+    @Override
+    public String getUser(String username) throws Exception {
+        List<UserDTO> users = userDao.getUser(username)
+                .stream()
+                .map(user -> BeanUtil.copyProperties(user, UserDTO.class))
+                .collect(Collectors.toList());
+        return JSON.toJSONString(users);
+    }
+    @Override
+    public String getUserById(String id) throws Exception {
+        UserDTO userDTO = BeanUtil.copyProperties(userDao.getUserById(id), UserDTO.class);
+        return  JSON.toJSONString(userDTO);
     }
 }
