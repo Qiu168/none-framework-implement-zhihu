@@ -11,6 +11,7 @@ import com.my_framework.www.annotation.Repository;
 
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @author 14629
@@ -18,7 +19,7 @@ import java.sql.SQLException;
 @Repository
 public class UserDao implements IUserDao {
     private final Connection connection = DataBaseUtil.getConnection();
-    BaseDao baseDao=new BaseDao(connection);
+    private final BaseDao baseDao=new BaseDao(connection);
 
     @Override
     public void setEmailAndPassword(String email, String password) throws SQLException {
@@ -66,5 +67,21 @@ public class UserDao implements IUserDao {
                 .where("email")
                 .buildUpdate();
         baseDao.updateCommon(sql,encode,email);
+    }
+
+    public List<UserEntity> getUser(String username) throws Exception {
+        String sql=new SQLBuilder("user")
+                .select("*")
+                .blurWhere("username")
+                .buildSelect();
+        return baseDao.selectByParams(sql,UserEntity.class,"%"+username+"%");
+    }
+
+    public UserEntity getUserById(String id) throws Exception {
+        String sql=new SQLBuilder("user")
+                .select("*")
+                .where("id")
+                .buildSelect();
+        return baseDao.selectOne(sql, UserEntity.class,id);
     }
 }
