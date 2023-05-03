@@ -267,7 +267,7 @@
                 tableData += "<a href="+ 'index.html#'+question.userId+"><img src="+question.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
                     question.username+"</a>"+
                     "                        <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\" style=\"margin-left: 5px\">\n" +
-                    "                            <a href="+'' + question.id+"readAnswer.html#\n" +
+                    "                            <a href="+ 'readQuestion.html#'+question.id+"\n"+
                     "                               class=\"text-dark font-weight-bold text-decoration-none d-block\">"+ question.title +"\n" +
                     "                            </a>\n" +
                     "                            <span :class="+(question.answerCount == 0 ? 'badge badge-warning' : 'badge badge-info')+">\n" +

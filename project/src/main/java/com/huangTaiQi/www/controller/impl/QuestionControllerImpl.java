@@ -80,5 +80,18 @@ public class QuestionControllerImpl extends BaseController implements IQuestionC
         response.getWriter().write(category);
     }
 
+    @Override
+    @RequestMapping
+    public void getQuestionById(@RequestParam("id") String id, HttpServletResponse response) throws Exception {
+        String question = questionService.getQuestionById(id);
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(question);
+    }
+    @RequestMapping
+    public void getQuestionByAnswerId(@RequestParam("answerId") String answerId,HttpServletResponse response) throws Exception {
+        String question = questionService.getQuestionByAnswerId(answerId);
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(question);
+    }
 
 }

@@ -13,6 +13,13 @@
             font-size: .875rem;
             color: #6c757d;
         }
+        .text-container {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;  /* 控制到第3行，根据需要更改 */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body style="background: #f2f2f2;">
@@ -36,46 +43,48 @@
         <div class="col-md-12 blog-main">
 
             <div class="blog-post">
-                <h2 class="blog-post-title" th:text="${question.getTitle()}"></h2>
+                <h2 class="blog-post-title" id="question-title">title</h2>
                 <p class="blog-post-meta">
-                    <span th:text="${#dates.format(question.getGmtUpdate(),'yyyy-MM-dd')}"></span>
+                    <span id="question-time">time</span>
                     by
-                    <a href="#" th:text="${question.getAuthorName()}"></a>
+                    <img id="question-avatar" src="#" alt="avatar" style="border-radius: 5px " width="32" height="32">
+                    <a id="question-username" href="#">
+                        username</a>
                     <span>
                         <svg class="bi bi-eye-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
 <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
 <path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
 </svg>
-                        [[${question.getViews()}]]
+                        回答数：<b id="questionCount">123</b>
+                        <a id="question-category"></a>
                     </span>
                     <!-- 自己写的文章可以编辑和删除 -->
-                    <a th:if="${session.loginUser.getUid()==question.getAuthorId()}"
-                       class="float-right" style="color: red"
-                       th:href="@{'/question/delete/'+${session.loginUser.getUid()}+'/'+${question.getQid()}}"
-                       onclick="if(!confirm('你确认要删除吗？')) return false;">
-                        <svg class="bi bi-x-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>
-                            <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>
-                            <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>
-                        </svg>
-                        删除
-                    </a>
-                    <a th:if="${session.loginUser.getUid()==question.getAuthorId()}"
-                       class="float-right mr-3"
-                       th:href="@{'/question/editor/'+${session.loginUser.getUid()}+'/'+${question.getQid()}}">
-                        <svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>
-                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>
-                        </svg>
-                        编辑
-                    </a>
+<!--                    <a th:if="${session.loginUser.getUid()==question.getAuthorId()}"-->
+<!--                       class="float-right" style="color: red"-->
+<!--                       th:href="@{'/question/delete/'+${session.loginUser.getUid()}+'/'+${question.getQid()}}"-->
+<!--                       onclick="if(!confirm('你确认要删除吗？')) return false;">-->
+<!--                        <svg class="bi bi-x-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">-->
+<!--                            <path fill-rule="evenodd" d="M14 1H2a1 1 0 0 0-1 1v12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V2a1 1 0 0 0-1-1zM2 0a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V2a2 2 0 0 0-2-2H2z"/>-->
+<!--                            <path fill-rule="evenodd" d="M11.854 4.146a.5.5 0 0 1 0 .708l-7 7a.5.5 0 0 1-.708-.708l7-7a.5.5 0 0 1 .708 0z"/>-->
+<!--                            <path fill-rule="evenodd" d="M4.146 4.146a.5.5 0 0 0 0 .708l7 7a.5.5 0 0 0 .708-.708l-7-7a.5.5 0 0 0-.708 0z"/>-->
+<!--                        </svg>-->
+<!--                        删除-->
+<!--                    </a>-->
+<!--                    <a th:if="${session.loginUser.getUid()==question.getAuthorId()}"-->
+<!--                       class="float-right mr-3"-->
+<!--                       th:href="@{'/question/editor/'+${session.loginUser.getUid()}+'/'+${question.getQid()}}">-->
+<!--                        <svg class="bi bi-pencil-square" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">-->
+<!--                            <path d="M15.502 1.94a.5.5 0 0 1 0 .706L14.459 3.69l-2-2L13.502.646a.5.5 0 0 1 .707 0l1.293 1.293zm-1.75 2.456l-2-2L4.939 9.21a.5.5 0 0 0-.121.196l-.805 2.414a.25.25 0 0 0 .316.316l2.414-.805a.5.5 0 0 0 .196-.12l6.813-6.814z"/>-->
+<!--                            <path fill-rule="evenodd" d="M1 13.5A1.5 1.5 0 0 0 2.5 15h11a1.5 1.5 0 0 0 1.5-1.5v-6a.5.5 0 0 0-1 0v6a.5.5 0 0 1-.5.5h-11a.5.5 0 0 1-.5-.5v-11a.5.5 0 0 1 .5-.5H9a.5.5 0 0 0 0-1H2.5A1.5 1.5 0 0 0 1 2.5v11z"/>-->
+<!--                        </svg>-->
+<!--                        编辑-->
+<!--                    </a>-->
                 </p>
             </div>
 
             <hr style="margin-top: 18px">
 
-            <!--文章主体内容-->
-            <div id="doc-content">
+            <div id="question-content">
                 123
             </div>
 
@@ -84,34 +93,13 @@
         <div class="col-md-12 blog-main" style="margin-top: 20px">
             <hr>
         </div>
-
-        <div class="col-md-12 blog-main"  style="margin-top: 20px">
-            <form th:action="@{'/question/comment/'+${question.getQid()}}" method="post">
-                <div class="form-group">
-                    <textarea required name="content" class="form-control" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary float-right">提交评论</button>
-            </form>
-        </div>
-
-        <div th:if="${commentList.size()!=0}" class="col-md-12 blog-main" style="margin-top: 20px">
-            <div class="my-3 p-3 bg-white rounded shadow-sm">
-                <h6 class="border-bottom border-gray pb-2 mb-0">评论列表</h6>
-
-                <div class="media text-muted pt-3">
-                    <img src="" style="border-radius: 5px;margin-right: 5px " width="32" height="32">
-                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                        <strong class="d-block text-gray-dark" >username</strong>
-                        <span >content</span>
-                        <span  class="badge badge-light float-right">time</span>
-                    </p>
-                </div>
+        <p><button>点赞排序</button><button>时间排序</button></p>
+        <div id="answer">
+            <br><br><img src="" alt="user"><a>username</a><br>
+            <div id="answer-content">
+                123
             </div>
-        </div>
-        <div th:if="${commentList.size()==0}" class="col-md-12 blog-main" style="margin-top: 20px">
-            <div class="my-3 p-3 bg-white rounded shadow-sm">
-                <h6 class="pb-2 mb-0 text-center">emmm... 这里暂时还没有评论....</h6>
-            </div>
+            多少点赞
         </div>
 
     </div>
@@ -122,7 +110,54 @@
 
 
 <script >
-
+    let questionId = window.location.hash.substring(1);
+    function getQuestion() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/question/getQuestionById?id='+questionId
+        }).then(function (resp){
+            let question=resp.data;
+            console.log(question)
+            document.getElementById("question-avatar").src=question.avatar;
+            document.getElementById("question-username").innerHTML=question.username;
+            document.getElementById("question-username").href="index.html#"+question.id;
+            document.getElementById("questionCount").innerHTML=question.answerCount;
+            document.getElementById("question-time").innerHTML=formatDate(question.updateTime);
+            document.getElementById("question-content").innerHTML=question.content;
+            document.getElementById("question-title").innerHTML=question.title;
+            document.getElementById("question-category").innerHTML=question.categoryName;
+        })
+    }
+    function getAnswer(){
+        axios({
+            method: 'get',
+            url:'/project_war_exploded/api/answer/getAnswerByQuestionId?id='+questionId
+        }).then(function (resp){
+            let answers=resp.data;
+            let html="";
+            for(let i=0;i<answers.length;i++){
+                let answer = answers[i];
+                console.log(answer)
+                html+="<a href="+"index.html#"+ answer.userId+"\n" +
+                    "class=\"text-dark font-weight-bold text-decoration-none d-block\">" +
+                    "<img src="+answer.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
+                    answer.username+"</a>"+
+                " <a href="+'readAnswer.html#'+answer.id+"><p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\" style=\"margin-left: 5px\"><b>\n" +
+                 answer.title +"</b>\n" +
+                "<br>\n" +
+                " <span class='text-container'>\n" +
+                    answer.content+
+                "      </span><br>\n" +
+                    "<small>like:"+answer.likes+"</small>"+
+                "                        </p></a>"+"<br><br>";
+            }
+            document.getElementById("answer").innerHTML=html;
+        })
+    }
+    window.onload=function (){
+        getAnswer();
+        getQuestion();
+    }
 </script>
 
 </body>

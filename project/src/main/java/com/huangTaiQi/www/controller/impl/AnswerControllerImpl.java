@@ -24,4 +24,16 @@ public class AnswerControllerImpl extends BaseController implements IAnswerContr
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(json);
     }
+    @RequestMapping
+    public void getAnswerByQuestionId(@RequestParam("id") String questionId,HttpServletResponse response) throws Exception {
+        String answer = answerService.getAnswerByQuestionId(questionId);
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(answer);
+    }
+    @RequestMapping
+    public void getAnswerById(@RequestParam("answerId") String id,HttpServletResponse response) throws Exception {
+        String answer = answerService.getAnswerById(id);
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(answer);
+    }
 }

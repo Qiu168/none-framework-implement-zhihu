@@ -28,12 +28,13 @@ public class CommentDao implements ICommentDao {
     }
 
     public void addComment(String content, String pid, String tid) throws SQLException {
-        String sql=new SQLBuilder("comment")
-                .insert("content")
-                .insert("pid")
-                .insert("top_id")
-                .buildInsert();
-        baseDao.updateCommon(sql,content,pid,tid);
+//        String sql=new SQLBuilder("comment")
+//                .insert("content")
+//                .insert("pid")
+//                .insert("top_id")
+//                .buildInsert();
+        String sql="INSERT INTO comment(content,pid,top_id) VALUES (?,?,"+tid+")";
+        baseDao.updateCommon(sql,content,pid);
     }
 
     public List<CommentEntity> getCommentByAnswerId(String answerId) throws Exception {

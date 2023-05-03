@@ -51,6 +51,6 @@ public class FollowDao {
                 .where("followee_id")
                 .buildSelect();
         List<FollowEntity> followEntities = baseDao.selectByParams(sql, FollowEntity.class, id);
-        return followEntities.stream().map(followEntity -> followEntity.getUserId()).collect(Collectors.toList());
+        return followEntities.stream().map(FollowEntity::getUserId).collect(Collectors.toList());
     }
 }
