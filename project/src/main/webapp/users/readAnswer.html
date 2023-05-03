@@ -76,9 +76,9 @@
             <div id="doc-content">
                123456
             </div>
-
+            <br>
         </div>
-            点赞:<button id="like" style="float:right">123</button>
+            <b id="isLike"> 点赞:</b><button id="like" onclick="likeThis()" style="float:right" >123</button>
         <button onclick="previousPage()"  id="pre">上一个回答</button>
         <button onclick="nextPage()" id="aft">下一个回答</button>
         <div class="col-md-12 blog-main" style="margin-top: 20px">
@@ -86,12 +86,10 @@
         </div>
 
         <div class="col-md-12 blog-main" style="margin-top: 20px">
-            <form th:action="@{'/question/comment/'+${question.getQid()}}" method="post">
-                <div class="form-group">
-                    <textarea placeholder="评论" required name="content" class="form-control" rows="3"></textarea>
-                </div>
-                <button type="submit" class="btn btn-primary float-right">提交评论</button>
-            </form>
+            <div class="form-group">
+                <textarea id="top-comment" placeholder="评论" required name="content" class="form-control" rows="3"></textarea>
+            </div>
+            <button onclick="sendComment(0)" class="btn btn-primary float-right">提交评论</button>
         </div>
 
         <button onclick="ascGetComment()">时间顺序</button>
@@ -137,7 +135,7 @@
             let question = resp.data;
             questionId=question.id;
             document.getElementById("question-title").innerHTML=question.title;
-            document.getElementById("question-time").innerHTML=question.updateTime;
+            document.getElementById("question-time").innerHTML=formatDate(question.updateTime);
             document.getElementById("answerCount").innerHTML=question.answerCount;
             answerCount=question.answerCount;
             document.getElementById("question-username").innerHTML=question.username;
@@ -148,7 +146,7 @@
     function getAnswerByAnswerId() {
         axios({
             method: 'get',
-            url:'/project_war_exploded/api/answer/getAnswerByAnswerId?answerId='+answerId
+            url:'/project_war_exploded/api/answer/getAnswerById?answerId='+answerId
         }).then(function (resp){
             let answer = resp.data;
             document.getElementById("title").innerHTML=answer.title;
@@ -158,6 +156,8 @@
             answerUserId=answer.userId;
             document.getElementById("doc-content").innerHTML=answer.content;
             document.getElementById("like").innerHTML=answer.likes;
+            isFollow(answerUserId);
+            isLike(answerId);
         })
     }
 
@@ -165,12 +165,16 @@
         if (page>1) {
             page--;
             getAnswerByQuestionId(page);
+        }else {
+            alert("已经到尽头了")
         }
     }
     function nextPage() {
         if (page<answerCount) {
             page++;
             getAnswerByQuestionId(page);
+        }else {
+            alert("已经到尽头了")
         }
     }
 
@@ -187,6 +191,9 @@
             document.getElementById("doc-content").innerHTML=answer.content;
             document.getElementById("like").innerHTML=answer.likes;
             answerId=answer.id;
+            answerUserId=answer.userId;
+            isFollow(answerUserId);
+            isLike(answerId);
         })
     }
     function descGetComment(){
@@ -218,6 +225,7 @@
             return;
         }
 
+        commentTree = Array.from(commentTree);
         // 遍历当前节点，将其渲染到页面中
         const ul = $('<ul>');
         commentTree.forEach(comment => {
@@ -242,10 +250,25 @@
         container.append(ul);
     }
     function comment(id){
+        let a=sessionStorage.getItem(`token`);
+        if(a==null){
+            alert('请登录');
+            return;
+        }
         document.getElementById("comment-form-"+id).style.display="";
     }
     function sendComment(id){
-        let innerHTML = document.getElementById("comment-content-"+id).innerHTML;
+        let a=sessionStorage.getItem(`token`);
+        if(a==null){
+            alert('请登录');
+            return;
+        }
+        let innerHTML;
+        if(id!=0){
+            innerHTML = document.getElementById("comment-content-"+id).innerHTML;
+        }else{
+            innerHTML=document.getElementById("top-comment").innerHTML;
+        }
         axios({
             method:'post',
             url:'/project_war_exploded/api/comment/sendComment',
@@ -283,16 +306,20 @@
             window.location.href = '/question/editor/' + authorId + '/' + questionId;
         });
     });
-    window.onload=function () {
-        getAnswerByAnswerId();
-        getQuestion();
-        getCommentTree();
-        isFollow();
-    }
+
     document.getElementById("follow").onclick=function () {
+        let a=sessionStorage.getItem(`token`);
+        if(a==null){
+            alert('请登录');
+            return;
+        }
         follow();
     }
-    function isFollow(){
+    function isFollow(userId){
+        let a=sessionStorage.getItem(`token`);
+        if(a==null){
+            return;
+        }
         axios({
             method:'get',
             url:'/project_war_exploded/api/follow/isFollowed?id='+userId
@@ -305,6 +332,11 @@
         })
     }
     function follow() {
+        let a=sessionStorage.getItem(`token`);
+        if(a==null){
+            alert('请登录');
+            return;
+        }
         axios({
             method:'get',
             url:'/project_war_exploded/api/follow/follow?id='+answerUserId
@@ -314,6 +346,52 @@
                 document.getElementById("follow").innerHTML=data.message;
             }else{
                 alert(data.message)
+            }
+        })
+    }
+    window.onload=function () {
+        getAnswerByAnswerId();
+        getQuestion();
+        getCommentTree();
+
+    }
+    function likeThis(){
+        let a=sessionStorage.getItem(`token`);
+        if(a==null){
+            alert('请登录');
+            return;
+        }
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/like/likeAnswer?answerId='+answerId
+        }).then(function (resp) {
+            let data=resp.data;
+            if(data.isSuccess=="true"){
+                document.getElementById("like").innerHTML+=data.message;
+                let innerHTML = document.getElementById("isLike").innerHTML;
+                if(innerHTML==" 点赞:"){
+                    document.getElementById("isLike").innerHTML="已点赞";
+                }else {
+                    document.getElementById("isLike").innerHTML=" 点赞:";
+                }
+
+            }else{
+                alert(data.message)
+            }
+        })
+    }
+    function isLike() {
+        let a=sessionStorage.getItem(`token`);
+        if(a==null){
+            return;
+        }
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/like/isLike?answerId='+answerId
+        }).then(function (resp){
+            let data=resp.data;
+            if(data.isSuccess=="true"){
+                document.getElementById("isLike").innerHTML="已点赞";
             }
         })
     }
