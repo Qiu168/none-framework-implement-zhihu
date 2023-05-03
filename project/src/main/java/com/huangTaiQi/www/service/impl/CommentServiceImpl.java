@@ -29,7 +29,10 @@ public class CommentServiceImpl implements CommentService {
 
     public String getCommentTree(String answerId,String sortOrder) throws Exception {
         List<CommentEntity> commentByAnswerId = commentDao.getCommentByAnswerId(answerId);
-        List<CommentTreeNode> commentTree = new CommentTree().createCommentTree(commentByAnswerId, sortOrder);
-        return JSON.toJSONString(commentTree);
+        if(commentByAnswerId!=null){
+            List<CommentTreeNode> commentTree = new CommentTree().createCommentTree(commentByAnswerId, sortOrder);
+            return JSON.toJSONString(commentTree);
+        }
+        return JSON.toJSONString(null);
     }
 }

@@ -73,4 +73,6 @@ public interface QuestionService {
      * @throws Exception 异常
      */
     String getQuestionByUser(int page, int size, Long userId) throws Exception;
+
+    String getQuestionById(String id) throws Exception;
 }

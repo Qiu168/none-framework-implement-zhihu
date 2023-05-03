@@ -18,4 +18,12 @@ public class AnswerServiceImpl implements AnswerService {
     public String getUserAnswer(String userId) throws Exception {
         return JSON.toJSONString(answerDao.getUserAnswer(userId));
     }
+
+    public String getAnswerByQuestionId(String questionId) throws Exception {
+        return JSON.toJSONString(answerDao.getAnswerByQuestionId(questionId));
+    }
+
+    public String getAnswerById(String id) throws Exception {
+        return JSON.toJSONString(answerDao.getAnswerById(id));
+    }
 }
