@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>My Website</title>
+  <link href="../users/bootstrap.css" rel="stylesheet" />
+  <style>
+    /* 样式表 */
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    .row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+      padding: 16px;
+      background-color: #f2f2f2;
+    }
+    .row img {
+      width: 120px;
+      height: 80px;
+      margin-right: 16px;
+    }
+    .row h2 {
+      margin: 0;
+      font-size: 24px;
+      line-height: 1.2;
+    }
+    .row p {
+      margin: 8px 0;
+    }
+    .row .likes {
+      margin-right: 16px;
+      font-size: 18px;
+      color: #f00;
+    }
+    .row .author {
+      font-size: 18px;
+      color: #333;
+    }
+    #search-box {
+      width: 400px;
+      height: 40px;
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 20px;
+      box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+      outline: none;
+      display: inline-block; /* 设置为行内元素，方便放置按钮 */
+    }
+
+    #search-btn {
+      width: 80px;
+      height: 40px;
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      border-radius: 20px;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    #search-btn:hover {
+      background-color: #0062cc;
+    }
+
+    main {
+      width: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    form {
+      display: flex;
+    }
+
+    form #search-box {
+      margin-right: 10px;
+    }
+  </style>
+</head>
+<body>
+<div class="top">top</div>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script type="text/javascript">
+  //在js中引入
+  $(document).ready(function () {
+    $('.top').load('../users/header.html');
+
+  });
+</script>
+<main>
+  <form>
+    <input type="text" id="search-box" placeholder="Search...">
+    <button id="search-btn">搜索</button>
+  </form>
+</main>
+<div class="container">
+  <div class="row">
+    <img src="https://picsum.photos/120/80" alt="Image 1">
+    <div>
+      <h2>Article 1 Title</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <div>
+        <span class="likes">100</span>
+        <span class="author">John Smith</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <img src="https://picsum.photos/120/80" alt="Image 2">
+    <div>
+      <h2>Article 2 Title</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <div>
+        <span class="likes">200</span>
+        <span class="author">Jane Doe</span>
+      </div>
+    </div>
+  </div>
+  <div class="row">
+    <img src="https://picsum.photos/120/80" alt="Image 3">
+    <div>
+      <h2>Article 3 Title</h2>
+      <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+      <div>
+        <span class="likes">300</span>
+        <span class="author">Bob Johnson</span>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

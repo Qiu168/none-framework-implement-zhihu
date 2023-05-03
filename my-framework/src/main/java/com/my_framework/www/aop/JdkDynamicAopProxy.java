@@ -43,7 +43,7 @@ public class JdkDynamicAopProxy implements AopProxy, InvocationHandler {
                 this.advised.getTargetClass(),
                 interceptorsAndDynamicMethodMatchers
         );
-        //开始连接器链的调用
+        //开始拦截器链的调用
         return invocation.proceed();
     }
 }

@@ -15,8 +15,6 @@ import java.util.logging.Logger;
  */
 public class PropsUtil {
     private static final Logger LOGGER = Logger.getLogger(PropsUtil.class.getName());
-
-
     public static Properties loadProps(String fileName) {
         Properties props = new Properties();
         InputStream is = null;

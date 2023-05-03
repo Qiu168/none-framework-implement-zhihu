@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="zh-hans">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, chatRoomUser-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>群聊系统</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <div id="聊天框">
+        <div id="聊天标题">聊天室</div>
+        <div id="主体">
+            <div id="左边">
+                <div id="聊天内容区">
+                    <ol>
+<!--                        最终显示聊天内容的区域-->
+                    </ol>
+                </div>
+                <div id="聊天输入区">
+                    <textarea id="输入框"></textarea>
+                    <a id="发送按钮">发送(s)</a>
+                </div>
+            </div>
+            <div id="右边">
+                <div id="群成员总计">群成员x/x</div>
+                <div id="群成员名单">
+                    <ol>
+                        <li>
+                            <div class="群成员头像">
+                                <img src="https://up.bizhizu.com/pic_source/44/bd/93/44bd93671fe896aa17cb1349e7f81e3c.jpg">
+                            </div>
+                            <div class="群成员昵称">卡其</div>
+                        </li>
+                        <li class="不在线">
+                            <div class="群成员头像">
+                                <img src="../img/flower.jpg">
+                            </div>
+                            <div class="群成员昵称">阿里</div>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    const roomId = window.location.hash.substring(1);
+    let token =sessionStorage.getItem("token");
+    function main() {
+        var ol = document.querySelector("#聊天内容区");
+        var textarea = document.querySelector("#输入框");
+        var sendBtn = document.querySelector("#发送按钮");
+
+        var ws = new WebSocket(`ws://localhost:8080/project_war_exploded/chat?token=${token}&roomId=${roomId}`);
+        ws.onmessage = function (e) {
+            var message = JSON.parse(e.data);
+            var liHTML = `<li>
+                <div class="聊天头像"><img src="/group_chatroom/img/flower.jpg"></div>
+                <div class="聊天内容部分">
+                    <div class="聊天昵称">${message.username}</div>
+                    <div class="聊天内容">${message.content}</div>
+                </div>
+            </li>`;
+            ol.innerHTML += liHTML;
+        }
+
+        sendBtn.onclick = function () {
+            var content = textarea.value;
+            textarea.value = '';
+            ws.send(content);
+        }
+        textarea.onkeydown = function (e) {
+            if (e.keyCode == 13) {
+            var content = textarea.value;
+            textarea.value = '';
+            ws.send(content);
+            }
+        }
+
+        var 群成员总计 = document.querySelector("#群成员总计")
+        var 群成员名单 = document.querySelector("#群成员名单 ol")
+        function updateUserList() {
+            var xhr = new XMLHttpRequest();
+            xhr.open("GET", "/group_chatroom/api/user-list.json");
+            xhr.onload = function() {
+                var result = JSON.parse(xhr.responseText);
+                群成员总计.innerText = `群成员 ${result.onlineCount} / ${result.totalCount}`;
+                群成员名单.innerHTML =  '';
+                for (var i in result.userList) {
+                    var user = result.userList[i];
+                    var html;
+                    if (user.online) {
+                        html =`<li>
+                            <div class="群成员头像">
+                                <img src="https://up.bizhizu.com/pic_source/44/bd/93/44bd93671fe896aa17cb1349e7f81e3c.jpg">
+                            </div>
+                            <div class="群成员昵称">${user.username}</div>
+                        </li>`
+                    } else {
+                        html = `<li class="不在线">
+                            <div class="群成员头像">
+                                <img src="/group_chatroom/img/flower.jpg">
+                            </div>
+                            <div class="群成员昵称">${user.username}</div>
+                        </li>`
+                    }
+                    群成员名单.innerHTML += html;
+                }
+            }
+            xhr.send();
+        }
+            updateUserList();
+            setInterval(updateUserList, 1000);
+    }
+    </script>
+</body>
+</html>

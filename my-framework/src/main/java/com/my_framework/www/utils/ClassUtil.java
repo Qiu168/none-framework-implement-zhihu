@@ -46,7 +46,7 @@ public class ClassUtil {
      * 获取指定包名下的所有类
      */
     public static Set<Class<?>> getClassSet(String packageName){
-        Set<Class<?>> classSet = new HashSet<Class<?>>();
+        Set<Class<?>> classSet = new HashSet<>();
         try {
             //得到包名下的资源URL枚举
             //Enumeration枚举接口，用法和Iterator相似，提供了遍历Vector和HashTable类型集合元素的功能，不支持元素的移除操作

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<div class="top">top</div>
+<script src="../js/axios.js"></script>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+    //在js中引入
+    $(document).ready(function () {
+        $('.top').load('header.html');
+    });
+</script>
+<div id="chatroom"></div>
+<input id="name" placeholder="新增聊天室名">
+<button id="increase">increase chatroom</button>
+</body>
+<script src="../js/axios.js"></script>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="../js/common.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+    let id;
+    let Token =sessionStorage.getItem("token");
+  function getChatroom(){
+      axios({
+          method:'get',
+          url:"/project_war_exploded/api/chatroom/getChatroomByUid?uid="+id,
+          async:false
+      }).then(function (resp){
+          let chatRooms=resp.data;
+          let html="";
+          if(chatRooms==null){
+              html="还没有群聊哦";
+          }else{
+              for (let i = 0; i < chatRooms.length; i++) {
+                  let chatroom=chatRooms[i];
+                  let href1="chatRoom.html#"+chatroom.id;
+                  html+="<a href="+href1+">"+chatroom.name+"</a><br>"
+              }
+          }
+          document.getElementById("chatroom").innerHTML=html;
+      })
+  }
+  document.getElementById("increase").onclick=function () {
+      let value = document.getElementById("name").value;
+      let innerHTML = document.getElementById("chatroom").innerHTML;
+      axios({
+          method: 'get',
+          url: '/project_war_exploded/api/chatroom/createChatroom?name='+value
+      }).then(function (resp){
+          let data = resp.data;
+          let href1="chatRoom.html#"+data.id;
+          innerHTML+="<a href="+href1+">群聊："+data.name+"</a><br>";
+          document.getElementById("chatroom").innerHTML=innerHTML;
+      })
+  }
+  function getUser() {
+      axios({
+          method: 'get',
+          url: '/project_war_exploded/api/home/me',
+          async:false
+      }).then(function(resp) {
+          if (resp.data==null) {
+              location.href="login.html"
+          }else{
+              id=resp.data.id
+              getChatroom();
+          }
+      })
+  }
+  window.onload=function () {
+      getUser();
+
+  }
+</script>
+</html>

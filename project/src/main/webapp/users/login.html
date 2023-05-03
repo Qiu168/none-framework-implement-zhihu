@@ -1,0 +1,78 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <link rel="stylesheet" href="bootstrap.css">
+    <link rel="stylesheet" href="login.css">
+    <title>登录</title>
+</head>
+<body class="text-center">
+
+<div class="form-signin">
+    <img class="mb-4" src="../img/logo.png" alt="" width="72" height="72">
+    <h1 class="h3 mb-3 font-weight-normal">登录</h1>
+
+    <p id="message" style="color: red"></p>
+    <input name="usernameOrEmail" id="usernameOrEmail" class="form-control" placeholder="用户名/邮箱" required=""><br>
+    <input type="password" id="password" class="form-control" placeholder="密码" required=""><br>
+
+
+    <input type="text" id="imgCode" class="form-control" placeholder="验证码"  required="">
+    <img id="code"  alt="验证码"  onclick="getCodeImg()"/><br>
+    <div class="checkbox mb-3">
+        <label>
+            <input type="checkbox" name="remember" value="remember-me"> 记住密码
+        </label>
+    </div>
+    <button class="btn btn-lg btn-primary btn-block mt-3" id="sub">登 录</button>
+
+
+    <p class="clearfix">
+        <a href="register.html" class="float-right">没有账号？去注册</a><br>
+        <a href="findPassword.html" class="float-right">忘记密码</a><br>
+    </p>
+</div>
+
+<script src="../js/axios.js"></script>
+<script>
+    function getCodeImg(){
+        axios({
+            method: 'post',
+            url:'/project_war_exploded/api/home/getImgVerifyCode?'+new Date().getTime(),
+            responseType:'blob'
+        }).then(function (resp) {
+            console.log(resp);
+            document.getElementById("code").src=window.URL.createObjectURL(resp.data);
+        })
+    }
+    window.onload=getCodeImg();
+
+    const reg =/^(token:)/;
+    document.getElementById("sub").onclick=function () {
+        let usernameOrEmail = document.getElementById("usernameOrEmail").value;
+        let password = document.getElementById("password").value;
+        let imgCode = document.getElementById("imgCode").value;
+        axios({
+            method:'post',
+            url:'/project_war_exploded/api/home/login',
+            data: {
+                usernameOrEmail: usernameOrEmail,
+                password: password,
+                imgCode: imgCode
+            }
+        }).then(function (resp) {
+            console.log(resp);
+            //如果是token
+            if(reg.test(resp.data)){
+                //在页面会话结束时会被清除
+                sessionStorage.setItem("token",resp.data);
+                location.href='list.html'
+            }
+        })
+    }
+
+</script>
+</body>
+</html>

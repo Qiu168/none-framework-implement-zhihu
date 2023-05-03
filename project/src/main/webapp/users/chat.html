@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Room</title>
+  <!-- Link to Bootstrap CSS -->
+  <link rel="stylesheet" href="bootstrap.css">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      font-size: 16px;
+    }
+    h1 {
+      text-align: center;
+      margin-top: 20px;
+    }
+    #messages {
+      height: 400px;
+      overflow-y: scroll;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f2f2f2;
+    }
+    form {
+      display: flex;
+      align-items: center;
+      margin-top: 20px;
+      padding: 10px;
+      background-color: #f2f2f2;
+    }
+    input[type="text"] {
+      flex: 1;
+      padding: 10px;
+      margin-right: 10px;
+      border: none;
+      border-radius: 4px;
+    }
+    button[type="submit"] {
+      background-color: #007bff;
+      color: #ffffff;
+      border: none;
+      border-radius: 4px;
+      padding: 10px;
+    }
+    #members {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: flex-end;
+      margin-top: 10px;
+      padding: 10px;
+      background-color: #f2f2f2;
+    }
+    .member {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin-right: 10px;
+      font-size: 12px;
+    }
+    .member img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+    .member span {
+      margin-top: 5px;
+    }
+  </style>
+</head>
+<body>
+<h1>Chat Room</h1>
+<div class="container">
+  <div class="row">
+    <div class="col-12">
+      <div id="messages"></div>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <form id="message-form" onsubmit="sendMessage(event)">
+        <input type="text" id="message" autocomplete="off" placeholder="Type your message here...">
+        <button type="submit">Send</button>
+      </form>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-12">
+      <button id="invitations-button" type="button" class="btn btn-primary">Invite Users</button>
+      <div id="members"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for inviting users -->
+<div class="modal" id="invitations-modal" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Invite Users</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>输入你想邀请的用户的用户名，只能邀请互相关注的用户</p>
+        <div class="form-group">
+          username：<input type="text" class="form-control" id="invitations-input">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="inviteUsers()">Invite</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="../js/axios.js"></script>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="../js/common.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script>
+  const socket = new WebSocket("ws://" + location.host + "/chat");
+
+  socket.onopen = function(event) {
+    console.log("Connected to WebSocket server");
+  };
+
+  socket.onmessage = function(event) {
+    // 接收服务器广播的消息并将其添加到聊天记录中
+    const messageDiv = document.createElement("div");
+    messageDiv.className = "alert alert-primary";
+    messageDiv.role = "alert";
+    messageDiv.innerText = event.data;
+    document.getElementById("messages").appendChild(messageDiv);
+  };
+
+  function sendMessage(event) {
+    event.preventDefault();
+
+    // 将消息发送到WebSocket服务器端
+    const message = document.getElementById("message").value;
+    socket.send(message);
+
+    // 清除消息输入框
+    document.getElementById("message").value = "";
+
+    return false;
+  }
+
+
+
+
+  var members = [{"name": "Alice", "imgUrl": "https://dummyimage.com/50x50/ccc/fff.png&text=A"}, {"name": "Bob", "imgUrl": "https://dummyimage.com/50x50/ccc/fff.png&text=B"}];
+
+  function updateMembersList() {
+    var membersDiv = document.getElementById("members");
+    membersDiv.innerHTML = "";
+    for (var i = 0; i < members.length; i++) {
+      var memberDiv = document.createElement("div");
+      memberDiv.classList.add("member");
+      var img = document.createElement("img");
+      img.src = members[i].imgUrl;
+      memberDiv.appendChild(img);
+      var span = document.createElement("span");
+      span.textContent = members[i].name;
+      memberDiv.appendChild(span);
+      membersDiv.appendChild(memberDiv);
+    }
+  }
+
+  function inviteUsers() {
+    var inputElement = document.getElementById("invitations-input");
+    var usernames = inputElement.value
+    axios({
+      method:'get',
+      url:''
+    }).then(function (resp){
+
+    })
+    console.log("Inviting users:", usernames);
+    // Close the modal
+    $('#invitations-modal').modal('hide');
+    updateMembersList();
+  }
+
+  function sendMessage(event) {
+    event.preventDefault();
+    var messageElement = document.getElementById("message");
+    var message = messageElement.value;
+    // Code to send message to server (not implemented)
+    console.log("Sending message:", message);
+    messageElement.value = "";
+  }
+
+  // Show the invitations modal when the button is clicked
+  var invitationsButton = document.getElementById("invitations-button");
+  var invitationsModal = document.getElementById("invitations-modal");
+  invitationsButton.addEventListener("click", function() {
+    $('#invitations-modal').modal('show');
+  });
+
+  // Update the members list on page load
+  updateMembersList();
+
+</script>
+</body>
+</html>

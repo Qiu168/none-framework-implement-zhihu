@@ -16,6 +16,7 @@ public class BeanDefinition {
 
     /**
      * 保存实现类的类名（首字母小写）
+     * 接口名
      */
     private String factoryBeanName;
 

@@ -1,6 +1,9 @@
 package com.my_framework.www.context.Impl;
 
+import com.my_framework.www.transaction.ServiceProxyFactory;
 import com.my_framework.www.annotation.Autowired;
+import com.my_framework.www.annotation.Service;
+import com.my_framework.www.annotation.Transaction;
 import com.my_framework.www.aop.AopProxy;
 import com.my_framework.www.aop.CglibAopProxy;
 import com.my_framework.www.aop.JdkDynamicAopProxy;
@@ -11,14 +14,14 @@ import com.my_framework.www.beans.BeanDefinitionReader;
 import com.my_framework.www.beans.BeanWrapper;
 import com.my_framework.www.context.ApplicationContext;
 import com.my_framework.www.utils.PropsUtil;
+import com.my_framework.www.utils.StringUtil;
 
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.lang.reflect.Method;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-
-
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 
 /**
@@ -26,12 +29,13 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class ApplicationContextImpl implements ApplicationContext {
 
+    private final Logger logger= Logger.getLogger(ApplicationContextImpl.class.getName());
     /**
      * 配置文件路径
      */
     private final String configLocation;
     private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
-    private Map<String, BeanWrapper> factoryBeanInstanceCache = new ConcurrentHashMap<>();
+    private final Map<String, BeanWrapper> factoryBeanInstanceCache = new ConcurrentHashMap<>();
 
 
     public ApplicationContextImpl(String configLocation) {
@@ -48,6 +52,10 @@ public class ApplicationContextImpl implements ApplicationContext {
         BeanDefinitionReader reader = new BeanDefinitionReader(this.configLocation);
         //2、加载配置文件，扫描相关的类，把它们封装成BeanDefinition
         List<BeanDefinition> beanDefinitions = reader.loadBeanDefinitions();
+        for (BeanDefinition beanDefinition : beanDefinitions) {
+            logger.log(Level.INFO,beanDefinition.getFactoryBeanName());
+            logger.log(Level.INFO,beanDefinition.getBeanClassName());
+        }
         //3、注册，把配置信息放到容器里面(伪IOC容器)
         doRegisterBeanDefinition(beanDefinitions);
         //4、把不是延时加载的类，提前初始化
@@ -87,24 +95,20 @@ public class ApplicationContextImpl implements ApplicationContext {
             return instance;
         }
         BeanDefinition beanDefinition = beanDefinitionMap.get(beanName);
-
         //1.调用反射初始化Bean
-        instance = instantiateBean(beanName, beanDefinition);
-
+        instance = instantiateBean(beanDefinition);
         //2.把这个对象封装到BeanWrapper中
         BeanWrapper beanWrapper = new BeanWrapper(instance);
-
         //3.把BeanWrapper保存到IOC容器中去
         //注册一个类名（首字母小写，如helloService）
         factoryBeanInstanceCache.put(beanName, beanWrapper);
         //注册一个全类名（如com.huangTaiQi.www.HelloService）
         factoryBeanInstanceCache.put(beanDefinition.getBeanClassName(), beanWrapper);
-
         //4.注入
-        populateBean(beanName, new BeanDefinition(), beanWrapper);
-
+        populateBean(beanWrapper);
         return this.factoryBeanInstanceCache.get(beanName).getWrappedInstance();
     }
+
 
     private Object getSingleton(String beanName) {
         if(this.factoryBeanInstanceCache.containsKey(beanName)){
@@ -113,21 +117,40 @@ public class ApplicationContextImpl implements ApplicationContext {
         return null;
     }
 
-    private Object instantiateBean(String beanName, BeanDefinition beanDefinition) {
+    private Object instantiateBean(BeanDefinition beanDefinition) {
         //1、拿到要实例化的对象的类名
         String className = beanDefinition.getBeanClassName();
         //2、反射实例化，得到一个对象
         Object instance = null;
         try {
             Class<?> clazz = Class.forName(className);
-            instance = clazz.newInstance();
+            if(clazz.isAnnotationPresent(Service.class)){
+                //如果是service,检查是否有被@Transaction注释的方法
+                Method[] methods= clazz.getMethods();
+                for (Method method : methods) {
+                    if (method.isAnnotationPresent(Transaction.class)) {
+                        //如果有，代理
+                        instance = ServiceProxyFactory.getProxy(clazz);
+                        break;
+                    }
+                }
+            }
+            if(instance==null){
+                //没有被代理的类直接实例化
+                instance = clazz.newInstance();
+            }
             //获取AOP配置
             AdvisedSupport config = getAopConfig();
             config.setTargetClass(clazz);
+            //这个instance应该被注入，否则成员变量为空
             config.setTarget(instance);
-
             //符合PointCut的规则的话，将创建代理对象
             if(config.pointCutMatch()) {
+                //把这个对象封装到BeanWrapper中
+                BeanWrapper beanWrapper = new BeanWrapper(instance);
+                //注入,不会重复注入，因为被代理类不会返回
+                populateBean(beanWrapper);
+                config.setTarget(beanWrapper.getWrappedInstance());
                 //创建代理
                 instance = createProxy(config).getProxy();
             }
@@ -137,7 +160,7 @@ public class ApplicationContextImpl implements ApplicationContext {
         return instance;
     }
     private AopProxy createProxy(AdvisedSupport config) {
-        Class targetClass = config.getTargetClass();
+        Class<?> targetClass = config.getTargetClass();
         //如果接口数量 > 0则使用JDK原生动态代理
         if(targetClass.getInterfaces().length > 0){
             return new JdkDynamicAopProxy(config);
@@ -160,34 +183,44 @@ public class ApplicationContextImpl implements ApplicationContext {
 
     /**
      * 注入bean
-     * @param beanName beanName
-     * @param beanDefinition bean的配置
+     *
      * @param beanWrapper bean的实例
      */
-    private void populateBean(String beanName, BeanDefinition beanDefinition, BeanWrapper beanWrapper) {
-
+    private void populateBean(BeanWrapper beanWrapper) {
         Class<?> clazz = beanWrapper.getWrappedClass();
-
         //获得所有的成员变量
         Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
+        Class<?> superclass = clazz.getSuperclass();
+        Field[] fields1 = superclass.getDeclaredFields();
+        Field[] result = new Field[fields.length + fields1.length];
+        System.arraycopy(fields, 0, result, 0, fields.length);
+        System.arraycopy(fields1, 0, result, fields.length, fields1.length);
+        for (Field field : result) {
             //如果没有被Autowired注解的成员变量则直接跳过
             if (!field.isAnnotationPresent(Autowired.class)) {
                 continue;
             }
-
             Autowired autowired = field.getAnnotation(Autowired.class);
             //拿到需要注入的类名
             String autowiredBeanName = autowired.value().trim();
             if ("".equals(autowiredBeanName)) {
                 autowiredBeanName = field.getType().getName();
             }
-
+            logger.log(Level.INFO,beanWrapper.getWrappedInstance().getClass()+"  autowired:"+autowiredBeanName);
             //强制访问该成员变量
             field.setAccessible(true);
-
             try {
-                if (factoryBeanInstanceCache.get(autowiredBeanName) == null) {
+                String autowiredBeanName1 = StringUtil.getBeanName(autowiredBeanName);
+                BeanDefinition definition = beanDefinitionMap.get(autowiredBeanName1);
+                if(definition!=null){
+                    //此成员变量是ioc控制的，但是还未实例化
+                    if (factoryBeanInstanceCache.get(autowiredBeanName) == null) {
+                        //被注入的成员变量还没有实例化
+                        logger.log(Level.INFO,"实例化成员变量");
+                        getBean(autowiredBeanName1);
+                    }
+                }else {
+                    //此成员变量不是ioc控制的
                     continue;
                 }
                 //将容器中的实例注入到成员变量中
@@ -208,6 +241,10 @@ public class ApplicationContextImpl implements ApplicationContext {
     @Override
     public <T> T getBean(Class<T> requiredType) {
         String beanName=requiredType.getName();
-        return requiredType.cast(beanName);
+        return requiredType.cast(getBean(beanName));
+    }
+
+    public String[] getBeanDefinitionNames() {
+        return beanDefinitionMap.keySet().toArray(new String[beanDefinitionMap.size()]);
     }
 }

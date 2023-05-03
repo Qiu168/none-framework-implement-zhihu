@@ -1,16 +1,25 @@
 package com.huangTaiQi.www.utils.sql;
 
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
+/**
+ * @author 14629
+ */
 public class SQLBuilder {
 
-    private String tableName;
-    private List<String> columns = new ArrayList<>();
-    private List<String> whereClause = new ArrayList<>();
-    private String orderByClause;
+    private final String tableName;
+    private final List<String> columns = new ArrayList<>();
+    private final List<String> whereClause = new ArrayList<>();
+    private final List<String> joinClause = new ArrayList<>();
+    private final List<String> groupByClause = new ArrayList<>();
+    private final List<String> havingClause = new ArrayList<>();
+    private final List<String> orderByClause=new ArrayList<>();
     private int limit;
     private int offset;
+
 
     public SQLBuilder(String tableName) {
         this.tableName = tableName;
@@ -21,21 +30,34 @@ public class SQLBuilder {
         whereClause.add("?");
         return this;
     }
-
+    public SQLBuilder update(String column) {
+        columns.add(column);
+        return this;
+    }
     public SQLBuilder select(String... columns) {
-        for (String column : columns) {
-            this.columns.add(column);
-        }
+        this.columns.addAll(Arrays.asList(columns));
+        return this;
+    }
+    public SQLBuilder count(String column) {
+        columns.add("count("+column+")");
         return this;
     }
 
     public SQLBuilder where(String condition) {
-        whereClause.add(condition+" = ? ");
+        whereClause.add(condition+"= ? ");
+        return this;
+    }
+    public SQLBuilder blurWhere(String condition) {
+        whereClause.add(condition+" LIKE  ? ");
         return this;
     }
 
     public SQLBuilder orderBy(String orderByClause) {
-        this.orderByClause = orderByClause;
+        this.orderByClause.add(orderByClause) ;
+        return this;
+    }
+    public SQLBuilder having(String condition) {
+        this.havingClause.add(condition) ;
         return this;
     }
 
@@ -46,6 +68,15 @@ public class SQLBuilder {
 
     public SQLBuilder offset(int offset) {
         this.offset = offset;
+        return this;
+    }
+    public SQLBuilder groupBy(String column) {
+        columns.add(column);
+        return this;
+    }
+
+    public SQLBuilder join(String table, String condition) {
+        joinClause.add(" JOIN " + table + " ON " + condition);
         return this;
     }
 
@@ -60,11 +91,20 @@ public class SQLBuilder {
     public String buildSelect() {
         StringBuilder sql = new StringBuilder();
         sql.append("SELECT ").append(String.join(",", columns)).append(" FROM ").append(tableName);
+        if(!joinClause.isEmpty()){
+            sql.append(String.join(" ",joinClause));
+        }
         if (!whereClause.isEmpty()) {
             sql.append(" WHERE ").append(String.join(" AND ", whereClause));
         }
-        if (orderByClause != null) {
-            sql.append(" ORDER BY ").append(orderByClause);
+        if(!groupByClause.isEmpty()){
+            sql.append(" GROUP BY ").append(String.join(",",groupByClause));
+        }
+        if (!havingClause.isEmpty()) {
+            sql.append(" HAVING ").append(String.join(" AND ",orderByClause));
+        }
+        if (!orderByClause.isEmpty()) {
+            sql.append(" ORDER BY ").append(String.join(",",orderByClause));
         }
         if (limit > 0) {
             sql.append(" LIMIT ").append(limit);
@@ -98,4 +138,6 @@ public class SQLBuilder {
         }
         return sql.toString();
     }
+
+
 }

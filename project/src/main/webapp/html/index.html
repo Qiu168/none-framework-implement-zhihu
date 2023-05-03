@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>CAT乎</title>
+    <style>
+        /* 样式表 */
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+        th {
+            background-color: #f2f2f2;
+        }
+        a {
+            text-decoration: none;
+            color: #337ab7;
+        }
+    </style>
+
+    <style>
+        /* 样式表 */
+        body {
+            font-family: Arial, sans-serif;
+        }
+        header {
+            height: 80px;
+            background-color: #333;
+            color: #fff;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+        header h1 {
+            margin: 0;
+            font-size: 24px;
+        }
+        #chatRoomUserEntity-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background-color: #ccc;
+            cursor: pointer;
+        }
+        #search-box {
+            width: 400px;
+            height: 40px;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 20px;
+            box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+            outline: none;
+        }
+    </style>
+
+</head>
+<body>
+<header>
+    <h1>My Website</h1>
+    <div>
+        <a id="avatar"><img id="chatRoomUserEntity-avatar" src="../img/default.jpg" alt="登录" ></a>
+    </div>
+</header>
+<main>
+    <form>
+        <input type="text" id="search-box" placeholder="Search...">
+    </form>
+</main>
+<script>
+    document.getElementById("avatar").href="my.html#";
+</script>
+<h1>My Blog</h1>
+<table>
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Link</th>
+    </tr>
+    <tr>
+        <td><a href="https://example.com/article1">Article 1</a></td>
+        <td>John Smith</td>
+        <td><a href="https://example.com/article1">View</a></td>
+    </tr>
+    <tr>
+        <td><a href="https://example.com/article2">Article 2</a></td>
+        <td>Jane Doe</td>
+        <td><a href="https://example.com/article2">View</a></td>
+    </tr>
+    <tr>
+        <td><a href="https://example.com/article3">Article 3</a></td>
+        <td>Bob Johnson</td>
+        <td><a href="https://example.com/article3">View</a></td>
+    </tr>
+</table>
+<script>
+    // JavaScript代码
+    var tableRows = document.querySelectorAll("table tr");
+    // 遍历每一行，除了表头
+    for (var i = 1; i < tableRows.length; i++) {
+        // 获取该行的标题和链接单元格
+        var titleCell = tableRows[i].querySelector("td:first-child");
+        var linkCell = tableRows[i].querySelector("td:last-child");
+        // 给标题单元格添加一个点击事件处理程序
+        titleCell.addEventListener("click", function() {
+            // 获取链接单元格的链接
+            var link = this.nextElementSibling.firstElementChild.href;
+            // 跳转到链接
+            window.location.href = link;
+        });
+    }
+</script>
+</body>
+</html>

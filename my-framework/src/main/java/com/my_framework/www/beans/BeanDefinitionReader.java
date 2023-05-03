@@ -29,17 +29,16 @@ public class BeanDefinitionReader {
 
     private Set<Class<?>> registerBeanClasses = new HashSet<>();
 
-    public BeanDefinitionReader(String... locations) {
+    public BeanDefinitionReader(String location) {
         try (
                 //1.定位，通过URL定位找到配置文件，然后转换为文件流
              InputStream is = this.getClass().getClassLoader().
-                     getResourceAsStream(locations[0].replace("classpath:", ""))) {
+                     getResourceAsStream(location)) {
             //2.加载，保存为properties
             config.load(is);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
         //3.扫描，扫描资源文件(class)，并保存到集合中
         registerBeanClasses = ClassUtil.getClassSet(config.getProperty(SCAN_PACKAGE));
     }
@@ -58,17 +57,17 @@ public class BeanDefinitionReader {
                 for (Annotation annotation : annotations) {
                     Class<? extends Annotation> annotationType = annotation.annotationType();
                     //只考虑被@Component注解的class
-                    if (annotationType.isAnnotationPresent(Component.class)) {
+                    if (annotationType.isAnnotationPresent(Component.class)||annotation instanceof Component) {
                         //beanName有三种情况:
                         //1、默认是类名首字母小写
                         //2、自定义名字（这里暂不考虑）
                         //3、接口注入
                         result.add(doCreateBeanDefinition(StringUtil.toLowerFirstCase(beanClass.getSimpleName()), beanClass.getName()));
-                        Class<?>[] interfaces = beanClass.getInterfaces();
-                        for (Class<?> i : interfaces) {
-                            //接口和实现类之间的关系也需要封装
-                            result.add(doCreateBeanDefinition(i.getName(), beanClass.getName()));
-                        }
+//                        Class<?>[] interfaces = beanClass.getInterfaces();
+//                        for (Class<?> i : interfaces) {
+//                            //接口和实现类之间的关系也需要封装，作用是可以用接口名获取实现类
+//                            result.add(doCreateBeanDefinition(i.getName(), beanClass.getName()));
+//                        }
                         break;
                     }
                 }

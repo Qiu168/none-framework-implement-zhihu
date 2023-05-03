@@ -12,9 +12,13 @@ public class BeanWrapper {
     /**
      * Bean的实例化对象
      */
-    private final Object wrappedObject;
+    private Object wrappedObject;
 
     public BeanWrapper(Object wrappedObject) {
+        this.wrappedObject = wrappedObject;
+    }
+
+    public void setWrappedObject(Object wrappedObject) {
         this.wrappedObject = wrappedObject;
     }
 

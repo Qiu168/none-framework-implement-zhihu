@@ -6,6 +6,7 @@ import com.my_framework.www.aop.aspect.AfterReturningAdviceInterceptor;
 import com.my_framework.www.aop.aspect.AfterThrowingAdviceInterceptor;
 import com.my_framework.www.aop.aspect.MethodBeforeAdviceInterceptor;
 import com.my_framework.www.aop.config.AopConfig;
+import com.my_framework.www.utils.StringUtil;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -76,14 +77,17 @@ public class AdvisedSupport {
                 .replaceAll("\\(", "\\\\(")
                 .replaceAll("\\)", "\\\\)");
         //pointCut=public .* com.wh.demo.service..*Service..*(.*)
+        //从开头到最后一个(的前面四个字符（即空格和public关键字）
         String pointCutForClassRegex = pointCut.substring(0, pointCut.lastIndexOf("\\(") - 4);
+        //class com.wh.demo.service.SomeService
+        //class这个关键字是因为pointCutClassPattern在处理类的正则表达式时，需要在上面加上class关键字匹配。
         pointCutClassPattern = Pattern.compile("class " + pointCutForClassRegex.substring(
                 pointCutForClassRegex.lastIndexOf(" ") + 1));
 
         try {
             //保存切面的所有通知方法
             Map<String, Method> aspectMethods = new HashMap<>();
-            Class aspectClass = Class.forName(this.config.getAspectClass());
+            Class<?> aspectClass = Class.forName(this.config.getAspectClass());
             for (Method m : aspectClass.getMethods()) {
                 aspectMethods.put(m.getName(), m);
             }
@@ -104,7 +108,7 @@ public class AdvisedSupport {
                     List<Object> advices = new LinkedList<>();
 
                     //创建前置拦截器
-                    if (!(null == config.getAspectBefore() || "".equals(config.getAspectBefore()))) {
+                    if (StringUtil.isNotEmpty(config.getAspectBefore())) {
                         //创建一个Advice
                         MethodBeforeAdviceInterceptor beforeAdvice = new MethodBeforeAdviceInterceptor(
                                 aspectMethods.get(config.getAspectBefore()),
@@ -113,7 +117,7 @@ public class AdvisedSupport {
                         advices.add(beforeAdvice);
                     }
                     //创建后置拦截器
-                    if (!(null == config.getAspectAfter() || "".equals(config.getAspectAfter()))) {
+                    if (StringUtil.isNotEmpty(config.getAspectAfter())) {
                         AfterReturningAdviceInterceptor returningAdvice = new AfterReturningAdviceInterceptor(
                                 aspectMethods.get(config.getAspectAfter()),
                                 aspectClass.newInstance()
@@ -121,7 +125,7 @@ public class AdvisedSupport {
                         advices.add(returningAdvice);
                     }
                     //创建异常拦截器
-                    if (!(null == config.getAspectAfterThrow() || "".equals(config.getAspectAfterThrow()))) {
+                    if (StringUtil.isNotEmpty(config.getAspectAfterThrow())) {
                         AfterThrowingAdviceInterceptor throwingAdvice = new AfterThrowingAdviceInterceptor(
                                 aspectMethods.get(config.getAspectAfterThrow()),
                                 aspectClass.newInstance()

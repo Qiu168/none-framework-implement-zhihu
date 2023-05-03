@@ -1,0 +1,193 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    --总体高度: 640px;
+    --总体宽度: 820px;
+    --标题高度: 32px;
+    --聊天输入高度: 130px;
+    --群成员宽度: 200px;
+    --发送按钮宽度: 85px;
+    --发送按钮高度: 28px;
+}
+
+body {
+    background-image: url(../img/p1.jpg);
+    background-repeat: no-repeat;
+    background-size: cover;
+    width: 100%;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#聊天框 {
+    width: calc(var(--总体宽度));
+    height: calc(var(--总体高度));
+    background-color: #fff;
+    border-radius: 5px;
+    overflow: hidden;
+    box-shadow: 3px 3px 15px 3px rgba(15, 15, 15, .3),
+                -3px -3px 30px 3px rgba(15, 15, 15, .3);
+}
+
+#聊天标题 {
+    background-image: linear-gradient(132deg, hsl(218, 99%, 65%) 50%, hsl(192, 100%, 56%));
+    width: 100%;
+    height: calc(var(--标题高度));
+    line-height: calc(var(--标题高度));
+    text-align: center;
+    color: #f1fbff;
+}
+
+#主体 {
+    width: 100%;
+    height: calc(var(--总体高度) - var(--标题高度));
+    display: flex;
+    flex-direction: row;    /* 默认就是 */
+}
+
+#左边 {
+    width: calc(var(--总体宽度) - var(--群成员宽度));
+    height: 100%;
+}
+
+#右边 {
+    width: calc(var(--群成员宽度));
+    height: 100%;
+}
+
+#聊天输入区 {
+    width: 100%;
+    height: calc(var(--聊天输入高度));
+    border-right: 2px solid hsl(0, 0%, 92%);
+    position: relative;
+}
+
+#输入框 {
+    position: absolute;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    resize: none;
+    outline: none;
+    border: none;
+    padding: 5px;
+    font-size: .8rem;
+    line-height: 1.5em;
+}
+
+#发送按钮 {
+    position: absolute;
+    width: calc(var(--发送按钮宽度));
+    height: calc(var(--发送按钮高度));
+    line-height: calc(var(--发送按钮高度));
+    font-size: .7rem;
+    color: #f1fbff;
+    background-color: hsl(196, 73%, 53%);
+    text-align: center;
+    bottom: 10px;
+    right: 10px;
+    cursor: pointer;
+    user-select: none;
+    border-radius: 2px;
+    transition: all .2s;
+}
+
+#发送按钮:hover {
+    background-color: hsl(196, 93%, 63%);
+}
+
+#发送按钮:active {
+    background-color: hsl(196, 73%, 53%);
+}
+
+
+#聊天内容区 {
+    width: 100%;
+    height: calc(100% - var(--聊天输入高度));
+    padding: 13px;
+    overflow: auto;/*滚动条，超出高度的内容可以自动用滚动条*/
+    box-shadow: inset 1px 1px 2px 1px rgba(0, 0, 0, .1),
+                inset -1px -1px 3px 1px rgba(0, 0, 0, .1);
+
+}
+
+#聊天内容区 li {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#聊天内容区 .聊天头像 {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 15px;
+    overflow: hidden;
+}
+
+#聊天内容区 .聊天头像 img {
+    width: 30px;
+    height: 30px;
+}
+
+#聊天内容区 .聊天昵称 {
+    color: #b4b4b4;
+    font-size: .8rem;
+    margin-bottom: 7px;
+}
+
+#聊天内容区 .聊天内容 {
+    background-color: #e5e5e5;
+    padding: 12px;
+    border-radius: 10px;
+    font-size: .8rem;
+}
+
+#群成员总计 {
+    height: 30px;
+    line-height: 30px;
+    padding-left: 7px;
+    font-size: .8rem;
+}
+
+#群成员名单 ol {
+    padding-left: 7px;
+}
+
+#群成员名单 li {
+    list-style: none;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 5px;
+}
+
+#群成员名单 .群成员头像 {
+    width: 25px;
+    height: 25px;
+    overflow: hidden;
+    border-radius: 50%;
+    margin-right: 13px;
+}
+
+#群成员名单 .群成员头像 img {
+    width: 25px;
+    height: 25px;
+}
+
+#群成员名单 .群成员昵称 {
+    font-size: .8rem;
+}
+
+#群成员名单 li.不在线 {
+    filter: grayscale(1.0);
+}
