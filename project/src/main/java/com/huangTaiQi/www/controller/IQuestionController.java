@@ -30,4 +30,7 @@ public interface IQuestionController {
 
 
     void getCategory(HttpServletResponse response) throws Exception;
+
+    @RequestMapping
+    void getQuestionById(@RequestParam("id") String id, HttpServletResponse response) throws Exception;
 }
