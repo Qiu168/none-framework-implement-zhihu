@@ -91,4 +91,14 @@ public class QuestionDao implements IQuestionDao {
                 .buildSelect();
         return baseDao.selectByParams(sql, QuestionEntity.class,userId);
     }
+
+    public QuestionEntity getQuestionById(String id) throws Exception {
+        String sql=new SQLBuilder("question")
+                .select("*")
+                .where("id")
+                .buildSelect();
+        return baseDao.selectOne(sql,QuestionEntity.class,id);
+    }
+
+
 }
