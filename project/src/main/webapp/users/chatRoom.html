@@ -8,11 +8,16 @@
     <title>群聊系统</title>
     <link rel="stylesheet" href="style.css">
 </head>
-
+<script src="../js/axios.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <body>
 
     <div id="聊天框">
         <div id="聊天标题">聊天室</div>
+        新增群友<input type="text" class="form-control" id="invitations-input" placeholder="用户昵称，只能是互关的">
+        <button id="invite">邀请</button>
         <div id="主体">
             <div id="左边">
                 <div id="聊天内容区">
@@ -48,6 +53,7 @@
     </div>
 
     <script>
+        let me;
     const roomId = window.location.hash.substring(1);
     let token =sessionStorage.getItem("token");
     function main() {
@@ -59,7 +65,7 @@
         ws.onmessage = function (e) {
             var message = JSON.parse(e.data);
             var liHTML = `<li>
-                <div class="聊天头像"><img src="/group_chatroom/img/flower.jpg"></div>
+                <div class="聊天头像"><img src=${message.avatar}></div>
                 <div class="聊天内容部分">
                     <div class="聊天昵称">${message.username}</div>
                     <div class="聊天内容">${message.content}</div>
@@ -72,6 +78,14 @@
             var content = textarea.value;
             textarea.value = '';
             ws.send(content);
+            var liHTML = `<li>
+                <div class="聊天头像"><img src=${me.avatar}></div>
+                <div class="聊天内容部分">
+                    <div class="聊天昵称">${me.username}</div>
+                    <div class="聊天内容">${content}</div>
+                </div>
+            </li>`;
+            document.querySelector("#聊天内容区").innerHTML+=liHTML;
         }
         textarea.onkeydown = function (e) {
             if (e.keyCode == 13) {
@@ -85,7 +99,7 @@
         var 群成员名单 = document.querySelector("#群成员名单 ol")
         function updateUserList() {
             var xhr = new XMLHttpRequest();
-            xhr.open("GET", "/group_chatroom/api/user-list.json");
+            xhr.open("GET", "/project_war_exploded/api/chatroom/getUserList?roomId="+roomId);
             xhr.onload = function() {
                 var result = JSON.parse(xhr.responseText);
                 群成员总计.innerText = `群成员 ${result.onlineCount} / ${result.totalCount}`;
@@ -96,14 +110,14 @@
                     if (user.online) {
                         html =`<li>
                             <div class="群成员头像">
-                                <img src="https://up.bizhizu.com/pic_source/44/bd/93/44bd93671fe896aa17cb1349e7f81e3c.jpg">
+                                <img src=${user.avatar}>
                             </div>
                             <div class="群成员昵称">${user.username}</div>
                         </li>`
                     } else {
                         html = `<li class="不在线">
                             <div class="群成员头像">
-                                <img src="/group_chatroom/img/flower.jpg">
+                                <img src=${user.avatar}>
                             </div>
                             <div class="群成员昵称">${user.username}</div>
                         </li>`
@@ -113,8 +127,34 @@
             }
             xhr.send();
         }
-            updateUserList();
-            setInterval(updateUserList, 1000);
+        updateUserList();
+        setInterval(updateUserList, 1000);
+    }
+    function getUser() {
+        axios({
+            method: 'get',
+            url: '/project_war_exploded/api/home/me',
+            async:false
+        }).then(function(resp) {
+            if (resp.data==null) {
+                location.href="login.html"
+            }else{
+                me=resp.data;
+            }
+        })
+    }
+    document.getElementById("invite").onclick=function () {
+        let value = document.getElementById("invitations-input").value;
+        axios({
+            method: 'get',
+            url:'/project_war_exploded/api/chatroom/addUser?roomId='+roomId+"&username="+value
+        }).then(function (resp){
+
+        })
+    }
+    window.onload=function () {
+        main();
+        getUser();
     }
     </script>
 </body>

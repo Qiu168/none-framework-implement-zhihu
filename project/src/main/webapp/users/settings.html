@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>用户中心-KuangStudy</title>
+    <title>用户中心</title>
     <link rel="stylesheet" href="bootstrap.css">
     <style>
         #table-title tr th{
@@ -27,78 +27,44 @@
 </script>
 
 <main role="main" class="container">
-
     <div class="row">
-
-        <div th:replace="~{chatRoomUser/index::userShowPanel}"></div>
-
         <div class="col-md-9 blog-main">
 
             <div class="my-3 p-3 bg-white rounded shadow-sm">
 
-                <form class="needs-validation" novalidate="" th:action="@{'/userinfo/update/'+${session.loginUser.getUid()}}" method="post">
-                    <div class="row">
+                <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="username">用户昵称</label>
-                            <input type="text" th:value="${userInfo.getNickname()}" name="username" class="form-control" id="username" placeholder="遇见狂神说" required="">
+                            <label for="name">用户昵称</label>
+                            <input  id="name">
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="realname">真实姓名</label>
-                            <input type="text" th:value="${userInfo.getRealname()}" name="realname" class="form-control" id="realname" placeholder="xxxx" required="">
-                        </div>
+                </div>
+                性别
+                <select id="gender" >
+                    <option value=0>male</option>
+                    <option value=1>female</option>
+                </select>
+                <br>
+                头像
+                <input type="file" accept="image/*" onchange="previewFile()"><br>
+                <img src="" height="200" alt="Image preview" id="preview">
+
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label for="email">邮箱</label>
+                        <input type="email" class="form-control" id="email" placeholder="email">
                     </div>
+                </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="qq">QQ</label>
-                            <input type="text" th:value="${userInfo.getQq()}" name="qq" class="form-control" id="qq" placeholder="遇见狂神说" required="">
-                        </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="wechat">WeChat</label>
-                            <input type="text" th:value="${userInfo.getWechat()}" name="wechat" class="form-control" id="wechat" placeholder="xxxx" required="">
-                        </div>
-                    </div>
+                <div class="mb-3">
+                    <label>自我介绍</label>
+                    <textarea  type="text" id="introduce" class="form-control"></textarea>
+                </div>
 
-                    <input type="file" accept="image/*" onchange="previewFile()"><br>
-                    <img src="" height="200" alt="Image preview" id="preview">
+                <hr class="mb-4">
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
-                            <label for="email">邮箱</label>
-                            <input type="email" th:value="${userInfo.getEmail()}" name="email" class="form-control" id="email" placeholder="kuangshen@qq.com">
-                        </div>
+                <button id="load" class="btn btn-primary btn-lg btn-block" > 更新资料 </button>
 
-                        <div class="col-md-6 mb-3">
-                            <label for="phone">手机</label>
-                            <input type="text" th:value="${userInfo.getPhone()}" name="phone" class="form-control" id="phone" placeholder="123 3333 2222">
-                        </div>
-                    </div>
 
-                    <div class="mb-3">
-                        <label for="work">工作</label>
-                        <input type="text" th:value="${userInfo.getWork()}" name="work" class="form-control" id="work" placeholder="Java高级程序员">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="address">地址</label>
-                        <input type="text" th:value="${userInfo.getAddress()}" name="address" class="form-control" id="address" placeholder="中国 重庆">
-                    </div>
-
-                    <div class="mb-3">
-                        <label for="hobby">爱好(使用英文逗号隔开)</label>
-                        <input type="text" th:value="${userInfo.getHobby()}" name="hobby" class="form-control" id="hobby" placeholder="代码,唱歌,游戏">
-                    </div>
-
-                    <div class="mb-3">
-                        <label>自我介绍</label>
-                        <textarea  th:text="${userInfo.getIntro()}" type="text" name="introduce" id="introduce" class="form-control"></textarea>
-                    </div>
-
-                    <hr class="mb-4">
-
-                    <button class="btn btn-primary btn-lg btn-block" type="submit"> 更新资料 </button>
-
-                </form>
 
             </div>
 
@@ -116,8 +82,6 @@
 
         reader.addEventListener("load", function () {
             preview.src = reader.result;
-            // 将上传的图片发送到后端
-            uploadImage(reader.result);
         }, false);
 
         if (file) {
@@ -125,33 +89,64 @@
         }
     }
 
+    document.getElementById("load").onclick=function () {
+        submitHandler();
+    }
+    function submitHandler() {
+        const file = document.querySelector('input[type=file]').files[0];
+        if(file==null){
+            uploadImage(null)
+        }else{
+            const reader = new FileReader();
+            reader.onloadend = function() {
+                const imageDataBlob = new Blob([new Uint8Array(reader.result)], { type: file.type });
+                uploadImage(imageDataBlob);
+            };
+            reader.readAsArrayBuffer(file);
+        }
+    }
     function uploadImage(imageData) {
+        const file = document.querySelector('input[type=file]').files[0];
+        let username = document.getElementById("name").value;
+        let introduce = document.getElementById("introduce").innerHTML;
+        let email = document.getElementById("email").value;
+        let gender = document.getElementById('gender').value;
+        let formData = new FormData();
+        formData.append('imageData', file);
+        formData.append('username', username);
+        formData.append('introduce', introduce);
+        formData.append('email', email);
+        formData.append('gender', gender);
         axios({
             method: 'post',
-            url: '/upload',
-            headers: { 'Content-Type': 'application/json' },
-            data: { imageData: imageData }
+            url: '/project_war_exploded/api/home/updateSettings',
+            headers: { 'Content-Type': 'multipart/form-data' },
+            data: formData
         }).then(function (resp) {
             console.log(resp);
-            // do something after image uploaded
         });
     }
-    axios({
-        method: 'get',
-        url:'/project_war/user/me'
-    }).then(function (resp){
-        document.getElementById("username").value=resp.data.username;
-        document.getElementById("introduce").value=resp.data.introduce;
-        document.getElementById("email").value=resp.data.email;
-    })
+    function getUser() {
+        let token =sessionStorage.getItem("token");
+        if(token==null){
+            alert('请登录');
+            location.href="login.html"
+            return;
+        }
+        axios({
+            method: 'get',
+            url:'/project_war_exploded/api/home/me'
+        }).then(function (resp){
+            document.getElementById("name").value=resp.data.username;
+            document.getElementById("introduce").innerHTML=resp.data.introduce;
+            document.getElementById("email").value=resp.data.email;
+            document.getElementById('preview').src=resp.data.avatar;
+        })
+    }
+    window.onload=function () {
+        getUser();
+    }
 </script>
-
-
-
-
-
-
-
 
 
 </body>
