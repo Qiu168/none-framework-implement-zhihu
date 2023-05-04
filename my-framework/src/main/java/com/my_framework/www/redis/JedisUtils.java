@@ -15,7 +15,7 @@ public class JedisUtils {
     private static final ThreadLocal<Transaction> TRAN = new ThreadLocal<>();
     private static final Logger logger= Logger.getLogger(JedisUtils.class.getName());
     public static Jedis getJedis()  {
-        logger.log(Level.INFO,"获取jedis对象");
+        //logger.log(Level.INFO,"获取jedis对象");
         Jedis jedis = TL.get();
         if (jedis == null) {
             jedis = JedisPoolFactory.getResource();
@@ -29,7 +29,7 @@ public class JedisUtils {
             jedis.close();
             TL.remove();
         }
-        logger.log(Level.INFO,"归还jedis对象");
+        //logger.log(Level.INFO,"归还jedis对象");
     }
     public static void beginTransaction(){
         Jedis jedis = getJedis();

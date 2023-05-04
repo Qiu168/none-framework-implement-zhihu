@@ -169,6 +169,7 @@ public class HandlerAdapter {
             if(e instanceof NoSuchMethodException ||e instanceof IllegalAccessException){
                 logger.log(Level.SEVERE,"不正常的调用，可能方法名错误或调用私有方法！ " +
                         "An error occurred in BaseServlet e = {0}", e);
+                response.sendRedirect("http://localhost:8080/project_war_exploded/html/error/404.html");
             }
             //获取真正引起的异常
             Throwable cause = e.getCause();
