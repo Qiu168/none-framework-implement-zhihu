@@ -20,6 +20,8 @@ public class JedisConstants {
     public static final String LOGIN_USER_KEY = "login:token:";
     public static final Long LOGIN_USER_TTL = 1800L;
 
+    public static final String USER_RIGHT_KEY = "user:right:";
+    public static final Long USER_RIGHT_TTL = 1800L;
     public static final Long CACHE_NULL_TTL = 2L;
 
     public static final Long CACHE_SHOP_TTL = 30L;
