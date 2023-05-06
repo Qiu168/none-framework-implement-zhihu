@@ -75,8 +75,8 @@ public class SQLBuilder {
         return this;
     }
 
-    public SQLBuilder join(String table, String condition) {
-        joinClause.add(" JOIN " + table + " ON " + condition);
+    public SQLBuilder join(String table, String... condition) {
+        joinClause.add(" JOIN " + table + " ON " + String.join(" AND ", condition));
         return this;
     }
 
