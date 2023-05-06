@@ -48,7 +48,7 @@ public class CollectionUtil {
      * @param list List
      * @return Object[]
      */
-    public static Object[] listToArray(List list) {
+    public static Object[] listToArray(List<?> list) {
         if (isEmpty(list)) {
             return new Object[0];
         }
