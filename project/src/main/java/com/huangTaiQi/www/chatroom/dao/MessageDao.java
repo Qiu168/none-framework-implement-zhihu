@@ -10,7 +10,6 @@ import com.my_framework.www.annotation.Repository;
 import com.my_framework.www.pool.DataBaseUtil;
 
 import java.sql.Connection;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,7 +33,7 @@ public class MessageDao {
         return baseDao.selectByParams(sql, Message.class,logoutAt);
     }
 
-    public Integer insert(Message message) throws Exception {
+    public void insertMessage(Message message) throws Exception {
         String sql=new SQLBuilder("message")
                 .insert("uid")
                 .insert("content")
@@ -42,7 +41,6 @@ public class MessageDao {
                 .insert("room_id")
                 .buildInsert();
         baseDao.updateCommon(sql,message.getUid(),message.getContent(),message.getPublishedAt(),message.getRoomId());
-        return baseDao.getLastInsertId();
 
     }
 }
