@@ -25,7 +25,6 @@ public class ChatRoomUserDao {
     private final Connection connection = DataBaseUtil.getConnection();
     BaseDao baseDao=new BaseDao(connection);
     public ChatRoomUserEntity selectOneByUsername(String username) {
-        //String sql = "SELECT uid, username, username, password, logout_at FROM users WHERE username = ?";
         String sql=new SQLBuilder("chat_users A")
                 .select("A.id","A.chatroom_id","A.state","A.uid","A.role","A.logout_at","B.username","B.avatar")
                 .join("user B","A.uid = B.id").where("username").buildSelect();
@@ -38,19 +37,27 @@ public class ChatRoomUserDao {
 
     }
 
-    public List<ChatRoomUserVO> selectAllList(String roomId) {
+    public List<ChatRoomUserVO> selectAllList(String roomId) throws Exception {
         List<ChatRoomUserVO> chatRoomUserEntityList = new ArrayList<>();
-        //String sql = "SELECT uid, username FROM users ORDER BY uid";
-
-            return chatRoomUserEntityList;
+        String sql=new SQLBuilder("chat_users A")
+                .join("user B","A.uid=B.id")
+                .select("A.id","A.uid","A.state","A.chatroom_id","A.role","A.logout_at","B.avatar","B.username")
+                .where("A.chatroom_id")
+                .buildSelect();
+        return baseDao.selectByParams(sql,ChatRoomUserVO.class,roomId);
     }
 
-    public ChatRoomUserEntity getUserByUidAndRoomId(Long id, String roomId) {
-        return null;
+    public ChatRoomUserEntity getUserByUidAndRoomId(Long uid, String roomId) throws Exception {
+        String sql=new SQLBuilder("chat_users")
+                .select("*")
+                .where("uid")
+                .where("chatroom_id")
+                .buildSelect();
+        return baseDao.selectOne(sql,ChatRoomUserEntity.class,uid,roomId);
     }
 
     public void createUser(Long id, String roomId, int role) throws SQLException {
-        String sql=new SQLBuilder("chat_user")
+        String sql=new SQLBuilder("chat_users")
                 .insert("uid")
                 .insert("chatroom_id")
                 .insert("logout_at")
@@ -64,19 +71,28 @@ public class ChatRoomUserDao {
                 .select("A.chatroom_id id")
                 .select("B.name")
                 .join("chatroom B","A.chatroom_id=B.id")
+                .where("uid")
                 .buildSelect();
-        return baseDao.selectByParams(sql,Chatroom.class);
+        return baseDao.selectByParams(sql,Chatroom.class,uid);
     }
 
     public Integer createChatRoom(String roomName) throws Exception {
         String sql=new SQLBuilder("chatroom").insert("name").buildInsert();
         baseDao.updateCommon(sql,roomName);
         //获取主键
-        return baseDao.getLastInsertId();
+        return selectChatRoomByRoomName(roomName).getId();
+    }
+
+    private Chatroom selectChatRoomByRoomName(String roomName) throws Exception {
+        String sql=new SQLBuilder("chatroom")
+                .select("*")
+                .where("name")
+                .buildSelect();
+        return baseDao.selectOne(sql,Chatroom.class,roomName);
     }
 
     public void updateLogoutAt(ChatRoomUserVO chatRoomUserEntityDo) throws SQLException {
-        String sql=new SQLBuilder("chatroom").update("logout_at").where("id").buildUpdate();
+        String sql=new SQLBuilder("chat_users").update("logout_at").where("id").buildUpdate();
         baseDao.updateCommon(sql,chatRoomUserEntityDo.getLogoutAt(), chatRoomUserEntityDo.getId());
     }
 }
