@@ -51,6 +51,7 @@ public class HandlerAdapter {
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+                return;
             }
         }
         //获取请求方法类型
