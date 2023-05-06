@@ -149,7 +149,8 @@
             method: 'get',
             url:'/project_war_exploded/api/chatroom/addUser?roomId='+roomId+"&username="+value
         }).then(function (resp){
-
+            let data=resp.data;
+            alert(data.message);
         })
     }
     window.onload=function () {

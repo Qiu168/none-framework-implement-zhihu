@@ -125,7 +125,7 @@
 
             <div class="my-3 rounded">
                 <p class="mb-0">
-                    <a href="write.html" class="btn btn-primary btn-sm btn-block" style="color: white">发布问题</a>
+                    <a href="sendQuestion.html" class="btn btn-primary btn-sm btn-block" style="color: white">发布问题</a>
                 </p>
             </div>
 
@@ -317,7 +317,7 @@ function getTotal(condition) {
                         tableData += "<img src="+question.avatar+" alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
                             question.username+
                             "                        <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\" style=\"margin-left: 5px\">\n" +
-                            "                            <a href="+"readAnswer.html#"+ question.id+"\n" +
+                            "                            <a href="+"readQuestion.html#"+ question.id+"\n" +
                             "                               class=\"text-dark font-weight-bold text-decoration-none d-block\">"+ question.title +"\n" +
                             "                            </a>\n" +
                             "                            <span :class="+(question.answerCount == 0 ? 'badge badge-warning' : 'badge badge-info')+">\n" +

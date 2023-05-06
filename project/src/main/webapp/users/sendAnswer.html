@@ -1,0 +1,133 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>问答</title>
+  <link rel="stylesheet" href="bootstrap.css"/>
+  <link rel="stylesheet" href="editormd.css"/>
+  <style>
+    .nav-underline .nav-link {
+      padding-top: .75rem;
+      padding-bottom: .75rem;
+      font-size: .875rem;
+      color: #6c757d;
+    }
+  </style>
+</head>
+<body style="background: #f2f2f2;">
+
+<div class="top">top</div>
+<script src="../js/axios.js"></script>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="../js/common.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+  //在js中引入
+  $(document).ready(function () {
+    $('.top').load('header.html');
+
+  });
+</script>
+
+<main role="main" class="container mt-3 p-3 bg-white rounded">
+  <div class="row">
+    <div class="col-md-12 blog-main">
+
+      <div class="blog-post">
+        <h2 class="blog-post-title" id="question-title">title</h2>
+        <p class="blog-post-meta">
+          <span id="question-time">time</span>
+          by
+          <img id="question-avatar" src="#" alt="avatar" style="border-radius: 5px " width="32" height="32">
+          <a id="question-username" href="#">
+            username</a>
+          <span>
+                        <svg class="bi bi-eye-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>
+                        <path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
+                        </svg>
+                        回答数：<b id="answerCount">123</b>
+                        <a id="question-category"></a>
+          </span>
+        </p>
+      </div>
+
+
+
+      <hr style="margin-top: 18px">
+
+      <div id="question-content">
+        123
+      </div>
+      <div class="col-md-12 blog-main" style="margin-top: 20px">
+        <hr>
+      </div>
+
+    </div>
+    <div class="col-md-12 blog-main">
+      <div class="col-md-12 order-md-1">
+        <h4 class="mb-3">写回答</h4>
+
+        <div class="needs-validation">
+          <div class="row">
+            <div class="col-md-10 mb-3">
+              <label for="title">标题</label>
+              <input type="text" name="title" class="form-control" id="title" value="" required autocomplete="off">
+            </div>
+
+            <div class="col-md-12 mb-3">
+              <p>内容</p>
+              <div id="blog-content">
+                <textarea required name="content" id="content"  rows="3" class="form-control"> </textarea>
+              </div>
+            </div>
+
+          </div>
+          <button class="btn btn-primary btn-lg btn-block" id="submit">回答问题</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script>
+    let questionId = window.location.hash.substring(1);
+    function getQuestion() {
+        axios({
+            method: 'get',
+            url:'/project_war_exploded/api/question/getQuestionById?id='+questionId
+        }).then(function (resp){
+            let question = resp.data;
+            questionId=question.id;
+            document.getElementById("question-title").innerHTML=question.title;
+            document.getElementById("question-time").innerHTML=formatDate(question.updateTime);
+            document.getElementById("answerCount").innerHTML=question.answerCount;
+            answerCount=question.answerCount;
+            document.getElementById("question-username").innerHTML=question.username;
+            document.getElementById("question-username").href='index.html#'+question.userId;
+            document.getElementById("question-avatar").src=question.avatar;
+            document.getElementById("question-content").innerHTML=question.content;
+          document.getElementById("question-category").innerHTML=question.categoryName;
+        })
+    }
+    document.getElementById("submit").onclick=function sendQuestion() {
+      let title = document.getElementById("title").value;
+      let content = document.getElementById("content").value;
+      axios({
+        method:'post',
+        url:'/project_war_exploded/api/answer/sendAnswer',
+        data:{
+          title:title,
+          questionId:questionId,
+          content:content
+        }
+      }).then(function (resp){
+        alert(resp.data.message)
+      })
+    }
+    window.onload=function (){
+        getQuestion();
+    }
+</script>
+</body>
+</html>

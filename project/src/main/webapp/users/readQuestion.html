@@ -57,6 +57,7 @@
 </svg>
                         回答数：<b id="questionCount">123</b>
                         <a id="question-category"></a>
+                        <a id="write-answer">写回答</a>
                     </span>
                     <!-- 自己写的文章可以编辑和删除 -->
 <!--                    <a th:if="${session.loginUser.getUid()==question.getAuthorId()}"-->
@@ -126,6 +127,7 @@
             document.getElementById("question-content").innerHTML=question.content;
             document.getElementById("question-title").innerHTML=question.title;
             document.getElementById("question-category").innerHTML=question.categoryName;
+            document.getElementById("write-answer").href="sendAnswer.html#"+question.id;
         })
     }
     function getAnswer(){
@@ -134,6 +136,10 @@
             url:'/project_war_exploded/api/answer/getAnswerByQuestionId?id='+questionId
         }).then(function (resp){
             let answers=resp.data;
+            if(answers==null){
+                document.getElementById("answer").innerHTML="还没有人回答"
+                return;
+            }
             let html="";
             for(let i=0;i<answers.length;i++){
                 let answer = answers[i];
