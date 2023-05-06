@@ -8,6 +8,7 @@ import com.my_framework.www.annotation.RequestMapping;
 import com.my_framework.www.annotation.RequestParam;
 import com.my_framework.www.utils.CastUtil;
 import com.my_framework.www.utils.StringUtil;
+import com.my_framework.www.utils.XSSDefenceUtils;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+
 
 /**
  * @author 14629
@@ -115,6 +119,15 @@ public class HandlerAdapter {
             params = request.getParameterMap();
         }
 
+        //TODO：参数过滤
+        params = params.entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> Arrays.stream(e.getValue())
+                                .map(XSSDefenceUtils::xssFilter)
+                                .toArray(String[]::new)
+                ));
         //controller的方法实参列表
         Object[] paramValues = new Object[paramsTypes.length];
 
