@@ -47,6 +47,12 @@ public class SQLBuilder {
         whereClause.add(condition+"= ? ");
         return this;
     }
+    public SQLBuilder whereIn(String condition,int size) {
+        String[] a=new String[size];
+        Arrays.fill(a,"?");
+        whereClause.add(condition+" IN ( "+String.join(",",a)+" ) ");
+        return this;
+    }
     public SQLBuilder blurWhere(String condition) {
         whereClause.add(condition+" LIKE  ? ");
         return this;
