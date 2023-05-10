@@ -160,6 +160,7 @@
 
 <script>
     const userId = window.location.hash.substring(1);
+    let total=0;
     let questions;
     let current=1;
     let pageSize=5;
@@ -213,7 +214,7 @@
         }).then(function (resp){
             let data = resp.data;
             console.log(data)
-            if(data.isSuccess=="true"){
+            if(data.success==true){
                 document.getElementById("follow").innerHTML="已关注";
             }
         })
@@ -224,7 +225,7 @@
             url:'/project_war_exploded/api/follow/follow?id='+userId
         }).then(function (resp){
             let data = resp.data;
-            if(data.isSuccess=="true"){
+            if(data.success==true){
                 document.getElementById("follow").innerHTML=data.message;
             }else{
                 alert(data.message)
@@ -262,6 +263,10 @@
             url:'/project_war_exploded/api/question/getQuestionByUser?page='+current+'&size='+pageSize+'&userId='+userId
         }).then(function(response) {
             questions = response.data;
+            if(questions==null){
+                document.getElementById("table").innerHTML="没有发表问题";
+                return;
+            }
             console.log(questions)
             let tableData="";
             for (let i = 0; i < questions.length; i++) {

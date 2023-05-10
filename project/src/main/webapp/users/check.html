@@ -4,7 +4,123 @@
     <meta charset="UTF-8">
     <title>Title</title>
 </head>
+<script src="../js/axios.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <body>
+<style>
+    .btn {
+        width: 80px;
+        height: 40px;
+        background-color: #007bff;
+        color: #007bff;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .text-container {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;  /* 控制到第3行，根据需要更改 */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
 
+<div class="top">top</div>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="../js/axios.js"></script>
+<script src="../js/common.js"></script>
+<script type="text/javascript">
+    //在js中引入
+    $(document).ready(function () {
+        $('.top').load('header.html');
+    });
+</script>
+
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-9 blog-main">
+            <div class="my-3 p-3 bg-white rounded shadow-sm">
+                <div id="a"  >问题，回答，评论
+                    <button>审核问题</button>
+                    <button>审核回答</button>
+                    <button>审核评论</button>
+                    <h6 class="border-bottom border-gray pb-2 mb-0">
+                        Q&A 累计：
+                        <span id="total"></span>
+                    </h6>
+                    <div id="message">
+                        内容
+                    </div>
+                    <button>pass</button>
+                    <nav aria-label="Page navigation example" class="mt-4">
+                        <ul class="pagination justify-content-center pagination-sm">
+                            <li class="page-item">
+                                <a class="page-link" onclick="previousPage()">Previous</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" onclick="nextPage()">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</main>
+<script>
+    let messageId;
+    let currentMessageUserId;
+    let current=1;
+    let pageSize=2;
+    let total=0;
+    let offset=0;
+    let checkType='question';
+    function getUncheckedQuestion() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/question/getUncheckedQuestion?page='+current+'&size='+pageSize
+        }).then(function (resp) {
+
+        })
+    }
+    function getUncheckedAnswer() {
+        axios({
+            method: 'get',
+            url:'/project_war_exploded/api/question/getUncheckedAnswer?page='+current+'&size='+pageSize
+        }).then(function (resp) {
+
+        })
+    }
+    function getUncheckedComment() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/question/getUncheckedComment?page='+current+'&size='+pageSize
+        }).then(function (resp) {
+
+        })
+    }
+    function pass() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/'+checkType+'/pass?id='+messageId+"&userId="+currentMessageUserId
+        }).then(function (resp) {
+
+        })
+    }
+    function getTotal() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/'+checkType+'/getUncheckedTotal'
+        }).then(function (resp) {
+
+        })
+    }
+</script>
 </body>
 </html>

@@ -252,7 +252,7 @@ function getTotal(condition) {
                 }
             }
             function nextPage() {
-                if (current<(total/pageSize)+(total%pageSize===0)?0:1) {
+                if (current<Math.ceil(total / pageSize)) {
                     current++;
                     Paging();
                 }else{

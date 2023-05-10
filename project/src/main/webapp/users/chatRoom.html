@@ -31,6 +31,7 @@
                 </div>
             </div>
             <div id="右边">
+                <button>管理员</button>
                 <div id="群成员总计">群成员x/x</div>
                 <div id="群成员名单">
                     <ol>
@@ -78,14 +79,14 @@
             var content = textarea.value;
             textarea.value = '';
             ws.send(content);
-            var liHTML = `<li>
-                <div class="聊天头像"><img src=${me.avatar}></div>
-                <div class="聊天内容部分">
-                    <div class="聊天昵称">${me.username}</div>
-                    <div class="聊天内容">${content}</div>
-                </div>
-            </li>`;
-            document.querySelector("#聊天内容区").innerHTML+=liHTML;
+            // var liHTML = `<li>
+            //     <div class="聊天头像"><img src=${me.avatar}></div>
+            //     <div class="聊天内容部分">
+            //         <div class="聊天昵称">${me.username}</div>
+            //         <div class="聊天内容">${content}</div>
+            //     </div>
+            // </li>`;
+            // document.querySelector("#聊天内容区").innerHTML+=liHTML;
         }
         textarea.onkeydown = function (e) {
             if (e.keyCode == 13) {
