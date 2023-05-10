@@ -12,6 +12,6 @@ import java.lang.annotation.*;
 @Target(ElementType.METHOD)
 @Documented
 public @interface Access {
-    boolean authority() default true;
+    long rightName();
     String message() default "没有权限";
 }
