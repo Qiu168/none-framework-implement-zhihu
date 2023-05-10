@@ -1,4 +1,4 @@
-package com.huangTaiQi.www.exception;
+package com.my_framework.www.exception;
 
 /**
  * @author 14629
