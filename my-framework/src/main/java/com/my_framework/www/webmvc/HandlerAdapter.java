@@ -2,14 +2,13 @@ package com.my_framework.www.webmvc;
 
 
 import com.alibaba.fastjson.*;
-import com.my_framework.www.annotation.Access;
-import com.my_framework.www.annotation.Pattern;
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
+import com.my_framework.www.annotation.*;
 import com.my_framework.www.exception.AccessDeniedException;
+import com.my_framework.www.exception.ApiRequestFrequencyException;
 import com.my_framework.www.utils.CastUtil;
 import com.my_framework.www.utils.StringUtil;
 import com.my_framework.www.utils.XSSDefenceUtils;
+import com.my_framework.www.webmvc.rate.RateLimiter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -45,7 +44,7 @@ public class HandlerAdapter {
 
     public void handle(HttpServletRequest request, HttpServletResponse response, HandlerMapping handlerMapping) {
         Method method = handlerMapping.getMethod();
-        //TODO:权限管理
+        //权限管理
         //是否有access注解
         Access access = method.getAnnotation(Access.class);
         if(access!=null){
@@ -66,6 +65,25 @@ public class HandlerAdapter {
                     throw new RuntimeException(e);
                 }
                 throw new AccessDeniedException("没有编号："+rightName+"的权限");
+            }
+        }
+        //接口限流
+        Limit limit = method.getAnnotation(Limit.class);
+        if(limit!=null){
+            boolean hasBucket = RateLimiter.hasBucket(method.getName());
+            if(!hasBucket){
+                RateLimiter.addBucket(method.getName(), limit.maxToken(), limit.ratePerSecond());
+            }
+            boolean allowAccess = RateLimiter.allowAccess(method.getName(), request.getRemoteAddr(), limit.costPerRequest());
+            if(!allowAccess){
+                //返回信息
+                try {
+                    response.getWriter().write("太多请求了，歇一下吧");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                logger.log(Level.INFO,request.getRemoteAddr()+"限流");
+                throw new ApiRequestFrequencyException(request.getRemoteAddr());
             }
         }
         //获取请求方法类型
