@@ -11,7 +11,6 @@ import com.huangTaiQi.www.chatroom.model.entity.ChatRoomUserEntity;
 import com.huangTaiQi.www.chatroom.model.entity.Message;
 import com.huangTaiQi.www.chatroom.model.OnlineUser;
 import com.huangTaiQi.www.chatroom.model.vo.ChatRoomUserVO;
-import com.huangTaiQi.www.utils.UserHolder;
 import com.my_framework.www.annotation.Autowired;
 import com.my_framework.www.annotation.Service;
 
@@ -30,29 +29,27 @@ public class MessageService implements IMessagePublisher {
 
     @Override
     public void publish(ChatRoomUserVO chatRoomUserVO, String content) throws Exception {
-        //TODO:1,保存消息到数据库中，同时得到生成的消息mid
         Message message = new Message();
         message.setUid(chatRoomUserVO.getUid());
-        message.setUsername(UserHolder.getUser().getUsername());
-        message.setAvatar(UserHolder.getUser().getAvatar());
+        message.setUsername(chatRoomUserVO.getUsername());
+        message.setAvatar(chatRoomUserVO.getAvatar());
         message.setContent(content);
+        message.setRoomId(chatRoomUserVO.getChatroomId());
         message.setPublishedAt(System.currentTimeMillis());
-        //TODO:真的用得到mid吗
-        Integer mid = messageDao.insert(message);
-        message.setMid(mid);
+        messageDao.insertMessage(message);
         //2,从用户中心中获取当前在线用户
         String messageText= JSON.toJSONString(message);
-        List<OnlineUser> onlineUserList = userCenter.getOnlineUserList(chatRoomUserVO.getChatRoomId());
+        List<OnlineUser> onlineUserList = userCenter.getOnlineUserList(chatRoomUserVO.getChatroomId());
         for (OnlineUser onlineUser : onlineUserList) {
-            if(onlineUser.getDo().getChatRoomId().equals(chatRoomUserVO.getChatRoomId())){
+            if(onlineUser.getDo().getChatroomId().equals(chatRoomUserVO.getChatroomId())){
                 //发送数据到同一个群聊的
                 onlineUser.send(messageText);
-            } else if(onlineUser.getDo().getChatRoomId()==0){
+            } else if(onlineUser.getDo().getChatroomId()==0){
                 //该用户在这个群聊的
-                ChatRoomUserEntity userByUidAndRoomId = chatRoomUserDao.getUserByUidAndRoomId(onlineUser.getDo().getUid(), String.valueOf(onlineUser.getDo().getChatRoomId()));
+                ChatRoomUserEntity userByUidAndRoomId = chatRoomUserDao.getUserByUidAndRoomId(onlineUser.getDo().getUid(), String.valueOf(onlineUser.getDo().getChatroomId()));
                 if(userByUidAndRoomId!=null){
                     //如果还没有进入。发个提示
-                    onlineUser.send(String.valueOf(onlineUser.getDo().getChatRoomId()));
+                    onlineUser.send(String.valueOf(onlineUser.getDo().getChatroomId()));
                 }
             }
         }
