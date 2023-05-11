@@ -1,5 +1,7 @@
 package com.huangTaiQi.www.model.entity;
 
+import java.sql.Timestamp;
+
 /**
  * @author 14629
  */
@@ -8,7 +10,7 @@ public class FollowEntity {
     private Long id;
     private Long userId;
     private Long followeeId;
-    private Long createTime;
+    private Timestamp createTime;
 
     public Long getId() {
         return id;
@@ -34,11 +36,11 @@ public class FollowEntity {
         this.followeeId = followeeId;
     }
 
-    public Long getCreateTime() {
+    public Timestamp getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(Long createTime) {
+    public void setCreateTime(Timestamp createTime) {
         this.createTime = createTime;
     }
 }

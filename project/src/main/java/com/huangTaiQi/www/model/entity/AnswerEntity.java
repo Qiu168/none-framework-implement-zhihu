@@ -1,5 +1,7 @@
 package com.huangTaiQi.www.model.entity;
 
+import java.sql.Timestamp;
+
 /**
  * @author 14629
  */
@@ -14,6 +16,8 @@ public class AnswerEntity {
     private String title;
     private String content;
     private Long likes;
+    private Timestamp createTime;
+    private Timestamp updateTime;
 
     public Long getQuestionId() {
         return questionId;
@@ -85,5 +89,21 @@ public class AnswerEntity {
 
     public void setLikes(Long likes) {
         this.likes = likes;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    public Timestamp getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
     }
 }

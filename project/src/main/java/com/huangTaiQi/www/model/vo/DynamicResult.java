@@ -6,9 +6,9 @@ import java.util.List;
  * @author 14629
  */
 public class DynamicResult {
-    private List<?> list;
-    private Long minTime;
-    private Integer offset;
+    private final List<?> list;
+    private final Long minTime;
+    private final Integer offset;
 
     public DynamicResult(List<?> list, Long minTime, Integer offset) {
         this.list = list;
