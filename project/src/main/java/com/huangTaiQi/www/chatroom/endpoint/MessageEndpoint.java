@@ -9,15 +9,15 @@ import com.huangTaiQi.www.chatroom.service.ChatRoomUserService;
 import com.huangTaiQi.www.model.dto.UserDTO;
 import com.huangTaiQi.www.utils.BeanUtil;
 import com.huangTaiQi.www.utils.StringUtils;
-import com.my_framework.www.annotation.Autowired;
 import com.my_framework.www.redis.JedisUtils;
+import com.my_framework.www.utils.ContextUtil;
 import redis.clients.jedis.Jedis;
 
 
 import javax.websocket.*;
-import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.Map;
 
 import static com.huangTaiQi.www.constant.JedisConstants.LOGIN_USER_KEY;
@@ -29,13 +29,10 @@ import static javax.websocket.CloseReason.CloseCodes.NORMAL_CLOSURE;
  * 这里是固定用法
  * @author 14629
  */
-
 @ServerEndpoint(value = "/chat", configurator = HttpSessionConfigurator.class)
 public class MessageEndpoint {
-    @Autowired
-    private ChatRoomUserService chatRoomUserService;
-    @Autowired
-    private MessageService messageService;
+    private final ChatRoomUserService chatRoomUserService=ContextUtil.getBean(ChatRoomUserService.class);
+    private final MessageService messageService= ContextUtil.getBean(MessageService.class);
     private OnlineUser currentUser;
 
 
@@ -44,7 +41,11 @@ public class MessageEndpoint {
      */
 
     @OnOpen
-    public void onOpen( @PathParam("token") String token,@PathParam("roomId") String roomId, Session session) throws Exception {
+    public void onOpen(Session session, EndpointConfig endpointConfig) throws Exception {
+        //ws://localhost:8080/project_war_exploded/chat?token=${token}&roomId=${roomId}
+        Map<String, List<String>> params = session.getRequestParameterMap();
+        String token = params.get("token").get(0);
+        String roomId = params.get("roomId").get(0);
         //1，判断当前上线的是哪个用户————从redis中获取当前登录用户信息
         if(StringUtils.isEmpty(token)){
             CloseReason reason = new CloseReason(NORMAL_CLOSURE, "必须先登录");
@@ -76,8 +77,10 @@ public class MessageEndpoint {
         chatRoomUserService.online(currentUser);
     }
 
+
+
     @OnClose
-    public void onClose() throws SQLException {
+    public void onClose(Session session, CloseReason closeReason) throws SQLException {
         chatRoomUserService.offline(currentUser);
     }
 
