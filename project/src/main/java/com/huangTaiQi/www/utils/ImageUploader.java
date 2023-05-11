@@ -1,9 +1,8 @@
 package com.huangTaiQi.www.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.IOUtils;
@@ -12,6 +11,8 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 
 import javax.servlet.http.HttpServletRequest;
+
+
 
 /**
  * @author 14629
@@ -22,7 +23,7 @@ public class ImageUploader {
      * 文件上传目录
      */
 
-    private static final String UPLOAD_DIRECTORY = "src/main/webapp/img";
+    private static final String UPLOAD_DIRECTORY = "img";
 
     /**
      * 处理文件上传请求
@@ -41,6 +42,7 @@ public class ImageUploader {
 
         // 设置最大文件大小限制 10MB
         upload.setFileSizeMax(1024 * 1024 * 10);
+        upload.setHeaderEncoding("UTF-8");
 
         // 配置上传目录
         String uploadPath = request.getServletContext().getRealPath("") + UPLOAD_DIRECTORY;
@@ -52,10 +54,11 @@ public class ImageUploader {
         // 处理文件上传
         String fileName = "";
         try {
-            for (FileItem item : upload.parseRequest(request)) {
+            List<FileItem> fileItems = upload.parseRequest(request);
+            for (FileItem item : fileItems) {
                 // 处理普通表单字段
                 if (item.isFormField()) {
-                    // 表单字段
+
                 } else {
                     // 处理上传文件
                     fileName = new File(item.getName()).getName();
@@ -69,7 +72,7 @@ public class ImageUploader {
             return "Error: " + e.getMessage();
         }
 
-        return fileName;
+        return ".."+File.separator +UPLOAD_DIRECTORY+File.separator +fileName;
     }
 
     /**

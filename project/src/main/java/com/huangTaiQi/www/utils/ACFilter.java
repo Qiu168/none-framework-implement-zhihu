@@ -2,6 +2,9 @@ package com.huangTaiQi.www.utils;
 
 import java.util.*;
 
+/**
+ * @author 14629
+ */
 public class ACFilter {
     private final TrieNode root;
 

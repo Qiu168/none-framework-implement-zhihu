@@ -30,9 +30,6 @@
 </style>
 
 <div class="top">top</div>
-<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
-<script src="../js/axios.js"></script>
-<script src="../js/common.js"></script>
 <script type="text/javascript">
     //在js中引入
     $(document).ready(function () {
@@ -120,6 +117,10 @@
         }).then(function (resp) {
 
         })
+    }
+    window.onload=function () {
+        getUncheckedQuestion();
+        getTotal();
     }
 </script>
 </body>
