@@ -92,7 +92,7 @@ public class ChatRoomUserDao {
     }
 
     public void updateLogoutAt(ChatRoomUserVO chatRoomUserEntityDo) throws SQLException {
-        String sql=new SQLBuilder("chat_users").update("logout_at").where("id").buildUpdate();
+        String sql=new SQLBuilder("chat_users").update(ChatRoomUserEntity::getLogoutAt).where("id").buildUpdate();
         baseDao.updateCommon(sql,chatRoomUserEntityDo.getLogoutAt(), chatRoomUserEntityDo.getId());
     }
 }
