@@ -21,18 +21,21 @@ import javax.servlet.http.HttpServletResponse;
 public class FollowControllerImpl extends BaseController implements IFollowController {
     @Autowired
     FollowServiceImpl followService;
+    @Override
     @RequestMapping
     public void isFollowed(@RequestParam("id") String userId, HttpServletResponse response) throws Exception {
         String json=followService.isFollowed(userId);
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(json);
     }
+    @Override
     @RequestMapping
     public void follow(@RequestParam("id") Long userId,HttpServletResponse response) throws Exception {
         String json=followService.follow(userId);
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(json);
     }
+    @Override
     @RequestMapping
     public void getSameFollow(@RequestParam("id") Long userId,HttpServletResponse response) throws Exception {
         UserDTO user = UserHolder.getUser();
