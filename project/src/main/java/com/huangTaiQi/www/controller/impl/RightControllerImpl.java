@@ -16,6 +16,7 @@ import com.my_framework.www.annotation.RequestParam;
 public class RightControllerImpl extends BaseController implements IRightController {
     @Autowired
     RightServiceImpl rightService;
+    @Override
     @RequestMapping
     public void banRight(@RequestParam("right") Integer right,@RequestParam("banTime") Long banTime){
         rightService.banUserRight(right,banTime);
