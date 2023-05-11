@@ -16,14 +16,17 @@ import java.sql.SQLException;
 public class BlackListServiceImpl implements BlackListService {
     @Autowired
     BlackListDao blackListDao;
+    @Override
     public String getBlackListByUid() throws Exception {
         Long userId = UserHolder.getUser().getId();
         return JSON.toJSONString(blackListDao.getBlackListByUid(userId));
     }
+    @Override
     public void addBlackList(String blackUid) throws SQLException {
         Long userId = UserHolder.getUser().getId();
         blackListDao.addBlackList(userId,blackUid);
     }
+    @Override
     public void deleteBlackList(String blackUid) throws SQLException{
         Long userId = UserHolder.getUser().getId();
         blackListDao.deleteBlackList(userId,blackUid);

@@ -1,8 +1,12 @@
 package com.huangTaiQi.www.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.huangTaiQi.www.dao.impl.FollowDao;
+import com.huangTaiQi.www.dao.impl.RightDao;
 import com.huangTaiQi.www.dao.impl.UserDao;
 import com.huangTaiQi.www.model.dto.UserDTO;
+import com.huangTaiQi.www.model.entity.FollowEntity;
+import com.huangTaiQi.www.model.entity.RoleRightRelationEntity;
 import com.huangTaiQi.www.model.entity.UserEntity;
 import com.huangTaiQi.www.service.UserService;
 import com.huangTaiQi.www.utils.*;
@@ -35,15 +39,19 @@ import static com.huangTaiQi.www.constant.ResponseConstants.*;
 import static com.huangTaiQi.www.constant.SessionConstants.IMG_CODE;
 
 /**
- * TODO:所有的service没有实现事务，写完看能不能用aop实现事务,还有jedis的事务
  * @author 14629
  */
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
     UserDao userDao;
+    @Autowired
+    FollowDao followDao;
+    @Autowired
+    RightDao rightDao;
 
     Logger logger= Logger.getLogger(UserServiceImpl.class.getName());
+    @Override
     public BufferedImage imgCode(HttpSession session) {
         //使用验证码类，生成验证码类对象
         ImgVerifyCode ivc = new ImgVerifyCode();
@@ -140,9 +148,15 @@ public class UserServiceImpl implements UserService {
         // 设置token有效期
         jedis.expire(tokenKey, LOGIN_USER_TTL);
         // TODO:获取用户权限
+        List<RoleRightRelationEntity> userRight = rightDao.getUserRight(user.getRoleId());
         // TODO:制作成权限表
-        // TODO:存储到redis
+        Map<Long, Boolean> rightMap = userRight.stream().collect(Collectors.toMap(RoleRightRelationEntity::getRightId, right -> true));
+        UserHolder.saveUserRight(rightMap);
+        // TODO:存储到redis,存JSON
+        String rightKey = USER_RIGHT_KEY + token;
+        jedis.set(rightKey,JSON.toJSONString(rightMap));
         // TODO：设置有效期
+        jedis.expire(rightKey, USER_RIGHT_TTL);
         // 返回token
         return TOKEN+token;
     }
@@ -158,7 +172,8 @@ public class UserServiceImpl implements UserService {
         userDao.alterPassword(email, Md5Utils.encode(password));
         return SUCCESS_REGISTER;
     }
-    private String verifyUser(String email, String emailCode, String password, String rePassword){
+    @Override
+    public String verifyUser(String email, String emailCode, String password, String rePassword){
         //从redis中获取邮箱验证码
         Jedis jedis = JedisUtils.getJedis();
         String code = jedis.get(LOGIN_CODE_KEY + email);
@@ -175,7 +190,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public String getUser(String username) throws Exception {
-        List<UserDTO> users = userDao.getUser(username)
+        List<UserDTO> users = userDao.getUserByBlurUsername(username)
                 .stream()
                 .map(user -> BeanUtil.copyProperties(user, UserDTO.class))
                 .collect(Collectors.toList());
@@ -185,5 +200,25 @@ public class UserServiceImpl implements UserService {
     public String getUserById(String id) throws Exception {
         UserDTO userDTO = BeanUtil.copyProperties(userDao.getUserById(id), UserDTO.class);
         return  JSON.toJSONString(userDTO);
+    }
+    @Override
+    public void updateUserSettings(String username, String gender, String email, String introduce, String imgPath) throws SQLException {
+        //userDao.updateUserSettings(username,gender,email,introduce,imgPath);
+    }
+
+    /**
+     * 是否互关
+     * @param user 当前用户
+     * @param username 查询的用户昵称
+     * @return 如果互关，返回查询的用户Id，否则返回0
+     */
+    @Override
+    public Long isFollowEachOther(UserDTO user, String username) throws Exception {
+        UserEntity userByUsername = userDao.getUserByUsername(username);
+        if(userByUsername==null){
+            return 0L;
+        }
+        FollowEntity followEntity=followDao.getEachFollow(user.getId(),userByUsername.getId());
+        return followEntity==null?0:followEntity.getUserId();
     }
 }

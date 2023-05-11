@@ -21,16 +21,17 @@ public class LikeServiceImpl implements LikeService {
     @Autowired
     AnswerDao answerDao;
 
+    @Override
     public String isLike(String answerId) throws Exception {
         UserDTO user = UserHolder.getUser();
         LikeEntity likeEntity = null;
         if(user!=null){
-            //没登陆
+            //登陆了
             likeEntity=likeDao.selectLike(user.getId(),answerId);
         }
         return JSON.toJSONString(new IsSuccessVO(likeEntity!=null,""));
     }
-
+    @Override
     public String likeAnswer(String answerId) throws Exception {
         UserDTO user = UserHolder.getUser();
         if(user==null){
@@ -49,6 +50,5 @@ public class LikeServiceImpl implements LikeService {
             answerDao.updateLikes(answerId,-1);
             return JSON.toJSONString(new IsSuccessVO(true,"-1"));
         }
-
     }
 }

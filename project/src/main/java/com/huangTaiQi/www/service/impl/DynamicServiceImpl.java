@@ -37,6 +37,7 @@ public class DynamicServiceImpl implements DynamicService {
     QuestionDao questionDao;
     @Autowired
     AnswerDao answerDao;
+    @Override
     public void sendDynamic(MessageType type, Long followerId, String questionId) throws Exception {
         //getFollowee
         List<Long> follows = followDao.selectFollowee(followerId);
@@ -58,8 +59,8 @@ public class DynamicServiceImpl implements DynamicService {
         }
 
     }
-    public String getDynamic(MessageType type, Integer offset, Integer pageSize) throws Exception {
-        long max=System.currentTimeMillis();
+    @Override
+    public String getDynamic(MessageType type,Long max, Integer offset, Integer pageSize) throws Exception {
         Long userId= UserHolder.getUser().getId();
         String key;
         if(type==MessageType.QUESTION){
@@ -93,6 +94,16 @@ public class DynamicServiceImpl implements DynamicService {
         }else {
             List<AnswerEntity> answerByIds = answerDao.getAnswerByIds(ids);
             return JSON.toJSONString(new DynamicResult(answerByIds,minTime,os));
+        }
+    }
+    @Override
+    public Long getDynamicCount(MessageType type){
+        Long userId= UserHolder.getUser().getId();
+        Jedis jedis = JedisUtils.getJedis();
+        if(type==MessageType.QUESTION){
+            return jedis.zcard(FEED_QUESTION_KEY+userId);
+        }else{
+            return jedis.zcard(FEED_ANSWER_KEY+userId);
         }
     }
 }
