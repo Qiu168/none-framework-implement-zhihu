@@ -1,8 +1,10 @@
 package com.huangTaiQi.www.controller;
 
+
 import com.my_framework.www.annotation.RequestMapping;
 import com.my_framework.www.annotation.RequestParam;
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -86,9 +88,40 @@ public interface IUserController {
      */
     void resetPassword( String email, String emailCode, String password, String rePassword, HttpServletResponse response) throws SQLException, IOException, NoSuchAlgorithmException;
 
-    @RequestMapping
-    void getUser(@RequestParam("username") String username, HttpServletResponse response) throws Exception;
+    /**
+     * 根据username获取用户
+     * @param username 用户名
+     * @param response resp
+     * @throws Exception 异常
+     */
+    void getUser( String username, HttpServletResponse response) throws Exception;
 
-    @RequestMapping
-    void getUserById(@RequestParam("userId") String id, HttpServletResponse response) throws Exception;
+    /**
+     * 通过id查询用户
+     * @param id id
+     * @param response resp
+     * @throws Exception 异常
+     */
+    void getUserById(String id, HttpServletResponse response) throws Exception;
+
+    /**
+     * 更新设置
+     * @param introduce 简介
+     * @param email 邮箱
+     * @param username 用户名
+     * @param gender 性别
+     * @param request req
+     * @param response resp
+     * @throws ServletException 异常
+     * @throws IOException 异常
+     * @throws SQLException 异常
+     */
+    void updateSettings(String introduce, String email, String username, String gender, HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException, SQLException;
+
+    /**
+     * 获取权限
+     * @param response resp
+     * @throws IOException 异常
+     */
+    void getRight(HttpServletResponse response) throws IOException;
 }
