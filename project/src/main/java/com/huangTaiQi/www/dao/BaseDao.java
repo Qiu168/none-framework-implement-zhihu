@@ -101,13 +101,12 @@ public class BaseDao {
         ps.execute();
     }
 
-    /**
-     * 获取刚刚insert的主键值
-     * @return 插入数据的主键值
-     * @throws Exception 异常
-     */
-    public Integer getLastInsertId() throws Exception {
-        String sql="SELECT LAST_INSERT_ID()";
-        return selectOne(sql,Integer.class);
-    }
+//    /**
+//     * 获取刚刚insert的主键值
+//     * @return 插入数据的主键值
+//     * @throws Exception 异常
+//     */
+//    public Integer getLastInsertId() throws Exception {
+//        return selectOne("SELECT CAST(LAST_INSERT_ID() AS UNSIGNED) AS id", LastId.class).id.intValue();
+//    }
 }
