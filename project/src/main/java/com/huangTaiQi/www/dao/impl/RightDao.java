@@ -17,6 +17,7 @@ import java.util.List;
 public class RightDao implements IRightDao {
     private final Connection connection = DataBaseUtil.getConnection();
     private final BaseDao baseDao=new BaseDao(connection);
+    @Override
     public List<RoleRightRelationEntity> getUserRight(Long roleId) throws Exception {
         String sql=new SQLBuilder("role_right_relation")
                 .select("*")

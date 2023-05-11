@@ -1,6 +1,7 @@
 package com.huangTaiQi.www.dao.impl;
 
 import com.huangTaiQi.www.dao.BaseDao;
+import com.huangTaiQi.www.dao.IFollowDao;
 import com.huangTaiQi.www.model.entity.FollowEntity;
 import com.huangTaiQi.www.utils.sql.SQLBuilder;
 import com.my_framework.www.annotation.Repository;
@@ -15,10 +16,10 @@ import java.util.stream.Collectors;
  * @author 14629
  */
 @Repository
-public class FollowDao {
+public class FollowDao implements IFollowDao {
     private final Connection connection = DataBaseUtil.getConnection();
     private final BaseDao baseDao=new BaseDao(connection);
-
+    @Override
     public FollowEntity selectFollow(String userId, Long followeeId) throws Exception {
         String sql=new SQLBuilder("follow")
                 .select("*")
@@ -27,7 +28,7 @@ public class FollowDao {
                 .buildSelect();
         return baseDao.selectOne(sql,FollowEntity.class,userId,followeeId);
     }
-
+    @Override
     public void add(Long userId, Long followeeId) throws SQLException {
         String sql=new SQLBuilder("follow")
                 .insert("user_id")
@@ -35,7 +36,7 @@ public class FollowDao {
                 .buildInsert();
         baseDao.updateCommon(sql,userId,followeeId);
     }
-
+    @Override
     public void delete(Long userId, Long followeeId) throws SQLException {
         String sql=new SQLBuilder("follow")
                 .where("user_id")
@@ -44,13 +45,38 @@ public class FollowDao {
         baseDao.updateCommon(sql,userId,followeeId);
     }
 
-
+    @Override
     public List<Long> selectFollows(Long id) throws Exception {
         String sql=new SQLBuilder("follow")
                 .select("*")
                 .where("followee_id")
                 .buildSelect();
         List<FollowEntity> followEntities = baseDao.selectByParams(sql, FollowEntity.class, id);
+        if(followEntities==null){
+            return null;
+        }
         return followEntities.stream().map(FollowEntity::getUserId).collect(Collectors.toList());
+    }
+    @Override
+    public FollowEntity getEachFollow(Long id, Long selectId) throws Exception {
+        String sql=new SQLBuilder("follow A")
+                .select("A.id","A.user_id","A.followee_id","A.create_time")
+                .join("follow B","A.user_id=B.followee_id","A.followee_id=B.user_id")
+                .where("B.user_id")
+                .where("A.user_id")
+                .buildSelect();
+        return baseDao.selectOne(sql,FollowEntity.class,id,selectId);
+    }
+    @Override
+    public List<Long> selectFollowee(Long followerId) throws Exception {
+        String sql=new SQLBuilder("follow")
+                .select("*")
+                .where("user_id")
+                .buildSelect();
+        List<FollowEntity> followEntities = baseDao.selectByParams(sql, FollowEntity.class, followerId);
+        if(followEntities==null){
+            return null;
+        }
+        return followEntities.stream().map(FollowEntity::getFolloweeId).collect(Collectors.toList());
     }
 }

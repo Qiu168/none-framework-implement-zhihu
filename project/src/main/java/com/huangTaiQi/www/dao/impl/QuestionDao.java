@@ -9,6 +9,7 @@ import com.my_framework.www.annotation.Repository;
 import com.my_framework.www.pool.DataBaseUtil;
 
 import java.sql.Connection;
+import java.sql.SQLException;
 import java.util.List;
 
 /**
@@ -91,7 +92,7 @@ public class QuestionDao implements IQuestionDao {
                 .buildSelect();
         return baseDao.selectByParams(sql, QuestionEntity.class,userId);
     }
-
+    @Override
     public QuestionEntity getQuestionById(String id) throws Exception {
         String sql=new SQLBuilder("question")
                 .select("*")
@@ -100,5 +101,51 @@ public class QuestionDao implements IQuestionDao {
         return baseDao.selectOne(sql,QuestionEntity.class,id);
     }
 
-
+    @Override
+    public void addQuestion(String title, String content, String categoryId, String categoryName, String avatar, String username, Long uid) throws SQLException {
+        String sql=new SQLBuilder("question")
+                .insert("title")
+                .insert("content")
+                .insert("category_id")
+                .insert("user_id")
+                .insert("username")
+                .insert("avatar")
+                .insert("category_name")
+                .buildInsert();
+        baseDao.updateCommon(sql,title,content,categoryId,uid,username,avatar,categoryName);
+    }
+    @Override
+    public void updateQuestionState(int state,Long id) throws SQLException {
+        String sql=new SQLBuilder("question")
+                .update(QuestionEntity::getState)
+                .where("id")
+                .buildUpdate();
+        baseDao.updateCommon(sql,state,id);
+    }
+    @Override
+    public List<QuestionEntity> getQuestionByIds(List<Long> ids) throws Exception {
+        String sql=new SQLBuilder("question")
+                .select("*")
+                .whereIn("id",ids.size())
+                .buildSelect();
+        return baseDao.selectByParams(sql,QuestionEntity.class,ids.toArray());
+    }
+    @Override
+    public List<QuestionEntity> getQuestionByState(int page, int size,int state) throws Exception {
+        String sql=new SQLBuilder("question")
+                .select("*")
+                .limit(size)
+                .offset((page-1)*size)
+                .where("state")
+                .buildSelect();
+        return baseDao.selectByParams(sql,QuestionEntity.class,state);
+    }
+    @Override
+    public int getQuestionCountByState(int state) throws Exception {
+        String sql=new SQLBuilder("question")
+                .count("*")
+                .where("state")
+                .buildSelect();
+        return baseDao.selectOne(sql,Integer.class,state);
+    }
 }
