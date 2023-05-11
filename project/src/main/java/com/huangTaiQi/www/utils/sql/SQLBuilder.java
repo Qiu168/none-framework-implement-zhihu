@@ -1,6 +1,9 @@
 package com.huangTaiQi.www.utils.sql;
 
 
+import com.huangTaiQi.www.utils.FieldNameUtil;
+import com.huangTaiQi.www.utils.SFunction;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +33,8 @@ public class SQLBuilder {
         whereClause.add("?");
         return this;
     }
-    public SQLBuilder update(String column) {
+    public <T> SQLBuilder update(SFunction<T, ?> fn) {
+        String column = FieldNameUtil.getDBName(fn);
         columns.add(column);
         return this;
     }
