@@ -2,7 +2,6 @@ package com.huangTaiQi.www.controller.impl;
 
 import com.huangTaiQi.www.controller.BaseController;
 import com.huangTaiQi.www.controller.ICommentController;
-import com.huangTaiQi.www.model.entity.CommentEntity;
 import com.huangTaiQi.www.service.impl.CommentServiceImpl;
 import com.my_framework.www.annotation.Autowired;
 import com.my_framework.www.annotation.Controller;
@@ -10,6 +9,8 @@ import com.my_framework.www.annotation.RequestMapping;
 import com.my_framework.www.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
+
+import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_CHECKING;
 
 /**
  * @author 14629
@@ -20,24 +21,39 @@ public class CommentControllerImpl extends BaseController implements ICommentCon
     @Autowired
     CommentServiceImpl commentService;
 
+    @Override
     @RequestMapping(method = "post")
-    public void sendComment(@RequestParam("content") String content,@RequestParam("pid") String pid) throws Exception {
-        String tid;
-        //若是前端可以传topId就没有这么麻烦，但是我前端不会
-        if("0".equals(pid)){
-            //如果插入的是一级评论，tid为自己的id
-            tid=" LAST_INSERT_ID()";
-        }else {
-            //查询父评论的topId
-            CommentEntity parentComment = commentService.getCommentById(pid);
-            tid=String.valueOf(parentComment.getTopId());
-        }
-        commentService.addComment(content,pid,tid);
+    public void sendComment(@RequestParam("content") String content,
+                            @RequestParam("answerId") String answerId,
+                            @RequestParam("pid") String pid) throws Exception {
+        commentService.addComment(content,answerId,pid);
     }
+    @Override
     @RequestMapping
     public void getComment(@RequestParam("answerId") String answerId,@RequestParam("sortOrder") String sortOrder, HttpServletResponse response) throws Exception {
         String commentTree = commentService.getCommentTree(answerId, sortOrder);
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(commentTree);
+    }
+    @Override
+    @RequestMapping
+    public void getUncheckedComment(@RequestParam("page") int page,@RequestParam("size") int size, HttpServletResponse response) throws Exception {
+        String comments=commentService.getUncheckedComment(page,size);
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(comments);
+    }
+    @Override
+    @RequestMapping
+    public void passComment(@RequestParam("id")String id,@RequestParam("userId") Long uid) throws Exception {
+        //TODO
+        //改变question的state
+        commentService.passComment(id);
+    }
+    @Override
+    @RequestMapping
+    public void getUncheckedTotal(HttpServletResponse response) throws Exception {
+        int count=commentService.getCommentCountByState(MESSAGE_CHECKING);
+        response.setContentType("text/html;charset=utf-8");
+        response.getWriter().write(String.valueOf(count));
     }
 }
