@@ -60,11 +60,11 @@ public class AnswerControllerImpl extends BaseController implements IAnswerContr
     @Override
     @RequestMapping("pass")
     public void passAnswer(@RequestParam("answerId")String answerId,@RequestParam("userId") Long id) throws Exception {
-        //TODO
-        //改变question的state
+        //改变answer的state
         answerService.passAnswer(answerId);
         //发送动态
         dynamicService.sendDynamic(MessageType.ANSWER,id,answerId);
+        //TODO：发消息给作者，
     }
 
     @Override

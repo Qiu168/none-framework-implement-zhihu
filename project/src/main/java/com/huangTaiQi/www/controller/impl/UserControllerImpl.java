@@ -148,7 +148,6 @@ public class UserControllerImpl extends BaseController implements IUserControlle
                                @RequestParam("gender") String gender,
                                HttpServletRequest request,
                                HttpServletResponse response) throws ServletException, IOException, SQLException {
-        System.out.println(username);
         String imgPath = ImageUploader.processFileUpload(request);
         userService.updateUserSettings(username,gender,email,introduce,imgPath);
     }
