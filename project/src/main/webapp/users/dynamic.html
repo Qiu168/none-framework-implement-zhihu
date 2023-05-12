@@ -60,9 +60,7 @@
                         </ul>
                     </nav>
                 </div>
-
             </div>
-
         </div>
     </div>
 </main>
@@ -71,7 +69,7 @@
     let pageSize=2;
     let total=0;
     let offset=0;
-    let minTime;
+    let minTime=new Date().getTime() ;
     let dynamicType='question';
     function refreshGetQuestion(){
         offset=0;
@@ -93,6 +91,10 @@
             url:'/project_war_exploded/api/dynamic/getDynamicQuestion?offset='+offset+"&pageSize="+pageSize+"&max="+minTime
         }).then(function (resp) {
             let data=resp.data;
+            if(data==null){
+                document.getElementById("message").innerHTML="还没有动态";
+                return;
+            }
             offset=data.offset;
             minTime=data.minTime;
             questions=data.list;
@@ -132,13 +134,17 @@
             url:'/project_war_exploded/api/dynamic/getDynamicAnswer?offset='+offset+"&pageSize="+pageSize+"&max="+minTime
         }).then(function (resp) {
             let data=resp.data;
+            if(data==null){
+                document.getElementById("message").innerHTML="还没有人回答"
+                return;
+            }
             let messages = data.list;
-            offset=data.offset;
-            minTime=data.minTime;
             if(messages==null){
                 document.getElementById("message").innerHTML="还没有人回答"
                 return;
             }
+            offset=data.offset;
+            minTime=data.minTime;
             let html="";
             for(let i=0;i<messages.length;i++){
                 let message = messages[i];
@@ -187,6 +193,7 @@
             method:'get',
             url:'/project_war_exploded/api/dynamic/getDynamicTotal?type='+dynamicType
         }).then(function (resp) {
+            total=resp.data;
             document.getElementById("total").innerHTML=resp.data;
         })
     }

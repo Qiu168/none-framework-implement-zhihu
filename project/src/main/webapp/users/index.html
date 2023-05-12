@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <title>用户中心-KuangStudy</title>
+    <title>用户中心</title>
     <link href="bootstrap.css" rel="stylesheet" />
     <link rel="import" href="header.html" />
 <!--    <link rel="stylesheet" th:href="@{/bootstrap/css/bootstrap.min.css}">-->
@@ -257,6 +257,14 @@
 
         })
     }
+    function blackList() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/black/addBlackList?userId='+userId
+        }).then(function (resp) {
+            let data=resp.data;
+        })
+    }
     function Paging(){
         axios({
             method:'get',
@@ -280,6 +288,9 @@
                     "                            <span :class="+(question.answerCount == 0 ? 'badge badge-warning' : 'badge badge-info')+">\n" +
                     (question.answerCount == 0 ? '暂时还没有人回答' : '已有'+question.answerCount+'人回答此问题')+"\n" +
                     "      </span>\n" +
+                    "                            <span >\n" +
+                    stateDescribe(question.state)+"\n" +
+                    "      </span>\n" +
                     "                            <span>\n" +
                     "        <svg class=\"bi bi-eye-fill\" width=\"1em\" height=\"1em\" viewBox=\"0 0 16 16\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
                     "          <path d=\"M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z\"/>\n" +
@@ -300,6 +311,15 @@
         Paging();
         getUser();
         isFollow();
+    }
+    function stateDescribe(state) {
+        if(state==0){
+            return "审核中";
+        }else if(state==1){
+            return "审核不通过";
+        } else if(state==3){
+            return "被举报";
+        }
     }
 </script>
 

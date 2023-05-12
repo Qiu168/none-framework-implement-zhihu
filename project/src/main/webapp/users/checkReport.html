@@ -42,10 +42,10 @@
         <div class="col-md-9 blog-main">
             <div class="my-3 p-3 bg-white rounded shadow-sm">
                 <div id="a"  >问题，回答，评论
-                    <button onclick="refreshGetQuestion()">审核问题</button>
-                    <button onclick="refreshGetAnswer()">审核回答</button>
-                    <button onclick="refreshGetComment()">审核评论</button>
-                    <a href="checkReport.html">被举报的内容</a>
+                    <button onclick="refreshGetQuestion()">审核被举报的问题</button>
+                    <button onclick="refreshGetAnswer()">审核被举报的回答</button>
+                    <button onclick="refreshGetComment()">审核被举报的评论</button>
+                    <a href="check.html">审核用户发表的内容</a>
                     <h6 class="border-bottom border-gray pb-2 mb-0">
                         Q&A 累计：
                         <span id="total"></span>
@@ -131,11 +131,11 @@
     function getUncheckedQuestion() {
         axios({
             method:'get',
-            url:'/project_war_exploded/api/question/getUncheckedQuestion?page='+current+'&size='+pageSize
+            url:'/project_war_exploded/api/question/getReportedQuestion?page='+current+'&size='+pageSize
         }).then(function (resp) {
             let question=resp.data[0];
             if(question==null){
-                document.getElementById("message").innerHTML="还没有需要审核的问题";
+                document.getElementById("message").innerHTML="还没有动态";
                 return;
             }
             messageId=question.id;
@@ -164,7 +164,7 @@
     function getUncheckedAnswer() {
         axios({
             method: 'get',
-            url:'/project_war_exploded/api/answer/getUncheckedAnswer?page='+current+'&size='+pageSize
+            url:'/project_war_exploded/api/answer/getReportedAnswer?page='+current+'&size='+pageSize
         }).then(function (resp) {
             let message=resp.data[0];
             if(message==null){
@@ -190,7 +190,7 @@
     function getUncheckedComment() {
         axios({
             method:'get',
-            url:'/project_war_exploded/api/comment/getUncheckedComment?page='+current+'&size='+pageSize
+            url:'/project_war_exploded/api/comment/getReportedComment?page='+current+'&size='+pageSize
         }).then(function (resp) {
             let comment=resp.data[0];
             if(comment!=null){
@@ -204,7 +204,7 @@
     function pass() {
         axios({
             method:'get',
-            url:'/project_war_exploded/api/'+checkType+'/pass?id='+messageId+"&userId="+currentMessageUserId
+            url:'/project_war_exploded/api/'+checkType+'/passReported?id='+messageId+"&userId="+currentMessageUserId
         }).then(function (resp) {
             alert("ok")
         })
@@ -213,7 +213,7 @@
         let reason=document.getElementById("message-unPass").value;
         axios({
             method:'get',
-            url:'/project_war_exploded/api/'+checkType+'/unPass?id='+messageId+"&userId="+currentMessageUserId+"&reason="+reason
+            url:'/project_war_exploded/api/'+checkType+'/unPassReported?id='+messageId+"&userId="+currentMessageUserId+"&reason="+reason
         }).then(function (resp) {
             alert("ok")
         })
@@ -221,7 +221,7 @@
     function getTotal() {
         axios({
             method:'get',
-            url:'/project_war_exploded/api/'+checkType+'/getUncheckedTotal'
+            url:'/project_war_exploded/api/'+checkType+'/getReportedTotal'
         }).then(function (resp) {
             total=resp.data;
             document.getElementById("total").innerHTML=resp.data;

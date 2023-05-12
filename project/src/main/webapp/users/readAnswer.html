@@ -51,6 +51,7 @@
 <path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
 </svg>
                         回答数：<b id="answerCount">123</b>
+
                     </span>
                     <!-- 自己写的文章可以编辑和删除 -->
                     <!-- HTML code -->
@@ -81,6 +82,7 @@
                123456
             </div>
             <br>
+            <a id="report"><small><font color="red">举报</font></small></a>
         </div>
             <b id="isLike"> 点赞:</b><button id="like" onclick="likeThis()" style="float:right" >123</button>
         <button onclick="previousPage()"  id="pre">上一个回答</button>
@@ -130,6 +132,7 @@
     let size=1;
     let sortOrder="asc";
     let answerId = window.location.hash.substring(1);
+    document.getElementById("report").href="report.html?messageId="+answerId+"&messageType=answer";
     let answerUserId;
     function getQuestion() {
         axios({
@@ -196,6 +199,7 @@
             document.getElementById("like").innerHTML=answer.likes;
             answerId=answer.id;
             answerUserId=answer.userId;
+            document.getElementById("report").href="report.html?messageId="+answerId+"&messageType=answer";
             isFollow(answerUserId);
             isLike(answerId);
         })
