@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>举报</title>
+</head>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="../js/axios.js"></script>
+<script src="../js/common.js"></script>
+<body>
+<h2>举报</h2>
+<font color="red">乱举报可能会面临封号处理！</font><br>
+举报文章：<div id="message-info"></div><br>
+作者：<div id="message-user"></div><br>
+举报原因：<br>
+<textarea required name="report" id="report"  rows="3" class="form-control"> </textarea><br>
+<button onclick="submitReport()">提交举报</button>
+</body>
+<script>
+    const params = new URLSearchParams(window.location.search);
+    const messageId = params.get('messageId');
+    const messageType = params.get('messageType');
+    function submitReport() {
+        let content=document.getElementById("report").value;
+        axios({
+            method:'post',
+            url:'/project_war_exploded/api/report/reportMessage',
+            data:{
+                type:messageType,
+                id:messageId,
+                content:content
+            }
+        }).then(function (resp) {
+            alert("提交成功")
+        })
+    }
+    window.onload=function () {
+        if(messageType=='question'){
+            axios({
+                method: 'get',
+                url:'/project_war_exploded/api/question/getQuestionById?id='+messageId
+            }).then(function (resp) {
+                let data=resp.data;
+                document.getElementById("message-user").innerHTML=`<img alt="头像" src="${data.avatar}">${data.username}`;
+                document.getElementById("message-info").innerHTML=`${data.title}`;
+            })
+        }else if(messageType=='comment'){
+            axios({
+                method: 'get',
+                url:'/project_war_exploded/api/comment/getCommentById?id='+messageId
+            }).then(function (resp) {
+                let data=resp.data;
+                document.getElementById("message-user").innerHTML=`<img alt="头像" src="${data.avatar}">${data.username}`;
+                document.getElementById("message-info").innerHTML=`${data.content}`;
+            })
+        }else{
+            axios({
+                method: 'get',
+                url:'/project_war_exploded/api/answer/getAnswerById?id='+messageId
+            }).then(function (resp) {
+                let data=resp.data;
+                document.getElementById("message-user").innerHTML=`<img alt="头像" src="${data.avatar}">${data.username}`;
+                document.getElementById("message-info").innerHTML=`${data.title}`;
+            })
+        }
+
+    }
+</script>
+</html>

@@ -1,11 +1,13 @@
 package com.huangTaiQi.www.model.entity;
 
+import com.huangTaiQi.www.model.UserSettings;
+
 /**
  * @author 14629
  */
 @SuppressWarnings("ALL")
-public class CommentEntity {
-    private Long id;
+public class CommentEntity implements UserSettings {
+    private String id;
     private Integer state;
     private Long answerId;
     private Long userId;
@@ -17,12 +19,12 @@ public class CommentEntity {
     /**
      * 父评论的id
      */
-    private Long pid;
+    private String pid;
 
     /**
      * 一级评论的id
      */
-    private Long topId;
+    private String topId;
 
     public Integer getState() {
         return state;
@@ -32,11 +34,11 @@ public class CommentEntity {
         this.state = state;
     }
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -88,19 +90,19 @@ public class CommentEntity {
         this.content = content;
     }
 
-    public Long getPid() {
+    public String getPid() {
         return pid;
     }
 
-    public void setPid(Long pid) {
+    public void setPid(String pid) {
         this.pid = pid;
     }
 
-    public Long getTopId() {
+    public String getTopId() {
         return topId;
     }
 
-    public void setTopId(Long topId) {
+    public void setTopId(String topId) {
         this.topId = topId;
     }
 }

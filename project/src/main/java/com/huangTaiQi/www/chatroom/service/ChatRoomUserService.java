@@ -11,6 +11,8 @@ import com.huangTaiQi.www.chatroom.model.*;
 import com.huangTaiQi.www.chatroom.model.entity.ChatRoomUserEntity;
 import com.huangTaiQi.www.chatroom.model.entity.Message;
 import com.huangTaiQi.www.chatroom.model.vo.ChatRoomUserVO;
+import com.huangTaiQi.www.dao.impl.UserDao;
+import com.huangTaiQi.www.model.entity.UserEntity;
 import com.my_framework.www.annotation.Autowired;
 import com.my_framework.www.annotation.Service;
 
@@ -33,11 +35,13 @@ public class ChatRoomUserService implements IOnlineUser {
     ChatRoomUserDao chatRoomUserDao;
     @Autowired
     MessageDao messageDao ;
+    @Autowired
+    UserDao userDao;
 
 
     @Override
     public void online(OnlineUser user) throws Exception {
-        if(user.getDo().getChatRoomId()==0){
+        if(user.getDo().getChatroomId()==0){
             //TODO：查询历史信息
 
             //查询所在的所有群。
@@ -49,9 +53,11 @@ public class ChatRoomUserService implements IOnlineUser {
             ChatRoomUserVO chatRoomUserEntityDo = user.getDo();
             List<Message> messageList = messageDao.selectListAfter(chatRoomUserEntityDo.getLogoutAt());
             //把得到的每条消息都依次发送给刚登陆的用户
-            for (Message message : messageList) {
-                String messageText= JSON.toJSONString(message);
-                user.send(messageText);
+            if(messageList!=null){
+                for (Message message : messageList) {
+                    String messageText= JSON.toJSONString(message);
+                    user.send(messageText);
+                }
             }
         }
         // 登记用户上线
@@ -60,7 +66,7 @@ public class ChatRoomUserService implements IOnlineUser {
 
     @Override
     public void offline(OnlineUser user) throws SQLException {
-        if(user.getDo().getChatRoomId()!=0){
+        if(user.getDo().getChatroomId()!=0){
             //1,更新当前用户的登出时间------从OnlineUser这个业务对象中获取到数据库对应的对象（DO)
             ChatRoomUserVO chatRoomUserEntityDo = user.getDo();
             chatRoomUserEntityDo.setLogoutAt(System.currentTimeMillis());
@@ -71,7 +77,7 @@ public class ChatRoomUserService implements IOnlineUser {
 
 
 
-    public UserListResult getUserList(String roomId) {
+    public UserListResult getUserList(String roomId) throws Exception {
         UserListResult result = new UserListResult();
         //从数据库中读取所有用户
         List<ChatRoomUserVO> allChatRoomUserEntityList = chatRoomUserDao.selectAllList(roomId);
@@ -98,12 +104,11 @@ public class ChatRoomUserService implements IOnlineUser {
 
     }
 
-    public ChatRoomUserEntity getUserByUidAndRoomId(Long id, String roomId) {
+    public ChatRoomUserEntity getUserByUidAndRoomId(Long id, String roomId) throws Exception {
         return chatRoomUserDao.getUserByUidAndRoomId(id,roomId);
     }
 
-    public void createNewChatUser(Long id, String roomId) throws SQLException {
+    public void createNewChatUser(Long id, String roomId) throws Exception {
         chatRoomUserDao.createUser(id,roomId, GROUP_USER);
-        //return chatRoomUserDao.getUserByUidAndRoomId(id,roomId);
     }
 }

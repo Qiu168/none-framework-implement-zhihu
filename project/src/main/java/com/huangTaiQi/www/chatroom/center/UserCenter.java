@@ -48,9 +48,11 @@ public class UserCenter implements IOnlineUser {
     public List<OnlineUser> getOnlineUserList(Integer roomId) {
         List<OnlineUser> roomOnlineUser=new ArrayList<>();
         for (OnlineUser onlineUser : onlineUserList) {
-            if (onlineUser.getDo().getChatRoomId().equals(roomId)) {
+            //在同一聊天室的,或还没有进聊天室的
+            if (onlineUser.getDo().getChatroomId().equals(roomId)) {
                 roomOnlineUser.add(onlineUser);
             }
+
         }
         return roomOnlineUser;
     }

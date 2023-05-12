@@ -1,5 +1,7 @@
 package com.huangTaiQi.www.filter;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.TypeReference;
 import com.huangTaiQi.www.model.dto.UserDTO;
 import com.huangTaiQi.www.utils.*;
 import com.my_framework.www.pool.DataBaseUtil;
@@ -13,13 +15,12 @@ import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.Map;
 
-import static com.huangTaiQi.www.constant.JedisConstants.LOGIN_USER_KEY;
-import static com.huangTaiQi.www.constant.JedisConstants.LOGIN_USER_TTL;
+import static com.huangTaiQi.www.constant.JedisConstants.*;
 
 /**
  * @author 14629
  */
-@WebFilter("/*")
+@WebFilter("/api/*")
 public class ARefreshTokenFilter extends BaseFilter{
     @Override
     protected boolean doBeforeProcessing(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws Exception {
@@ -31,8 +32,10 @@ public class ARefreshTokenFilter extends BaseFilter{
             return true;
         }
         token=StringUtils.getToken(token);
-        String key = LOGIN_USER_KEY + token;
-        Map<String, String> userMap = jedis.hgetAll(key);
+        String userKey = LOGIN_USER_KEY + token;
+        String rightKey = USER_RIGHT_KEY + token;
+        Map<String, String> userMap = jedis.hgetAll(userKey);
+        String rightJson = jedis.get(rightKey);
         if(userMap.isEmpty()){
             return true;
         }
@@ -41,8 +44,12 @@ public class ARefreshTokenFilter extends BaseFilter{
         BeanUtil.fillBeanWithMap(user,userMap);
         // 存在，保存用户信息到 ThreadLocal
         UserHolder.saveUser(user);
-        // 刷新token有效期 TODO:刷新权限有效期
-        jedis.expire(key, LOGIN_USER_TTL);
+        // 获取权限
+        Map<Long, Boolean> rightMap = JSON.parseObject(rightJson, new TypeReference<Map<Long, Boolean>>(){});
+        UserHolder.saveUserRight(rightMap);
+        // 刷新token有效期
+        jedis.expire(userKey, LOGIN_USER_TTL);
+        jedis.expire(rightKey, USER_RIGHT_TTL);
         JedisUtils.close();
         return true;
     }
@@ -51,6 +58,7 @@ public class ARefreshTokenFilter extends BaseFilter{
     protected void doAfterProcessing(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws SQLException {
         //请求结束后移除ThreadLocal中的值，防止影响。（内存泄漏
         UserHolder.removeUser();
+        UserHolder.removeUserRight();
         DataBaseUtil.close();
         JedisUtils.close();
     }

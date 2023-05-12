@@ -1,10 +1,10 @@
-package com.huangTaiQi.www.utils;
+package com.my_framework.www.utils;
 
 /**
  * @author 14629
  */
 public class XSSDefenceUtils {
-    public static String filter(String input) {
+    public static String xssFilter(String input) {
         if (input == null) {
             return null;
         }

@@ -5,12 +5,15 @@ import com.alibaba.fastjson.JSON;
 import com.huangTaiQi.www.controller.BaseController;
 import com.huangTaiQi.www.controller.IUserController;
 import com.huangTaiQi.www.model.dto.UserDTO;
+import com.huangTaiQi.www.service.impl.RightServiceImpl;
 import com.huangTaiQi.www.service.impl.UserServiceImpl;
+import com.huangTaiQi.www.utils.ImageUploader;
 import com.huangTaiQi.www.utils.ImgVerifyCode;
 import com.huangTaiQi.www.utils.UserHolder;
 import com.my_framework.www.annotation.*;
 
 
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.awt.image.BufferedImage;
@@ -32,6 +35,8 @@ public class UserControllerImpl extends BaseController implements IUserControlle
 
     @Autowired
     UserServiceImpl userService;
+    @Autowired
+    RightServiceImpl rightService;
 
     @Override
     @RequestMapping(value = "getImgVerifyCode")
@@ -135,4 +140,22 @@ public class UserControllerImpl extends BaseController implements IUserControlle
         response.getWriter().write(user);
     }
 
+    @Override
+    @RequestMapping
+    public void updateSettings(@RequestParam("introduce") String introduce,
+                               @RequestParam("email") String email,
+                               @RequestParam("username") String username,
+                               @RequestParam("gender") String gender,
+                               HttpServletRequest request,
+                               HttpServletResponse response) throws ServletException, IOException, SQLException {
+        String imgPath = ImageUploader.processFileUpload(request);
+        userService.updateUserSettings(username,gender,email,introduce,imgPath);
+    }
+    @Override
+    @RequestMapping
+    public void getRight(HttpServletResponse response) throws IOException {
+        String json=rightService.getRight();
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(json);
+    }
 }

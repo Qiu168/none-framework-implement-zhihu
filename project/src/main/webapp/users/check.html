@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<script src="../js/axios.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
+<body>
+<style>
+    .btn {
+        width: 80px;
+        height: 40px;
+        background-color: #007bff;
+        color: #007bff;
+        border: none;
+        border-radius: 20px;
+        font-size: 16px;
+        cursor: pointer;
+    }
+    .text-container {
+        display: -webkit-box;
+        -webkit-line-clamp: 3;  /* 控制到第3行，根据需要更改 */
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+</style>
+
+<div class="top">top</div>
+<script type="text/javascript">
+    //在js中引入
+    $(document).ready(function () {
+        $('.top').load('header.html');
+    });
+</script>
+
+<main role="main" class="container">
+    <div class="row">
+        <div class="col-md-9 blog-main">
+            <div class="my-3 p-3 bg-white rounded shadow-sm">
+                <div id="a"  >问题，回答，评论
+                    <button onclick="refreshGetQuestion()">审核问题</button>
+                    <button onclick="refreshGetAnswer()">审核回答</button>
+                    <button onclick="refreshGetComment()">审核评论</button>
+                    <a href="checkReport.html">被举报的内容</a>
+                    <h6 class="border-bottom border-gray pb-2 mb-0">
+                        Q&A 累计：
+                        <span id="total"></span>
+                    </h6>
+                    <div id="message">
+                        内容
+                    </div>
+                    <button onclick="pass()">pass</button><br>
+                    <button onclick="unPass()">不通过</button>
+                    不通过原因：<br>
+                    <textarea required name="message-unPass" id="message-unPass"  rows="3" class="form-control"> </textarea><br>
+                    <nav aria-label="Page navigation example" class="mt-4">
+                        <ul class="pagination justify-content-center pagination-sm">
+                            <li class="page-item">
+                                <a class="page-link" onclick="previousPage()">Previous</a>
+                            </li>
+                            <li class="page-item">
+                                <a class="page-link" onclick="nextPage()">Next</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+
+            </div>
+
+        </div>
+    </div>
+</main>
+<script>
+    let messageId;
+    let currentMessageUserId;
+    let current=1;
+    let pageSize=1;
+    let total=0;
+    let offset=0;
+    let checkType='question';
+    function previousPage() {
+        if (current>1) {
+            current--;
+            getMessage();
+        }else{
+            alert("已经到尽头了")
+        }
+    }
+    function nextPage() {
+        if (current<Math.ceil(total / pageSize)) {
+            current++;
+            getMessage();
+        }else{
+            alert("已经到尽头了")
+        }
+    }
+    function getMessage() {
+        if(checkType=='question'){
+            getUncheckedQuestion();
+        }else if (checkType=='answer'){
+            getUncheckedAnswer();
+        }else{
+            getUncheckedComment();
+        }
+    }
+    function refreshGetQuestion(){
+        offset=0;
+        current=1;
+        checkType='question';
+        getUncheckedQuestion();
+        getTotal();
+    }
+    function refreshGetAnswer(){
+        offset=0;
+        current=1;
+        checkType='answer';
+        getUncheckedAnswer();
+        getTotal();
+    }
+    function refreshGetComment(){
+        offset=0;
+        current=1;
+        checkType='comment';
+        getUncheckedComment();
+        getTotal();
+    }
+    function getUncheckedQuestion() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/question/getUncheckedQuestion?page='+current+'&size='+pageSize
+        }).then(function (resp) {
+            let question=resp.data[0];
+            if(question==null){
+                document.getElementById("message").innerHTML="还没有需要审核的问题";
+                return;
+            }
+            messageId=question.id;
+            currentMessageUserId=question.userId;
+            document.getElementById("message").innerHTML="<a href=" + 'index.html#' + question.userId + "><img src=" + question.avatar + " alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
+                question.username + "</a>" +
+                "                        <p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\" style=\"margin-left: 5px\">\n" +
+                "                            <a href=" + 'readQuestion.html#' + question.id + "\n" +
+                "                               class=\"text-dark font-weight-bold text-decoration-none d-block\">" + question.title + "\n" +
+                "                            </a>\n" +
+                "                            <span :class=" + (question.answerCount == 0 ? 'badge badge-warning' : 'badge badge-info') + ">\n" +
+                (question.answerCount == 0 ? '暂时还没有人回答' : '已有' + question.answerCount + '人回答此问题') + "\n" +
+                "      </span>\n" +
+                "                            <span>\n" +
+                "        <svg class=\"bi bi-eye-fill\" width=\"1em\" height=\"1em\" viewBox=\"0 0 16 16\" fill=\"currentColor\" xmlns=\"http://www.w3.org/2000/svg\">\n" +
+                "          <path d=\"M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z\"/>\n" +
+                "          <path fill-rule=\"evenodd\" d=\"M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z\"/>\n" +
+                "        </svg>\n" +
+                "        类型:\n" +
+                "        <span>" + question.categoryName + "</span>\n" +
+                "      </span>\n" +
+                "                            <span class=\"badge badge-light float-right\">" + formatDate(question.updateTime) + "</span>\n" +
+                "                        </p>" + "<br>";
+        })
+    }
+    function getUncheckedAnswer() {
+        axios({
+            method: 'get',
+            url:'/project_war_exploded/api/answer/getUncheckedAnswer?page='+current+'&size='+pageSize
+        }).then(function (resp) {
+            let message=resp.data[0];
+            if(message==null){
+                document.getElementById("message").innerHTML="还没有人回答"
+                return;
+            }
+            messageId=message.id;
+            currentMessageUserId=message.userId;
+            document.getElementById("message").innerHTML="<a href=" + "index.html#" + message.userId + "\n" +
+                "class=\"text-dark font-weight-bold text-decoration-none d-block\">" +
+                "<img src=" + message.avatar + " alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
+                message.username + "</a>" +
+                " <a href=" + 'readAnswer.html#' + message.id + "><p class=\"media-body pb-3 mb-0 small lh-125 border-bottom border-gray\" style=\"margin-left: 5px\"><b>\n" +
+                message.title + "</b>\n" +
+                "<br>\n" +
+                " <span class='text-container'>\n" +
+                message.content +
+                "      </span><br>\n" +
+                "<small>like:" + message.likes + "</small>" +
+                "                        </p></a>" + "<br><br>";
+        })
+    }
+    function getUncheckedComment() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/comment/getUncheckedComment?page='+current+'&size='+pageSize
+        }).then(function (resp) {
+            let comment=resp.data[0];
+            if(comment!=null){
+                messageId=comment.id;
+                currentMessageUserId=comment.userId;
+                document.getElementById("message").innerHTML=comment.content;
+            }
+
+        })
+    }
+    function pass() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/'+checkType+'/pass?id='+messageId+"&userId="+currentMessageUserId
+        }).then(function (resp) {
+            alert("ok")
+        })
+    }
+    function unPass() {
+        let reason=document.getElementById("message-unPass").value;
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/'+checkType+'/unPass?id='+messageId+"&userId="+currentMessageUserId+"&reason="+reason
+        }).then(function (resp) {
+            alert("ok")
+        })
+    }
+    function getTotal() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/'+checkType+'/getUncheckedTotal'
+        }).then(function (resp) {
+            total=resp.data;
+            document.getElementById("total").innerHTML=resp.data;
+        })
+    }
+    window.onload=function () {
+        getUncheckedQuestion();
+        getTotal();
+    }
+</script>
+</body>
+</html>

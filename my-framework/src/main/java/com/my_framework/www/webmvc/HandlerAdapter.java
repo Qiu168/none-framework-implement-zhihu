@@ -2,12 +2,13 @@ package com.my_framework.www.webmvc;
 
 
 import com.alibaba.fastjson.*;
-import com.my_framework.www.annotation.Access;
-import com.my_framework.www.annotation.Pattern;
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
+import com.my_framework.www.annotation.*;
+import com.my_framework.www.exception.AccessDeniedException;
+import com.my_framework.www.exception.ApiRequestFrequencyException;
 import com.my_framework.www.utils.CastUtil;
 import com.my_framework.www.utils.StringUtil;
+import com.my_framework.www.utils.XSSDefenceUtils;
+import com.my_framework.www.webmvc.rate.RateLimiter;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -22,6 +23,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+
+
 
 /**
  * @author 14629
@@ -40,17 +44,46 @@ public class HandlerAdapter {
 
     public void handle(HttpServletRequest request, HttpServletResponse response, HandlerMapping handlerMapping) {
         Method method = handlerMapping.getMethod();
-        //TODO:权限管理
+        //权限管理
         //是否有access注解
         Access access = method.getAnnotation(Access.class);
         if(access!=null){
-            if(!access.authority()){
+            long rightName = access.rightName();
+            RightGet obj;
+            try {
+                //这里可以设计成读取xml，这里先这样
+                Class<?> clz=Class.forName("com.huangTaiQi.www.utils.UserHolder");
+                obj = (RightGet) clz.newInstance();
+            } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+            if(!obj.getRight(rightName)){
                 //如果没有权限
                 try {
                     response.getWriter().write(access.message());
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
+                throw new AccessDeniedException("没有编号："+rightName+"的权限");
+            }
+        }
+        //接口限流
+        Limit limit = method.getAnnotation(Limit.class);
+        if(limit!=null){
+            boolean hasBucket = RateLimiter.hasBucket(method.getName());
+            if(!hasBucket){
+                RateLimiter.addBucket(method.getName(), limit.maxToken(), limit.ratePerSecond());
+            }
+            boolean allowAccess = RateLimiter.allowAccess(method.getName(), request.getRemoteAddr(), limit.costPerRequest());
+            if(!allowAccess){
+                //返回信息
+                try {
+                    response.getWriter().write("太多请求了，歇一下吧");
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                logger.log(Level.INFO,request.getRemoteAddr()+"限流");
+                throw new ApiRequestFrequencyException(request.getRemoteAddr());
             }
         }
         //获取请求方法类型
@@ -92,7 +125,9 @@ public class HandlerAdapter {
         //获取提交表单数据
         Map<String, String[]> params;
         try {
+            //默认设置
             request.setCharacterEncoding("utf-8");
+            response.setContentType("text/json;charset=utf-8");
         } catch (UnsupportedEncodingException e) {
             throw new RuntimeException(e);
         }
@@ -114,6 +149,15 @@ public class HandlerAdapter {
             params = request.getParameterMap();
         }
 
+        //参数过滤
+        params = params.entrySet()
+                .stream()
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        e -> Arrays.stream(e.getValue())
+                                .map(XSSDefenceUtils::xssFilter)
+                                .toArray(String[]::new)
+                ));
         //controller的方法实参列表
         Object[] paramValues = new Object[paramsTypes.length];
 
@@ -169,6 +213,7 @@ public class HandlerAdapter {
             if(e instanceof NoSuchMethodException ||e instanceof IllegalAccessException){
                 logger.log(Level.SEVERE,"不正常的调用，可能方法名错误或调用私有方法！ " +
                         "An error occurred in BaseServlet e = {0}", e);
+                response.sendRedirect("http://localhost:8080/project_war_exploded/html/error/404.html");
             }
             //获取真正引起的异常
             Throwable cause = e.getCause();

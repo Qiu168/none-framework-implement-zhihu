@@ -1,6 +1,9 @@
 package com.huangTaiQi.www.utils.sql;
 
 
+import com.huangTaiQi.www.utils.FieldNameUtil;
+import com.huangTaiQi.www.utils.SFunction;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +33,8 @@ public class SQLBuilder {
         whereClause.add("?");
         return this;
     }
-    public SQLBuilder update(String column) {
+    public <T> SQLBuilder update(SFunction<T, ?> fn) {
+        String column = FieldNameUtil.getDBName(fn);
         columns.add(column);
         return this;
     }
@@ -45,6 +49,12 @@ public class SQLBuilder {
 
     public SQLBuilder where(String condition) {
         whereClause.add(condition+"= ? ");
+        return this;
+    }
+    public SQLBuilder whereIn(String condition,int size) {
+        String[] a=new String[size];
+        Arrays.fill(a,"?");
+        whereClause.add(condition+" IN ( "+String.join(",",a)+" ) ");
         return this;
     }
     public SQLBuilder blurWhere(String condition) {
@@ -75,8 +85,8 @@ public class SQLBuilder {
         return this;
     }
 
-    public SQLBuilder join(String table, String condition) {
-        joinClause.add(" JOIN " + table + " ON " + condition);
+    public SQLBuilder join(String table, String... condition) {
+        joinClause.add(" JOIN " + table + " ON " + String.join(" AND ", condition));
         return this;
     }
 

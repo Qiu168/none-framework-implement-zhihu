@@ -18,7 +18,10 @@
 <body style="background: #f2f2f2;">
 
 <div class="top">top</div>
+<script src="../js/axios.js"></script>
 <script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="../js/common.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <script type="text/javascript">
     //在js中引入
     $(document).ready(function () {
@@ -26,8 +29,6 @@
 
     });
 </script>
-<!-- 导航栏 -->
-<div th:replace="~{common/header::header(activeUrl='question')}"></div>
 
 <main role="main" class="container mt-3 p-3 bg-white rounded">
     <div class="row">
@@ -35,16 +36,11 @@
             <div class="col-md-12 order-md-1">
                 <h4 class="mb-3">发布问题</h4>
 
-                <form class="needs-validation" th:action="@{/question/write}" method="post">
-                    <!-- 隐藏域 -->
-                    <input type="hidden" name="authorId" th:value="${session.loginUser.getUid()}">
-                    <input type="hidden" name="authorName" th:value="${session.loginUser.getUsername()}">
-                    <input type="hidden" name="authorAvatar" th:value="${session.loginUser.getAvatar()}">
-
+                <div class="needs-validation">
                     <div class="row">
                         <div class="col-md-10 mb-3">
-                            <label for="firstName">问题标题</label>
-                            <input type="text" name="title" class="form-control" id="firstName" value="" required>
+                            <label for="title">问题标题</label>
+                            <input type="text" name="title" class="form-control" id="title" value="" required autocomplete="off">
                         </div>
 
                         <div class="col-md-2 mb-3">
@@ -64,9 +60,8 @@
                         </div>
 
                     </div>
-
-                    <button class="btn btn-primary btn-lg btn-block" type="submit">发布问题</button>
-                </form>
+                    <button class="btn btn-primary btn-lg btn-block" id="submit">发布问题</button>
+                </div>
             </div>
         </div>
     </div>
@@ -118,6 +113,55 @@
             }
         });
     });
+    function me() {
+        axios({
+            method: 'get',
+            url: '/project_war_exploded/api/home/me',
+            async:false
+        }).then(function(resp) {
+            if (resp.data==null) {
+                alert("请登录")
+                location.href="login.html"
+            }
+        })
+    }
+    function getQuestionType() {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/question/getCategory'
+        }).then(function (resp){
+            categories=resp.data;
+            let table="";
+            for (let i = 0; i < categories.length; i++) {
+                let category= categories[i];
+                table+=
+                    `<option id="category-${category.id}" value=${category.id} >${category.name}</option>`
+            }
+            document.getElementById("country").innerHTML=table;
+        })
+    }
+    document.getElementById("submit").onclick=function sendQuestion() {
+        let title = document.getElementById("title").value;
+        let categoryId = document.getElementById("country").value;
+        let categoryName = document.getElementById("category-"+categoryId).innerHTML;
+        let content = document.getElementById("content").value;
+        axios({
+            method:'post',
+            url:'/project_war_exploded/api/question/sendQuestion',
+            data:{
+                title:title,
+                categoryId:categoryId,
+                categoryName:categoryName,
+                content:content
+            }
+        }).then(function (resp){
+            alert(resp.data.message)
+        })
+    }
+    window.onload=function (){
+        getQuestionType();
+        me();
+    }
 </script>
 
 </body>

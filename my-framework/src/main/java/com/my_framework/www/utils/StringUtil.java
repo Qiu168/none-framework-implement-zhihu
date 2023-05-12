@@ -5,6 +5,9 @@ import com.alibaba.fastjson.JSONObject;
 
 
 
+/**
+ * @author 14629
+ */
 public class StringUtil {
     public static boolean isEmpty(String str){
         if (str != null){

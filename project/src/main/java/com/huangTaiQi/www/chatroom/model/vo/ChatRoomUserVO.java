@@ -12,7 +12,7 @@ public class ChatRoomUserVO {
     private Integer id;
     private Long uid;
     private Boolean state;
-    private Integer chatRoomId;
+    private Integer chatroomId;
     private Integer role;
     private Long logoutAt;
     private String avatar;
@@ -23,12 +23,12 @@ public class ChatRoomUserVO {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         ChatRoomUserVO that = (ChatRoomUserVO) o;
-        return Objects.equals(id, that.id) && Objects.equals(uid, that.uid) && Objects.equals(state, that.state) && Objects.equals(chatRoomId, that.chatRoomId) && Objects.equals(role, that.role) && Objects.equals(logoutAt, that.logoutAt) && Objects.equals(avatar, that.avatar) && Objects.equals(username, that.username);
+        return Objects.equals(id, that.id) && Objects.equals(uid, that.uid) && Objects.equals(state, that.state) && Objects.equals(chatroomId, that.chatroomId) && Objects.equals(role, that.role) && Objects.equals(logoutAt, that.logoutAt) && Objects.equals(avatar, that.avatar) && Objects.equals(username, that.username);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, uid, state, chatRoomId, role, logoutAt, avatar, username);
+        return Objects.hash(id, uid, state, chatroomId, role, logoutAt, avatar, username);
     }
 
     public ChatRoomUserVO() {
@@ -38,7 +38,7 @@ public class ChatRoomUserVO {
         id=chatRoomUserEntity.getId();
         uid=chatRoomUserEntity.getUid();
         state=chatRoomUserEntity.getState();
-        chatRoomId=chatRoomUserEntity.getChatRoomId();
+        chatroomId =chatRoomUserEntity.getChatroomId();
         role=chatRoomUserEntity.getRole();
         logoutAt=chatRoomUserEntity.getLogoutAt();
     }
@@ -67,12 +67,12 @@ public class ChatRoomUserVO {
         this.state = state;
     }
 
-    public Integer getChatRoomId() {
-        return chatRoomId;
+    public Integer getChatroomId() {
+        return chatroomId;
     }
 
-    public void setChatRoomId(Integer chatRoomId) {
-        this.chatRoomId = chatRoomId;
+    public void setChatroomId(Integer chatroomId) {
+        this.chatroomId = chatroomId;
     }
 
     public Integer getRole() {

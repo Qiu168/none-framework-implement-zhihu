@@ -12,7 +12,7 @@ import java.util.List;
  * @author 14629
  */
 public class CommentTreeNode {
-    private Long id;
+    private String id;
     private String content;
     private String username;
     private String avatar;
@@ -25,7 +25,7 @@ public class CommentTreeNode {
      */
     public CommentTreeNode() {
     }
-    public CommentTreeNode(Long id, String content,String username,String avatar,Long commentTime) {
+    public CommentTreeNode(String id, String content,String username,String avatar,Long commentTime) {
         this.username=username;
         this.commentTime=commentTime;
         this.avatar=avatar;
@@ -52,11 +52,11 @@ public class CommentTreeNode {
     }
 
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

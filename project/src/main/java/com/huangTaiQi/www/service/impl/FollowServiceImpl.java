@@ -7,6 +7,7 @@ import com.huangTaiQi.www.model.dto.UserDTO;
 import com.huangTaiQi.www.model.entity.FollowEntity;
 import com.huangTaiQi.www.model.entity.UserEntity;
 import com.huangTaiQi.www.model.vo.IsSuccessVO;
+import com.huangTaiQi.www.service.FollowService;
 import com.huangTaiQi.www.utils.BeanUtil;
 import com.huangTaiQi.www.utils.UserHolder;
 import com.my_framework.www.annotation.Autowired;
@@ -22,12 +23,12 @@ import java.util.stream.Collectors;
  * @author 14629
  */
 @Service
-public class FollowServiceImpl {
+public class FollowServiceImpl implements FollowService {
     @Autowired
     FollowDao followDao;
     @Autowired
     UserDao userDao;
-
+    @Override
     public String isFollowed(String userId) throws Exception {
         UserDTO user = UserHolder.getUser();
         FollowEntity followEntity = null;
@@ -37,7 +38,7 @@ public class FollowServiceImpl {
         }
         return JSON.toJSONString(new IsSuccessVO(followEntity!=null,""));
     }
-
+    @Override
     public String follow(Long userId) throws Exception {
         UserDTO user = UserHolder.getUser();
         if(user==null){
@@ -53,10 +54,12 @@ public class FollowServiceImpl {
         FollowEntity followEntity=followDao.selectFollow(String.valueOf(userId),followeeId);
         if(followEntity==null){
             followDao.add(userId,followeeId);
+            userDao.updateFollowee(userId,1);
         }else{
             followDao.delete(userId,followeeId);
+            userDao.updateFollowee(userId,-1);
         }
-        return JSON.toJSONString(new IsSuccessVO(true,followEntity==null?"已关注":"关注"));
+        return JSON.toJSONString(new IsSuccessVO(true,followEntity==null?"关注成功":"取消关注"));
     }
 
     /**
@@ -65,17 +68,24 @@ public class FollowServiceImpl {
      * @param id 自己
      * @return json
      */
+    @Override
     public String getSameFollow(Long userId, Long id) throws Exception {
         if(userId.equals(id)){
             return JSON.toJSONString(null);
         }
         List<Long> follows1 = followDao.selectFollows(id);
         List<Long> follows2 = followDao.selectFollows(userId);
+        if(follows2==null||follows1==null){
+            return JSON.toJSONString(null);
+        }
         //取交集，转换成hashmap在contain的时候效率更高
         Set<Long> set = new HashSet<>(follows2);
         List<Long> union = follows1.stream()
                 .filter(set::contains)
                 .collect(Collectors.toList());
+        if(union.isEmpty()){
+            return JSON.toJSONString(null);
+        }
         List<UserEntity> users=new ArrayList<>();
         for (Long aLong : union) {
             //查询用户

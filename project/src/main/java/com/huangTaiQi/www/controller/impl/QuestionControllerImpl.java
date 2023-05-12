@@ -1,11 +1,17 @@
 package com.huangTaiQi.www.controller.impl;
 
+import com.huangTaiQi.www.constant.enums.MessageType;
 import com.huangTaiQi.www.controller.BaseController;
 import com.huangTaiQi.www.controller.IQuestionController;
+import com.huangTaiQi.www.service.impl.DynamicServiceImpl;
 import com.huangTaiQi.www.service.impl.QuestionServiceImpl;
 import com.my_framework.www.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.sql.SQLException;
+
+import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_CHECKING;
 
 
 /**
@@ -16,6 +22,8 @@ import javax.servlet.http.HttpServletResponse;
 public class QuestionControllerImpl extends BaseController implements IQuestionController {
     @Autowired
     QuestionServiceImpl questionService;
+    @Autowired
+    DynamicServiceImpl dynamicService;
     @Override
     @RequestMapping
     public void getQuestionCount(HttpServletResponse response) throws Exception {
@@ -87,11 +95,46 @@ public class QuestionControllerImpl extends BaseController implements IQuestionC
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(question);
     }
+    @Override
     @RequestMapping
-    public void getQuestionByAnswerId(@RequestParam("answerId") String answerId,HttpServletResponse response) throws Exception {
+    public void getQuestionByAnswerId(@RequestParam("answerId") String answerId, HttpServletResponse response) throws Exception {
         String question = questionService.getQuestionByAnswerId(answerId);
         response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(question);
     }
-
+    @Override
+    @RequestMapping(method = "post")
+    public void sendQuestion(@RequestParam("title") String title,
+                             @RequestParam("categoryId") String categoryId,
+                             @RequestParam("categoryName") String categoryName,
+                             @RequestParam("content") String content,
+                             HttpServletResponse response) throws SQLException, IOException {
+        String json = questionService.sendQuestion(title, content, categoryId, categoryName);
+        response.setContentType("text/json;charset=utf-8");
+        response.getWriter().write(json);
+    }
+    @Override
+    @RequestMapping("pass")
+    public void passQuestion(@RequestParam("id")String questionId,@RequestParam("userId") Long id) throws Exception {
+        //TODO
+        //改变question的state
+        questionService.passQuestion(questionId);
+        //发送动态
+        dynamicService.sendDynamic(MessageType.QUESTION,id,questionId);
+    }
+    @Access(rightName = 6L)
+    @Override
+    @RequestMapping
+    public void getUncheckedQuestion(@RequestParam("page") int page,@RequestParam("size") int size, HttpServletResponse response) throws Exception {
+        String questions=questionService.getUncheckedQuestion(page,size);
+        response.getWriter().write(questions);
+    }
+    @Access(rightName = 6L)
+    @Override
+    @RequestMapping
+    public void getUncheckedTotal(HttpServletResponse response) throws Exception {
+        int count=questionService.getQuestionCountByState(MESSAGE_CHECKING);
+        response.setContentType("text/html;charset=utf-8");
+        response.getWriter().write(String.valueOf(count));
+    }
 }

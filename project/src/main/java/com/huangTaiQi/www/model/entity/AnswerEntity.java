@@ -1,10 +1,14 @@
 package com.huangTaiQi.www.model.entity;
 
+import com.huangTaiQi.www.model.UserSettings;
+
+import java.sql.Timestamp;
+
 /**
  * @author 14629
  */
 @SuppressWarnings("ALL")
-public class AnswerEntity {
+public class AnswerEntity implements UserSettings {
     private Long id;
     private Long questionId;
     private Long userId;
@@ -14,6 +18,8 @@ public class AnswerEntity {
     private String title;
     private String content;
     private Long likes;
+    private Timestamp createTime;
+    private Timestamp updateTime;
 
     public Long getQuestionId() {
         return questionId;
@@ -85,5 +91,21 @@ public class AnswerEntity {
 
     public void setLikes(Long likes) {
         this.likes = likes;
+    }
+
+    public Timestamp getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(Timestamp createTime) {
+        this.createTime = createTime;
+    }
+
+    public Timestamp getUpdateTime() {
+        return updateTime;
+    }
+
+    public void setUpdateTime(Timestamp updateTime) {
+        this.updateTime = updateTime;
     }
 }

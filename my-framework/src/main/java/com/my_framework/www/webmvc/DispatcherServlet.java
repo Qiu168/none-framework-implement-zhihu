@@ -1,23 +1,22 @@
 package com.my_framework.www.webmvc;
 
 
-
-
 import com.my_framework.www.annotation.Controller;
 import com.my_framework.www.annotation.RequestMapping;
 import com.my_framework.www.context.Impl.ApplicationContextImpl;
+import com.my_framework.www.utils.ContextUtil;
 import com.my_framework.www.utils.StringUtil;
 
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
+import javax.servlet.annotation.MultipartConfig;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.util.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,6 +24,7 @@ import java.util.regex.Pattern;
 /**
  * @author 14629
  */
+@MultipartConfig
 public class DispatcherServlet extends HttpServlet {
 
     /**配置文件地址，从web.xml中获取*/
@@ -37,6 +37,7 @@ public class DispatcherServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         //1、初始化ApplicationContext，从web.xml中获取参数
         ApplicationContextImpl context = new ApplicationContextImpl(config.getInitParameter(CONTEXT_CONFIG_LOCATION));
+        ContextUtil.setApplicationContext(context);
         //2、初始化Spring MVC
         DispatcherServlet.initStrategies(context);
     }
@@ -49,7 +50,7 @@ public class DispatcherServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         try {
-            logger.log(Level.INFO,Thread.currentThread().toString());
+            //logger.log(Level.INFO,Thread.currentThread().toString());
             this.doDispatch(req, resp);
         } catch (Exception e) {
             resp.getWriter().write("500 Exception,Details:\r\n"

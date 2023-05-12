@@ -3,6 +3,7 @@ package com.huangTaiQi.www.dao.impl;
 import com.huangTaiQi.www.dao.BaseDao;
 import com.huangTaiQi.www.dao.IUserDao;
 import com.huangTaiQi.www.model.entity.UserEntity;
+import com.huangTaiQi.www.utils.UserHolder;
 import com.my_framework.www.pool.DataBaseUtil;
 import com.huangTaiQi.www.utils.RandomUtils;
 import com.huangTaiQi.www.utils.sql.SQLBuilder;
@@ -63,25 +64,66 @@ public class UserDao implements IUserDao {
     @Override
     public void alterPassword(String email, String encode) throws SQLException {
         String sql=new SQLBuilder("user")
-                .update("password")
+                .update(UserEntity::getPassword)
                 .where("email")
                 .buildUpdate();
         baseDao.updateCommon(sql,encode,email);
     }
-
-    public List<UserEntity> getUser(String username) throws Exception {
+    @Override
+    public List<UserEntity> getUserByBlurUsername(String username) throws Exception {
         String sql=new SQLBuilder("user")
                 .select("*")
                 .blurWhere("username")
                 .buildSelect();
         return baseDao.selectByParams(sql,UserEntity.class,"%"+username+"%");
     }
-
+    @Override
     public UserEntity getUserById(String id) throws Exception {
         String sql=new SQLBuilder("user")
                 .select("*")
                 .where("id")
                 .buildSelect();
         return baseDao.selectOne(sql, UserEntity.class,id);
+    }
+    @Override
+    public void updateUserSettings(String username, String gender, String email, String introduce, String imgPath) throws SQLException {
+        String sql=new SQLBuilder("user")
+                .update(UserEntity::getUsername)
+                .update(UserEntity::getGender)
+                .update(UserEntity::getEmail)
+                .update(UserEntity::getIntroduce)
+                .update(UserEntity::getAvatar)
+                .where("id")
+                .buildUpdate();
+        baseDao.updateCommon(sql,username,gender,email,introduce,imgPath, UserHolder.getUser().getId());
+    }
+    @Override
+    public UserEntity getUserByUsername(String username) throws Exception {
+        String sql=new SQLBuilder("user")
+                .select("*")
+                .where("username")
+                .buildSelect();
+        return baseDao.selectOne(sql,UserEntity.class,username);
+    }
+
+    @Override
+    public void updateQuestionCount(Long uid, int addCount) throws SQLException {
+        String sql="UPDATE user SET question_count = question_count + "+addCount+" WHERE id = ?";
+        baseDao.updateCommon(sql,uid);
+    }
+    @Override
+    public void updateAnswerCount(Long uid, int addCount) throws SQLException {
+        String sql="UPDATE user SET answer_count = answer_count + "+addCount+" WHERE id = ?";
+        baseDao.updateCommon(sql,uid);
+    }
+    @Override
+    public void updateCommentCount(Long uid, int addCount) throws SQLException {
+        String sql="UPDATE user SET comment_count = comment_count + "+addCount+" WHERE id = ?";
+        baseDao.updateCommon(sql,uid);
+    }
+    @Override
+    public void updateFollowee(Long uid, int addCount) throws SQLException {
+        String sql="UPDATE user SET followee = followee + "+addCount+" WHERE id = ?";
+        baseDao.updateCommon(sql,uid);
     }
 }

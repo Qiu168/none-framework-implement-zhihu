@@ -12,6 +12,10 @@
             font-size: .875rem;
             color: #6c757d;
         }
+        .comment-li {
+            list-style: none;
+            width: 900px;
+        }
     </style>
 </head>
 <body style="background: #f2f2f2;">
@@ -47,6 +51,7 @@
 <path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>
 </svg>
                         回答数：<b id="answerCount">123</b>
+
                     </span>
                     <!-- 自己写的文章可以编辑和删除 -->
                     <!-- HTML code -->
@@ -77,6 +82,7 @@
                123456
             </div>
             <br>
+            <a id="report"><small><font color="red">举报</font></small></a>
         </div>
             <b id="isLike"> 点赞:</b><button id="like" onclick="likeThis()" style="float:right" >123</button>
         <button onclick="previousPage()"  id="pre">上一个回答</button>
@@ -99,12 +105,12 @@
                 <h6 class="border-bottom border-gray pb-2 mb-0">评论列表</h6>
 
                 <div id="comment-list" class="media text-muted pt-3">
-                    <img src="" style="border-radius: 5px;margin-right: 5px " width="32" height="32">
-                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                        <strong class="d-block text-gray-dark" >username</strong>
-                        <span >content</span>
-                        <span  class="badge badge-light float-right">time</span>
-                    </p>
+<!--                    <img src="" style="border-radius: 5px;margin-right: 5px " width="32" height="32">-->
+<!--                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">-->
+<!--                        <strong class="d-block text-gray-dark" >username</strong>-->
+<!--                        <span >content</span>-->
+<!--                        <span  class="badge badge-light float-right">time</span>-->
+<!--                    </p>-->
                 </div>
             </div>
         </div>
@@ -126,6 +132,7 @@
     let size=1;
     let sortOrder="asc";
     let answerId = window.location.hash.substring(1);
+    document.getElementById("report").href="report.html?messageId="+answerId+"&messageType=answer";
     let answerUserId;
     function getQuestion() {
         axios({
@@ -150,7 +157,7 @@
         }).then(function (resp){
             let answer = resp.data;
             document.getElementById("title").innerHTML=answer.title;
-            document.getElementById("answer-avatar").innerHTML=answer.avatar;
+            document.getElementById("answer-avatar").src=answer.avatar;
             document.getElementById("answer-username").innerHTML=answer.username;
             document.getElementById("answer-username").href='index.html#'+answer.userId;
             answerUserId=answer.userId;
@@ -192,15 +199,18 @@
             document.getElementById("like").innerHTML=answer.likes;
             answerId=answer.id;
             answerUserId=answer.userId;
+            document.getElementById("report").href="report.html?messageId="+answerId+"&messageType=answer";
             isFollow(answerUserId);
             isLike(answerId);
         })
     }
     function descGetComment(){
+        document.getElementById("comment-list").innerHTML="";
         sortOrder="DESC";
         getCommentTree();
     }
     function ascGetComment(){
+        document.getElementById("comment-list").innerHTML="";
         sortOrder="ASC";
         getCommentTree();
     }
@@ -229,11 +239,11 @@
         // 遍历当前节点，将其渲染到页面中
         const ul = $('<ul>');
         commentTree.forEach(comment => {
-            const li = $('<li>');
+            const li = $('<li class="comment-li">');
             li.append(
-                `<div onclick="comment(${comment.id})"><img src="${comment.avatar}" style="border-radius: 5px;margin-right: 5px " width="32" height="32">
+                `<div onclick="comment('${comment.id}')"><img src="${comment.avatar}" style="border-radius: 5px;margin-right: 5px " width="32" height="32">
                 <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-                    <strong class="d-block text-gray-dark">${comment.username}</strong>`+(parentName==""?"":('apply to' +parentName))+`
+                    <strong class="d-block text-gray-dark">${comment.username}</strong>`+(parentName==""?"":('apply to ' +parentName))+`
                     <span>${comment.content}</span>
                     <span class="badge badge-light float-right">`+formatDate(comment.commentTime)+`</span>
                 </p></div>`
@@ -241,7 +251,7 @@
                    <div class="form-group">
                      <textarea id="comment-content-${comment.id}" required name="content" class="form-control" rows="3"></textarea>
                    </div>
-                   <button onclick="sendComment(${comment.id})" class="btn btn-primary float-right">回复评论</button>
+                   <button onclick="sendComment('${comment.id}')" class="btn btn-primary float-right">回复评论</button>
                   </div>`
             );
             renderCommentTree(comment.children, li,comment.username);
@@ -265,21 +275,22 @@
         }
         let innerHTML;
         if(id!=0){
-            innerHTML = document.getElementById("comment-content-"+id).innerHTML;
+            innerHTML = document.getElementById("comment-content-"+id).value;
         }else{
             innerHTML=document.getElementById("top-comment").innerHTML;
+            innerHTML=document.getElementById("top-comment").innerText;
+            innerHTML=document.getElementById("top-comment").value;
         }
         axios({
             method:'post',
             url:'/project_war_exploded/api/comment/sendComment',
             data:{
                 content:innerHTML,
-                pid:id
+                pid:id,
+                answerId:answerId
             }
         }).then(function (resp){
             alert("评论成功");
-        }).error(function (){
-            alert("失败")
         })
     }
     // jQuery code
@@ -324,9 +335,8 @@
             method:'get',
             url:'/project_war_exploded/api/follow/isFollowed?id='+userId
         }).then(function (resp){
-            let data = resp.data;
-            console.log(data)
-            if(data.isSuccess=="true"){
+            let success = resp.data.success;
+            if(success){
                 document.getElementById("follow").innerHTML="已关注";
             }
         })
@@ -366,15 +376,19 @@
             url:'/project_war_exploded/api/like/likeAnswer?answerId='+answerId
         }).then(function (resp) {
             let data=resp.data;
-            if(data.isSuccess=="true"){
-                document.getElementById("like").innerHTML+=data.message;
+            if(data.success==true){
+                let innerHTML1 = parseInt(document.getElementById("like").innerHTML);
+                if(data.message==1){
+                    document.getElementById("like").innerHTML=(innerHTML1+1).toString();
+                }else{
+                    document.getElementById("like").innerHTML=(innerHTML1-1).toString();
+                }
                 let innerHTML = document.getElementById("isLike").innerHTML;
                 if(innerHTML==" 点赞:"){
                     document.getElementById("isLike").innerHTML="已点赞";
                 }else {
                     document.getElementById("isLike").innerHTML=" 点赞:";
                 }
-
             }else{
                 alert(data.message)
             }
@@ -390,7 +404,7 @@
             url:'/project_war_exploded/api/like/isLike?answerId='+answerId
         }).then(function (resp){
             let data=resp.data;
-            if(data.isSuccess=="true"){
+            if(data.success==true){
                 document.getElementById("isLike").innerHTML="已点赞";
             }
         })

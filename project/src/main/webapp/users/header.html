@@ -5,6 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <title>cat</title>
     <link rel="stylesheet" href="bootstrap.css">
+    <style>
+        .message-number{
+            color: red;
+        }
+    </style>
 </head>
 <body>
 <script src="../js/axios.js"></script>
@@ -27,16 +32,31 @@
                     <a class="nav-link" href="#">收藏</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="#">动态</a>
+                    <a class="nav-link" href="dynamic.html">动态</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="chatrooms.html">聊天室</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="settings.html">个人资料</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">历史记录</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">公告</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">私信<small id="private-message-number" class="message-number">123</small></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#">消息<small id="message-number" class="message-number">123</small></a>
+                </li>
+                <li class="nav-item" id="ban" style="display: none">
+                    <a class="nav-link" href="ban.html">封禁</a>
+                </li>
+                <li class="nav-item" id="check" style="display: none">
+                    <a class="nav-link" href="check.html">审核</a>
                 </li>
             </ul>
             <div class="d-flex align-items-center">
@@ -76,6 +96,18 @@
                 document.getElementById("username").innerHTML = resp.data.username;
                 id = resp.data.id;
                 document.getElementById("dropdownMenuLink").href="index.html#"+id;
+                axios({
+                    method: 'get',
+                    url:'/project_war_exploded/api/home/getRight'
+                }).then(function (resp) {
+                    console.log(resp.data)
+                    if(resp.data.includes(5)){
+                        document.getElementById("ban").style.display='';
+                    }
+                    if(resp.data.includes(6)){
+                        document.getElementById("check").style.display='';
+                    }
+                })
             } else {
                 document.getElementById("isLogin").style.display = '';
             }

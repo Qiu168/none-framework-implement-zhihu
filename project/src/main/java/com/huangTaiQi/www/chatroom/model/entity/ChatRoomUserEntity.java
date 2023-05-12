@@ -10,7 +10,7 @@ public class ChatRoomUserEntity {
     private Integer id;
     private Long uid;
     private Boolean state;
-    private Integer chatRoomId;
+    private Integer chatroomId;
     private Integer role;
     private Long logoutAt;
 
@@ -38,12 +38,12 @@ public class ChatRoomUserEntity {
         this.state = state;
     }
 
-    public Integer getChatRoomId() {
-        return chatRoomId;
+    public Integer getChatroomId() {
+        return chatroomId;
     }
 
-    public void setChatRoomId(Integer chatRoomId) {
-        this.chatRoomId = chatRoomId;
+    public void setChatroomId(Integer chatroomId) {
+        this.chatroomId = chatroomId;
     }
 
     public Integer getRole() {
@@ -71,11 +71,11 @@ public class ChatRoomUserEntity {
             return false;
         }
         ChatRoomUserEntity that = (ChatRoomUserEntity) o;
-        return Objects.equals(id, that.id) && Objects.equals(uid, that.uid) && Objects.equals(state, that.state) && Objects.equals(chatRoomId, that.chatRoomId) && Objects.equals(role, that.role) && Objects.equals(logoutAt, that.logoutAt);
+        return Objects.equals(id, that.id) && Objects.equals(uid, that.uid) && Objects.equals(state, that.state) && Objects.equals(chatroomId, that.chatroomId) && Objects.equals(role, that.role) && Objects.equals(logoutAt, that.logoutAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, uid, state, chatRoomId, role, logoutAt);
+        return Objects.hash(id, uid, state, chatroomId, role, logoutAt);
     }
 }

@@ -1,8 +1,8 @@
-let token =sessionStorage.getItem("token");
+let common_js_token =sessionStorage.getItem("token");
 
 axios.interceptors.request.use(
     config => {
-        if(token) config.headers['authorization'] =token
+        if(common_js_token) config.headers['authorization'] =common_js_token
         return config
     },
     error =>{

@@ -1,5 +1,7 @@
 package com.huangTaiQi.www.service;
 
+import com.huangTaiQi.www.model.dto.UserDTO;
+
 import javax.servlet.http.HttpSession;
 import java.awt.image.BufferedImage;
 import java.security.NoSuchAlgorithmException;
@@ -69,6 +71,8 @@ public interface UserService {
      */
     String resetPassword(String email, String emailCode, String password, String rePassword) throws NoSuchAlgorithmException, SQLException;
 
+    String verifyUser(String email, String emailCode, String password, String rePassword);
+
     /**
      * 根据用户名模糊搜索用户
      * @param username 用户名
@@ -84,4 +88,24 @@ public interface UserService {
      * @throws Exception 异常
      */
     String getUserById(String id) throws Exception;
+
+    /**
+     * 更新用户的设置
+     * @param username 用户名
+     * @param gender 性别
+     * @param email 邮箱
+     * @param introduce 简介
+     * @param imgPath 头像
+     * @throws SQLException 异常
+     */
+    void updateUserSettings(String username, String gender, String email, String introduce, String imgPath) throws SQLException;
+
+    /**
+     * 是否互相关注
+     * @param user user
+     * @param username 用户名
+     * @return 如果互关，返回查询的用户Id，否则返回0
+     * @throws Exception 异常
+     */
+    Long isFollowEachOther(UserDTO user, String username) throws Exception;
 }
