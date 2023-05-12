@@ -15,4 +15,16 @@ public class DynamicResult {
         this.minTime = minTime;
         this.offset = offset;
     }
+
+    public List<?> getList() {
+        return list;
+    }
+
+    public Long getMinTime() {
+        return minTime;
+    }
+
+    public Integer getOffset() {
+        return offset;
+    }
 }

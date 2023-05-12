@@ -1,10 +1,12 @@
 package com.huangTaiQi.www.model.entity;
 
+import com.huangTaiQi.www.model.UserSettings;
+
 /**
  * @author 14629
  */
 @SuppressWarnings("ALL")
-public class CommentEntity {
+public class CommentEntity implements UserSettings {
     private String id;
     private Integer state;
     private Long answerId;

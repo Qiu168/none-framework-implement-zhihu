@@ -1,12 +1,14 @@
 package com.huangTaiQi.www.model.entity;
 
+import com.huangTaiQi.www.model.UserSettings;
+
 import java.sql.Timestamp;
 
 /**
  * @author 14629
  */
 @SuppressWarnings("ALL")
-public class AnswerEntity {
+public class AnswerEntity implements UserSettings {
     private Long id;
     private Long questionId;
     private Long userId;
