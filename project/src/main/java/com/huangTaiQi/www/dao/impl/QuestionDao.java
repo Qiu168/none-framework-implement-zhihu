@@ -2,6 +2,9 @@ package com.huangTaiQi.www.dao.impl;
 
 import com.huangTaiQi.www.dao.BaseDao;
 import com.huangTaiQi.www.dao.IQuestionDao;
+import com.huangTaiQi.www.dao.ReportAble;
+import com.huangTaiQi.www.dao.UpdateUserSettings;
+import com.huangTaiQi.www.model.entity.AnswerEntity;
 import com.huangTaiQi.www.model.entity.CategoryEntity;
 import com.huangTaiQi.www.model.entity.QuestionEntity;
 import com.huangTaiQi.www.utils.sql.SQLBuilder;
@@ -12,11 +15,13 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
+
 /**
  * @author 14629
  */
 @Repository
-public class QuestionDao implements IQuestionDao {
+public class QuestionDao implements IQuestionDao , ReportAble, UpdateUserSettings {
     private final Connection connection = DataBaseUtil.getConnection();
     private final  BaseDao baseDao=new BaseDao(connection);
 
@@ -147,5 +152,29 @@ public class QuestionDao implements IQuestionDao {
                 .where("state")
                 .buildSelect();
         return baseDao.selectOne(sql,Integer.class,state);
+    }
+
+    @Override
+    public void report(String messageId, Long reporterId) throws SQLException {
+        String sql=new SQLBuilder("question")
+                .update(QuestionEntity::getState)
+                .where("id")
+                .buildUpdate();
+        baseDao.updateCommon(sql,MESSAGE_REPORTED,messageId);
+    }
+
+    public void updateAnswerCount(Long questionId, int addCount) throws SQLException {
+        String sql="UPDATE question SET answer_count = answer_count + "+addCount+" WHERE id = ?";
+        baseDao.updateCommon(sql,questionId);
+    }
+
+    @Override
+    public void updateSettings(Long id, String avatar, String username) throws SQLException {
+        String sql=new SQLBuilder("question")
+                .update(AnswerEntity::getAvatar)
+                .update(AnswerEntity::getUsername)
+                .where("user_id")
+                .buildUpdate();
+        baseDao.updateCommon(sql,avatar,username,id);
     }
 }

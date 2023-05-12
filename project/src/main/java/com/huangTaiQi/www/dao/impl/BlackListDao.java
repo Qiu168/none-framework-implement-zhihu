@@ -42,4 +42,13 @@ public class BlackListDao implements IBlackListDao {
                 .buildDelete();
         baseDao.updateCommon(sql,userId,blackUid);
     }
+
+    public BlackListEntity selectBlackList(Long userId, String bid) throws Exception {
+        String sql=new SQLBuilder("black_list")
+                .select("*")
+                .where("uid")
+                .where("bid")
+                .buildSelect();
+        return baseDao.selectOne(sql,BlackListEntity.class,userId,bid);
+    }
 }

@@ -3,6 +3,7 @@ package com.huangTaiQi.www.dao.impl;
 import com.huangTaiQi.www.dao.BaseDao;
 import com.huangTaiQi.www.dao.IUserDao;
 import com.huangTaiQi.www.model.entity.UserEntity;
+import com.huangTaiQi.www.utils.UserHolder;
 import com.my_framework.www.pool.DataBaseUtil;
 import com.huangTaiQi.www.utils.RandomUtils;
 import com.huangTaiQi.www.utils.sql.SQLBuilder;
@@ -92,8 +93,9 @@ public class UserDao implements IUserDao {
                 .update(UserEntity::getEmail)
                 .update(UserEntity::getIntroduce)
                 .update(UserEntity::getAvatar)
+                .where("id")
                 .buildUpdate();
-        baseDao.updateCommon(sql,username,gender,email,introduce,imgPath);
+        baseDao.updateCommon(sql,username,gender,email,introduce,imgPath, UserHolder.getUser().getId());
     }
     @Override
     public UserEntity getUserByUsername(String username) throws Exception {
