@@ -203,7 +203,7 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public void updateUserSettings(String username, String gender, String email, String introduce, String imgPath) throws SQLException {
-        //userDao.updateUserSettings(username,gender,email,introduce,imgPath);
+        userDao.updateUserSettings(username,gender,email,introduce,imgPath);
     }
 
     /**
@@ -221,4 +221,5 @@ public class UserServiceImpl implements UserService {
         FollowEntity followEntity=followDao.getEachFollow(user.getId(),userByUsername.getId());
         return followEntity==null?0:followEntity.getUserId();
     }
+
 }

@@ -78,7 +78,9 @@ public class DynamicServiceImpl implements DynamicService {
         int os=1;
         for (Tuple tuple : tuples) {
             ids.add(CastUtil.castLong(tuple.getElement()));
-            long time= CastUtil.castLong(tuple.getScore());
+            //先转换成无小数的字符串
+            String scoreStr = String.format("%.0f", tuple.getScore());
+            long time= CastUtil.castLong(scoreStr);
             if(time==minTime){
                 os++;
             }else{
@@ -90,7 +92,8 @@ public class DynamicServiceImpl implements DynamicService {
         //查询,返回，minTime和os
         if(type==MessageType.QUESTION){
             List<QuestionEntity> questionByIds = questionDao.getQuestionByIds(ids);
-            return JSON.toJSONString(new DynamicResult(questionByIds,minTime,os));
+            DynamicResult dynamicResult = new DynamicResult(questionByIds, minTime, os);
+            return JSON.toJSONString(dynamicResult);
         }else {
             List<AnswerEntity> answerByIds = answerDao.getAnswerByIds(ids);
             return JSON.toJSONString(new DynamicResult(answerByIds,minTime,os));

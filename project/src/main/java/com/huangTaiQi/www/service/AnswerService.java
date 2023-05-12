@@ -45,7 +45,7 @@ public interface AnswerService {
      * @param id id
      * @throws SQLException 异常
      */
-    void passAnswer(String id) throws SQLException;
+    void passAnswer(String id) throws Exception;
 
     /**
      * 获取没有审核的回答
