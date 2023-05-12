@@ -17,7 +17,7 @@ public class JedisPoolFactory {
     static {
         JedisPoolConfig jedisPoolConfig=new JedisPoolConfig();
         //最大连接数
-        jedisPoolConfig.setMaxTotal(16);
+        jedisPoolConfig.setMaxTotal(32);
         //最大空闲连接
         jedisPoolConfig.setMaxIdle(16);
         //最小空闲连接
@@ -27,6 +27,8 @@ public class JedisPoolFactory {
         JEDIS_POOL=new JedisPool(jedisPoolConfig,"192.168.181.132",6379,1000,"redis");
     }
     public static Jedis getResource(){
-        return JEDIS_POOL.getResource();
+        Jedis jedis = JEDIS_POOL.getResource();
+        jedis.auth("redis");
+        return jedis;
     }
 }
