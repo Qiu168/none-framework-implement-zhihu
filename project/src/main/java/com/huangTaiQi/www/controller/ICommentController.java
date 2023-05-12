@@ -48,4 +48,12 @@ public interface ICommentController {
      * @throws Exception 异常
      */
     void getUncheckedTotal(HttpServletResponse response) throws Exception;
+
+    /**
+     * 根据id获取评论
+     * @param id id
+     * @param response resp
+     * @throws Exception 异常
+     */
+    void getCommentById(String id,HttpServletResponse response) throws Exception;
 }

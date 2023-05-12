@@ -114,8 +114,8 @@ public class QuestionControllerImpl extends BaseController implements IQuestionC
         response.getWriter().write(json);
     }
     @Override
-    @RequestMapping
-    public void passQuestion(@RequestParam("questionId")String questionId,@RequestParam("userId") Long id) throws Exception {
+    @RequestMapping("pass")
+    public void passQuestion(@RequestParam("id")String questionId,@RequestParam("userId") Long id) throws Exception {
         //TODO
         //改变question的state
         questionService.passQuestion(questionId);
@@ -123,13 +123,14 @@ public class QuestionControllerImpl extends BaseController implements IQuestionC
         dynamicService.sendDynamic(MessageType.QUESTION,id,questionId);
     }
     @Access(rightName = 6L)
+    @Override
     @RequestMapping
     public void getUncheckedQuestion(@RequestParam("page") int page,@RequestParam("size") int size, HttpServletResponse response) throws Exception {
         String questions=questionService.getUncheckedQuestion(page,size);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(questions);
     }
     @Access(rightName = 6L)
+    @Override
     @RequestMapping
     public void getUncheckedTotal(HttpServletResponse response) throws Exception {
         int count=questionService.getQuestionCountByState(MESSAGE_CHECKING);

@@ -1,5 +1,6 @@
 package com.huangTaiQi.www.controller;
 
+import com.my_framework.www.annotation.Access;
 import com.my_framework.www.annotation.RequestMapping;
 import com.my_framework.www.annotation.RequestParam;
 
@@ -116,4 +117,20 @@ public interface IQuestionController {
      * @throws Exception 异常
      */
     void passQuestion(String questionId, Long id) throws Exception;
+
+    /**
+     * 获取没有审核的问题
+     * @param page 页数
+     * @param size 大小
+     * @param response resp
+     * @throws Exception 异常
+     */
+    void getUncheckedQuestion(int page, int size, HttpServletResponse response) throws Exception;
+
+    /**
+     * 获取未审核的问题数量
+     * @param response resp
+     * @throws Exception 异常
+     */
+    void getUncheckedTotal(HttpServletResponse response) throws Exception;
 }

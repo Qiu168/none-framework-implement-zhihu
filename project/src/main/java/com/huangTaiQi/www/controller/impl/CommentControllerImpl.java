@@ -1,7 +1,9 @@
 package com.huangTaiQi.www.controller.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.huangTaiQi.www.controller.BaseController;
 import com.huangTaiQi.www.controller.ICommentController;
+import com.huangTaiQi.www.model.entity.CommentEntity;
 import com.huangTaiQi.www.service.impl.CommentServiceImpl;
 import com.my_framework.www.annotation.Autowired;
 import com.my_framework.www.annotation.Controller;
@@ -43,7 +45,7 @@ public class CommentControllerImpl extends BaseController implements ICommentCon
         response.getWriter().write(comments);
     }
     @Override
-    @RequestMapping
+    @RequestMapping(value = "pass")
     public void passComment(@RequestParam("id")String id,@RequestParam("userId") Long uid) throws Exception {
         //TODO
         //改变question的state
@@ -55,5 +57,12 @@ public class CommentControllerImpl extends BaseController implements ICommentCon
         int count=commentService.getCommentCountByState(MESSAGE_CHECKING);
         response.setContentType("text/html;charset=utf-8");
         response.getWriter().write(String.valueOf(count));
+    }
+
+    @Override
+    @RequestMapping
+    public void getCommentById(@RequestParam("id") String id, HttpServletResponse response) throws Exception {
+        CommentEntity commentById = commentService.getCommentById(id);
+        response.getWriter().write(JSON.toJSONString(commentById));
     }
 }
