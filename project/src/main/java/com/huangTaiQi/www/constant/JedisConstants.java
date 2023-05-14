@@ -35,4 +35,5 @@ public class JedisConstants {
     public static final String FEED_ANSWER_KEY = "feed:answer:";
     public static final String SHOP_GEO_KEY = "shop:geo:";
     public static final String USER_SIGN_KEY = "sign:";
+    public static final int REDIS_CACHE_CAPACITY = 200;
 }
