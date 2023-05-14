@@ -160,6 +160,6 @@ public class QuestionControllerImpl extends BaseController implements IQuestionC
     public void passReported(@Pattern(regex = NUMBER_REGEX) @RequestParam("id")String questionId,
                              @Pattern(regex = NUMBER_REGEX) @RequestParam("userId") Long id,
                              @Pattern(regex = NUMBER_REGEX) @RequestParam("intentional") String intentional) throws SQLException {
-        questionService.passReportedQuestion(questionId);
+        questionService.passReportedQuestion(questionId,intentional);
     }
 }

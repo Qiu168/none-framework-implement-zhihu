@@ -109,10 +109,10 @@ public class AnswerControllerImpl extends BaseController implements IAnswerContr
     }
     @Override
     @RequestMapping
-    public void passReported(@Pattern(regex = NUMBER_REGEX) @RequestParam("id")String answerId,
+    public void passReported(@Pattern(regex = NUMBER_REGEX) @RequestParam("id") String answerId,
                              @Pattern(regex = NUMBER_REGEX) @RequestParam("userId") Long id,
                              @Pattern(regex = NUMBER_REGEX) @RequestParam("intentional") String intentional) throws SQLException {
-        answerService.passReportedAnswer(answerId);
+        answerService.passReportedAnswer(answerId,intentional);
 
     }
 }
