@@ -20,4 +20,8 @@ public class RegexConstants {
      * 验证码正则, 6位数字或字母
      */
     public static final String VERIFY_CODE_REGEX = "^[a-zA-Z\\d]{4}$";
+    /**
+     * 数字正则
+     */
+    public static final String NUMBER_REGEX = "^[0-9]+$";
 }
