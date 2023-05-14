@@ -59,12 +59,28 @@ public interface ICommentController {
      */
     void getCommentById(String id,HttpServletResponse response) throws Exception;
 
-
+    /**
+     * 获取被举报的评论
+     * @param page 页数
+     * @param size 大小
+     * @param response resp
+     * @throws Exception 异常
+     */
     void getReportedComment( int page,int size, HttpServletResponse response) throws Exception;
 
-
+    /**
+     * 获取被举报的总数
+     * @param response resp
+     * @throws Exception 异常
+     */
     void getReportedTotal(HttpServletResponse response) throws Exception;
 
-
+    /**
+     * 通过
+     * @param commentId id
+     * @param id uid
+     * @param intentional 是否恶意
+     * @throws SQLException 异常
+     */
     void passReported( String commentId,Long id,String intentional) throws SQLException;
 }

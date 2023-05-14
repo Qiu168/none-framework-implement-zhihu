@@ -131,12 +131,28 @@ public interface IQuestionController {
      */
     void getUncheckedTotal(HttpServletResponse response) throws Exception;
 
-
+    /**
+     * 获取被举报的问题
+     * @param page 页数
+     * @param size 大小
+     * @param response resp
+     * @throws Exception 异常
+     */
     void getReportedQuestion(int page,int size, HttpServletResponse response) throws Exception;
 
-
+    /**
+     * 获取被举报的总书
+     * @param response resp
+     * @throws Exception 异常
+     */
     void getReportedTotal(HttpServletResponse response) throws Exception;
 
-
+    /**
+     * 通过
+     * @param questionId id
+     * @param id uid
+     * @param intentional 是否恶意
+     * @throws SQLException 异常
+     */
     void passReported(String questionId, Long id,String intentional) throws SQLException;
 }

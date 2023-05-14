@@ -72,12 +72,28 @@ public interface IAnswerController {
      */
     void getUncheckedTotal(HttpServletResponse response) throws Exception;
 
-
+    /**
+     * 获取被举报的信息
+     * @param page 页数
+     * @param size 大小
+     * @param response resp
+     * @throws Exception 异常
+     */
     void getReportedAnswer( int page, int size, HttpServletResponse response) throws Exception;
 
-
+    /**
+     * 获取被举报的总数
+     * @param response resp
+     * @throws Exception 异常
+     */
     void getReportedTotal(HttpServletResponse response) throws Exception;
 
-
+    /**
+     * 审核通过
+     * @param answerId id
+     * @param id uid
+     * @param intentional 是否恶意
+     * @throws SQLException 异常
+     */
     void passReported( String answerId, Long id, String intentional) throws SQLException;
 }

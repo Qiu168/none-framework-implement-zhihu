@@ -26,6 +26,11 @@ public interface IBlackListController {
      */
     void deleteBlackList(String bid,HttpServletResponse response) throws SQLException, IOException;
 
-
+    /**
+     * 是否被拉黑
+     * @param bid bid
+     * @param response resp
+     * @throws Exception 异常
+     */
     void isBlack(String bid, HttpServletResponse response) throws Exception;
 }
