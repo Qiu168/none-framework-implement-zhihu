@@ -126,4 +126,8 @@ public interface QuestionService {
      * @throws Exception 异常
      */
     int getQuestionCountByState(int state) throws Exception;
+
+    String getReportedQuestion(int page, int size) throws Exception;
+
+    void passReportedQuestion(String questionId, String intentional) throws SQLException;
 }

@@ -1,6 +1,9 @@
 package com.huangTaiQi.www.service;
 
+import com.huangTaiQi.www.model.entity.AnswerEntity;
+
 import java.sql.SQLException;
+import java.util.List;
 
 /**
  * @author 14629
@@ -38,7 +41,7 @@ public interface AnswerService {
      * @return 回答
      * @throws SQLException 异常
      */
-    String addAnswer(String questionId, String title, String content) throws SQLException;
+    String addAnswer(String questionId, String title, String content) throws Exception;
 
     /**
      * 审核通过回答
@@ -63,4 +66,10 @@ public interface AnswerService {
      * @throws Exception 异常
      */
     int getAnswerCountByState(int state) throws Exception;
+
+    List<AnswerEntity> getAnswerByQuestionIdByPage(String questionId, int page, int size) throws Exception;
+
+    String getReportedAnswer(int page, int size) throws Exception;
+
+    void passReportedAnswer(String answerId, String intentional) throws SQLException;
 }

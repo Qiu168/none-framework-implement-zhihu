@@ -1,5 +1,8 @@
 package com.huangTaiQi.www.service;
 
+import com.huangTaiQi.www.model.entity.BlackListEntity;
+import com.huangTaiQi.www.model.vo.IsSuccessVO;
+
 import java.sql.SQLException;
 
 /**
@@ -15,10 +18,12 @@ public interface BlackListService {
 
     /**
      * 新增拉黑
+     *
      * @param blackUid bid
+     * @return 信息
      * @throws SQLException 异常
      */
-    void addBlackList(String blackUid) throws SQLException;
+    IsSuccessVO addBlackList(String blackUid) throws Exception;
 
     /**
      * 取消拉黑
@@ -26,4 +31,12 @@ public interface BlackListService {
      * @throws SQLException 异常
      */
     void deleteBlackList(String blackUid) throws SQLException;
+
+    /**
+     * 是否拉黑
+     * @param bid bid
+     * @return 是否拉黑
+     * @throws Exception 异常
+     */
+    BlackListEntity selectBlackList(String bid) throws Exception;
 }
