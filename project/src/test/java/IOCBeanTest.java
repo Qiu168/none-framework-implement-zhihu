@@ -9,9 +9,5 @@ public class IOCBeanTest {
     @Test
     public void test(){
         UserServiceImpl userService =(UserServiceImpl) applicationContext.getBean("userServiceImpl");
-        System.out.println(userService);
-        System.out.println(userService.userDao);
-        System.out.println(userService.getUserDao());
-        System.out.println(userService.str);
     }
 }
