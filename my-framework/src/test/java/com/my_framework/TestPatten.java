@@ -8,6 +8,6 @@ import java.util.regex.Pattern;
 public class TestPatten {
     @Test
     public void test(){
-        Assert.assertFalse(Pattern.matches(".+", "        ".trim()));
+        Assert.assertTrue(Pattern.matches("^[0-9]+$", "   789    ".trim()));
     }
 }
