@@ -51,9 +51,9 @@
                     </div>
                     <nav aria-label="Page navigation example" class="mt-4">
                         <ul class="pagination justify-content-center pagination-sm">
-                            <li class="page-item">
-                                <a class="page-link" onclick="previousPage()">Previous</a>
-                            </li>
+<!--                            <li class="page-item">-->
+<!--                                <a class="page-link" onclick="previousPage()">Previous</a>-->
+<!--                            </li>-->
                             <li class="page-item">
                                 <a class="page-link" onclick="nextPage()">Next</a>
                             </li>
@@ -74,6 +74,7 @@
     function refreshGetQuestion(){
         offset=0;
         current=1;
+        minTime=new Date().getTime() ;
         dynamicType='question';
         getDyQuestion();
         getTotal();
@@ -81,6 +82,7 @@
     function refreshGetAnswer(){
         offset=0;
         current=1;
+        minTime=new Date().getTime() ;
         dynamicType='answer';
         getDyAnswer();
         getTotal();
