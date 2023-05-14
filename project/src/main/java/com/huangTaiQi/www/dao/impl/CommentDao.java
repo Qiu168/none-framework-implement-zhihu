@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_CHECKED;
 import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
 
 /**
@@ -49,8 +50,9 @@ public class CommentDao implements ICommentDao , ReportAble , UpdateUserSettings
         String sql=new SQLBuilder("comment")
                 .select("*")
                 .where("answer_id")
+                .where("state")
                 .buildSelect();
-        return baseDao.selectByParams(sql, CommentEntity.class,answerId);
+        return baseDao.selectByParams(sql, CommentEntity.class,answerId,MESSAGE_CHECKED);
     }
     @Override
     public List<CommentEntity> getCommentByState(int page, int size, int state) throws Exception {

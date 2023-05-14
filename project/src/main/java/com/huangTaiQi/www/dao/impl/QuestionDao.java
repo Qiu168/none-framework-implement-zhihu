@@ -13,6 +13,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_CHECKED;
 import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
 
 /**
@@ -27,8 +28,10 @@ public class QuestionDao implements IQuestionDao , ReportAble, UpdateUserSetting
     @Override
     public int getQuestionCount() throws Exception {
         String sql=new SQLBuilder("question")
-                .count("*").buildSelect();
-        return baseDao.selectOne(sql, Integer.class);
+                .count("*")
+                .where("state")
+                .buildSelect();
+        return baseDao.selectOne(sql, Integer.class,MESSAGE_CHECKED);
     }
 
     @Override
@@ -36,16 +39,18 @@ public class QuestionDao implements IQuestionDao , ReportAble, UpdateUserSetting
         String sql=new SQLBuilder("question")
                 .count("*")
                 .blurWhere("title")
+                .where("state")
                 .buildSelect();
-        return baseDao.selectOne(sql,Integer.class,"%"+title+"%");
+        return baseDao.selectOne(sql,Integer.class,"%"+title+"%",MESSAGE_CHECKED);
     }
     @Override
     public int getQuestionCountByCategory(String categoryId) throws Exception {
         String sql=new SQLBuilder("question")
                 .count("*")
                 .where("category_id")
+                .where("state")
                 .buildSelect();
-        return baseDao.selectOne(sql,Integer.class,categoryId);
+        return baseDao.selectOne(sql,Integer.class,categoryId,MESSAGE_CHECKED);
     }
     @Override
     public List<QuestionEntity> getQuestions(int page, int size) throws Exception {
@@ -53,8 +58,9 @@ public class QuestionDao implements IQuestionDao , ReportAble, UpdateUserSetting
                 .select("*")
                 .limit(size)
                 .offset((page-1)*size)
+                .where("state")
                 .buildSelect();
-        return baseDao.selectByParams(sql, QuestionEntity.class);
+        return baseDao.selectByParams(sql, QuestionEntity.class,MESSAGE_CHECKED);
     }
 
     @Override
@@ -64,9 +70,10 @@ public class QuestionDao implements IQuestionDao , ReportAble, UpdateUserSetting
                 .limit(size)
                 .offset((page-1)*size)
                 .blurWhere("title")
+                .where("state")
                 .buildSelect();
         String s = "%" + title + "%";
-        return baseDao.selectByParams(sql, QuestionEntity.class,s);
+        return baseDao.selectByParams(sql, QuestionEntity.class,s,MESSAGE_CHECKED);
     }
     @Override
     public List<QuestionEntity> getQuestionsByCategoryId(int page, int size, String categoryId) throws Exception {
@@ -75,8 +82,9 @@ public class QuestionDao implements IQuestionDao , ReportAble, UpdateUserSetting
                 .limit(size)
                 .offset((page-1)*size)
                 .where("category_id")
+                .where("state")
                 .buildSelect();
-        return baseDao.selectByParams(sql, QuestionEntity.class,categoryId);
+        return baseDao.selectByParams(sql, QuestionEntity.class,categoryId,MESSAGE_CHECKED);
     }
     @Override
     public List<CategoryEntity> getCategory() throws Exception {
@@ -92,8 +100,9 @@ public class QuestionDao implements IQuestionDao , ReportAble, UpdateUserSetting
                 .limit(size)
                 .offset((page-1)*size)
                 .where("user_id")
+                .where("state")
                 .buildSelect();
-        return baseDao.selectByParams(sql, QuestionEntity.class,userId);
+        return baseDao.selectByParams(sql, QuestionEntity.class,userId,MESSAGE_CHECKED);
     }
     @Override
     public QuestionEntity getQuestionById(String id) throws Exception {

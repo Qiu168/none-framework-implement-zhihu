@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_CHECKED;
 import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
 
 /**
@@ -35,8 +36,9 @@ public class AnswerDao implements IAnswerDao , ReportAble, UpdateUserSettings, S
         String sql=new SQLBuilder("answer")
                 .select("*")
                 .where("question_id")
+                .where("state")
                 .buildSelect();
-        return baseDao.selectByParams(sql,AnswerEntity.class,questionId);
+        return baseDao.selectByParams(sql,AnswerEntity.class,questionId,MESSAGE_CHECKED);
     }
     @Override
     public AnswerEntity getAnswerById(String id) throws Exception {
