@@ -54,10 +54,12 @@ public class FollowServiceImpl implements FollowService {
         FollowEntity followEntity=followDao.selectFollow(String.valueOf(userId),followeeId);
         if(followEntity==null){
             followDao.add(userId,followeeId);
-            userDao.updateFollowee(userId,1);
+            userDao.updateFollowee(user.getId(),1);
+            userDao.updateFans(userId,1);
         }else{
             followDao.delete(userId,followeeId);
-            userDao.updateFollowee(userId,-1);
+            userDao.updateFollowee(user.getId(),-1);
+            userDao.updateFans(userId,-1);
         }
         return JSON.toJSONString(new IsSuccessVO(true,followEntity==null?"关注成功":"取消关注"));
     }

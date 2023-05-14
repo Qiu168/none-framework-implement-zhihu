@@ -23,6 +23,7 @@ import java.sql.SQLException;
 
 
 import static com.huangTaiQi.www.constant.RegexConstants.EMAIL_REGEX;
+import static com.huangTaiQi.www.constant.RegexConstants.NUMBER_REGEX;
 import static com.huangTaiQi.www.constant.SessionConstants.IMG_CODE;
 
 
@@ -65,10 +66,10 @@ public class UserControllerImpl extends BaseController implements IUserControlle
 
     @Override
     @RequestMapping(value = "register")
-    public void register(@RequestParam("email") String email,
-                         @RequestParam("code") String emailCode,
-                         @RequestParam("password") String password,
-                         @RequestParam("repassword") String rePassword,
+    public void register(@Pattern(regex = EMAIL_REGEX,message = "email") @RequestParam("email") String email,
+                         @Pattern @RequestParam("code") String emailCode,
+                         @Pattern @RequestParam("password") String password,
+                         @Pattern @RequestParam("repassword") String rePassword,
                          HttpServletResponse response)
             throws SQLException, IOException, NoSuchAlgorithmException {
         //验证，注册
@@ -80,9 +81,9 @@ public class UserControllerImpl extends BaseController implements IUserControlle
 
     @Override
     @RequestMapping(value = "login",method = "post")
-    public void login(@RequestParam("usernameOrEmail") String usernameOrEmail,
-                      @RequestParam("password") String password,
-                      @RequestParam("imgCode") String imgCode,
+    public void login(@Pattern @RequestParam("usernameOrEmail") String usernameOrEmail,
+                      @Pattern @RequestParam("password") String password,
+                      @Pattern @RequestParam("imgCode") String imgCode,
                       HttpServletRequest request, HttpServletResponse response) throws Exception {
         String code = (String) request.getSession().getAttribute(IMG_CODE);
         String message = userService.login(usernameOrEmail, password, imgCode, code);
@@ -95,7 +96,8 @@ public class UserControllerImpl extends BaseController implements IUserControlle
 
     @Override
     @RequestMapping(value = "checkEmail")
-    public void checkEmail(@RequestParam("email") String email,HttpServletRequest request, HttpServletResponse response) throws Exception {
+    public void checkEmail(@Pattern(regex = EMAIL_REGEX,message = "email") @RequestParam("email") String email,
+                           HttpServletRequest request, HttpServletResponse response) throws Exception {
         boolean hasEmail = userService.hasEmail(email);
         response.getWriter().write(String.valueOf(hasEmail));
     }
@@ -105,47 +107,43 @@ public class UserControllerImpl extends BaseController implements IUserControlle
     public void me(HttpServletRequest request, HttpServletResponse response) throws IOException {
         UserDTO user = UserHolder.getUser();
         String json = JSON.toJSONString(user);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(json);
     }
 
     @Override
     @RequestMapping(value = "resetPassword")
-    public void resetPassword(@RequestParam("email") String email,
-                              @RequestParam("code") String emailCode,
-                              @RequestParam("password") String password,
-                              @RequestParam("repassword") String rePassword,
+    public void resetPassword(@Pattern(regex = EMAIL_REGEX,message = "email") @RequestParam("email") String email,
+                              @Pattern @RequestParam("code") String emailCode,
+                              @Pattern @RequestParam("password") String password,
+                              @Pattern @RequestParam("repassword") String rePassword,
                               HttpServletResponse response)
             throws SQLException, IOException, NoSuchAlgorithmException {
         //验证，注册
         String message = userService.resetPassword(email, emailCode, password, rePassword);
         //返回信息
-        response.setContentType("text/html;charset=utf-8");
         response.getWriter().write(message);
     }
 
     @Override
     @RequestMapping
-    public void getUser(@RequestParam("username") String username, HttpServletResponse response) throws Exception {
+    public void getUser(@Pattern @RequestParam("username") String username, HttpServletResponse response) throws Exception {
         String users=userService.getUser(username);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(users);
     }
 
     @Override
     @RequestMapping
-    public void getUserById(@RequestParam("userId") String id, HttpServletResponse response) throws Exception {
+    public void getUserById(@Pattern(regex = NUMBER_REGEX) @RequestParam("userId") String id, HttpServletResponse response) throws Exception {
         String user=userService.getUserById(id);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(user);
     }
 
     @Override
     @RequestMapping
-    public void updateSettings(@RequestParam("introduce") String introduce,
-                               @RequestParam("email") String email,
-                               @RequestParam("username") String username,
-                               @RequestParam("gender") String gender,
+    public void updateSettings(@Pattern @RequestParam("introduce") String introduce,
+                               @Pattern(regex = EMAIL_REGEX,message = "email") @RequestParam("email") String email,
+                               @Pattern @RequestParam("username") String username,
+                               @Pattern @RequestParam("gender") String gender,
                                HttpServletRequest request,
                                HttpServletResponse response) throws ServletException, IOException, SQLException {
         String imgPath = ImageUploader.processFileUpload(request);
@@ -155,7 +153,6 @@ public class UserControllerImpl extends BaseController implements IUserControlle
     @RequestMapping
     public void getRight(HttpServletResponse response) throws IOException {
         String json=rightService.getRight();
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(json);
     }
 }

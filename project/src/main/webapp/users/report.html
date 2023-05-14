@@ -56,7 +56,7 @@
         }else{
             axios({
                 method: 'get',
-                url:'/project_war_exploded/api/answer/getAnswerById?id='+messageId
+                url:'/project_war_exploded/api/answer/getAnswerById?answerId='+messageId
             }).then(function (resp) {
                 let data=resp.data;
                 document.getElementById("message-user").innerHTML=`<img alt="头像" src="${data.avatar}">${data.username}`;

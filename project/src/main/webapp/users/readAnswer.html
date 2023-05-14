@@ -188,9 +188,9 @@
     function getAnswerByQuestionId(page){
         axios({
             method:'get',
-            url:'/project_war_exploded/api/answer/getAnswerByQuestionId?id='+questionId+'&page='+page+"&size="+size
+            url:'/project_war_exploded/api/answer/getAnswerByQuestionIdAndPage?id='+questionId+'&page='+page+"&size="+size
         }).then(function (resp){
-            let answer = resp.data;
+            let answer = resp.data[0];
             document.getElementById("title").innerHTML=answer.title;
             document.getElementById("answer-avatar").innerHTML=answer.avatar;
             document.getElementById("answer-username").innerHTML=answer.username;
@@ -290,7 +290,7 @@
                 answerId:answerId
             }
         }).then(function (resp){
-            alert("评论成功");
+            alert(resp.data.message);
         })
     }
     // jQuery code

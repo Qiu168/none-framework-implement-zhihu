@@ -10,6 +10,8 @@ import com.my_framework.www.pool.DataBaseUtil;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+import static com.huangTaiQi.www.constant.EntityAttributeConstants.ALL;
+
 /**
  * @author 14629
  */
@@ -20,7 +22,7 @@ public class LikeDao implements ILikeDao {
     @Override
     public LikeEntity selectLike(Long userId, String answerId) throws Exception {
         String sql=new SQLBuilder("likes")
-                .select("*")
+                .select(ALL)
                 .where("user_id")
                 .where("answer_id")
                 .buildSelect();

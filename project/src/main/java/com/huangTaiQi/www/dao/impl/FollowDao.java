@@ -12,6 +12,8 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import static com.huangTaiQi.www.constant.EntityAttributeConstants.ALL;
+
 /**
  * @author 14629
  */
@@ -22,7 +24,7 @@ public class FollowDao implements IFollowDao {
     @Override
     public FollowEntity selectFollow(String userId, Long followeeId) throws Exception {
         String sql=new SQLBuilder("follow")
-                .select("*")
+                .select(ALL)
                 .where("user_id")
                 .where("followee_id")
                 .buildSelect();
@@ -48,7 +50,7 @@ public class FollowDao implements IFollowDao {
     @Override
     public List<Long> selectFollows(Long id) throws Exception {
         String sql=new SQLBuilder("follow")
-                .select("*")
+                .select(ALL)
                 .where("followee_id")
                 .buildSelect();
         List<FollowEntity> followEntities = baseDao.selectByParams(sql, FollowEntity.class, id);
@@ -70,7 +72,7 @@ public class FollowDao implements IFollowDao {
     @Override
     public List<Long> selectFollowee(Long followerId) throws Exception {
         String sql=new SQLBuilder("follow")
-                .select("*")
+                .select(ALL)
                 .where("user_id")
                 .buildSelect();
         List<FollowEntity> followEntities = baseDao.selectByParams(sql, FollowEntity.class, followerId);

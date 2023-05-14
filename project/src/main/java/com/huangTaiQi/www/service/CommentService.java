@@ -1,6 +1,7 @@
 package com.huangTaiQi.www.service;
 
 import com.huangTaiQi.www.model.entity.CommentEntity;
+import com.huangTaiQi.www.model.vo.IsSuccessVO;
 
 import java.sql.SQLException;
 
@@ -15,7 +16,7 @@ public interface CommentService {
      * @param pid 父评论id
      * @throws Exception 异常
      */
-    void addComment(String content, String answerId, String pid) throws Exception;
+    IsSuccessVO addComment(String content, String answerId, String pid) throws Exception;
 
     /**
      * 根据id获取评论
@@ -57,4 +58,8 @@ public interface CommentService {
      * @throws Exception 异常
      */
     int getCommentCountByState(int state) throws Exception;
+
+    String getReportedComment(int page, int size) throws Exception;
+
+    void passReportedComment(String commentId, String intentional) throws SQLException;
 }

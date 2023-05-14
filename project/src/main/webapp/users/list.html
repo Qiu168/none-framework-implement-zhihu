@@ -141,20 +141,41 @@ let questions;
 let categories;
 let current=1;
 let pageSize=2;
-function getTotal(condition) {
-    return new Promise((resolve, reject) => {
-        axios({
-            method: 'get',
-            url:'/project_war_exploded/api/question/getQuestionCount' + condition
-        }).then(function (resp) {
-            const total = resp.data;
-            console.log(total);
-            document.getElementById("total").innerHTML = total;
-            resolve(total);
-        }).catch(function (error) {
-            reject(error);
+let type='';
+let category;
+let title;
+function getTotal(id) {
+    if(type==''){
+        return new Promise((resolve, reject) => {
+            axios({
+                method: 'get',
+                url:'/project_war_exploded/api/question/getQuestionCount'
+            }).then(function (resp) {
+                total = resp.data;
+                console.log(total);
+                document.getElementById("total").innerHTML = total;
+                resolve(total);
+            }).catch(function (error) {
+                reject(error);
+            });
         });
-    });
+    }else if(type=='category'){
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/question/getQuestionCountByCategory?categoryId='+id
+        }).then(function (resp) {
+            total = resp.data;
+            document.getElementById("total").innerHTML = total;
+        })
+    }else if(type=='title'){
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/question/getQuestionCountByTitle?title='+id
+        }).then(function (resp) {
+            total = resp.data;
+            document.getElementById("total").innerHTML = total;
+        })
+    }
 }
 
             function getQuestionType() {
@@ -205,7 +226,7 @@ function getTotal(condition) {
                             "                        </p>"+"<br>";
                     }
                     document.getElementById("ques").innerHTML=tableData;
-                    getTotal('').then(total1 => {
+                    getTotal().then(total1 => {
                         console.log("222222222="+total1); // 这里可以获取到返回值
                         total=total1;
                     }).catch(error => {
@@ -223,7 +244,15 @@ function getTotal(condition) {
              function previousPage() {
                 if (current>1) {
                     current--;
-                    Paging();
+                    if(type==''){
+                        Paging();
+                    }else if(type=='category'){
+                        searchByCategory(category);
+                    }else if(type=='title'){
+                        searchTitle(title);
+                    }else{
+                        alert("用户已经全部展示")
+                    }
                 }else{
                     alert("已经到尽头了")
                 }
@@ -231,20 +260,38 @@ function getTotal(condition) {
             function nextPage() {
                 if (current<Math.ceil(total / pageSize)) {
                     current++;
-                    Paging();
+                    if(type==''){
+                        Paging();
+                    }else if(type=='category'){
+                        searchByCategory(category);
+                    }else if(type=='title'){
+                        searchTitle(title);
+                    }else{
+                        alert("用户已经全部展示")
+                    }
                 }else{
                     alert("已经到尽头了")
                 }
             }
-            function searchByTitle() {
-                let title = document.getElementById("search-box").value;
+            function searchByTitle(title){
                 current=1;
-                title='&title='+title;
+                searchTitle(title);
+            }
+            function searchTitle(title1) {
+                let title = document.getElementById("search-box").value;
+                if(title1!=null){
+                    title=title1;
+                }
+                this.title=title;
                 axios({
                     method:'get',
-                    url:'/project_war_exploded/api/question/getQuestionByTitle?page='+current+'&size='+pageSize+title
+                    url:'/project_war_exploded/api/question/getQuestionByTitle?page='+current+'&size='+pageSize+'&title='+title
                 }).then(function (resp) {
                     questions=resp.data;
+                    if(questions==null){
+                        document.getElementById("ques").innerHTML='没有问题';
+                        return;
+                    }
                     console.log(questions)
                     let tableData="";
                     for (let i = 0; i < questions.length; i++) {
@@ -270,17 +317,19 @@ function getTotal(condition) {
                             "                        </p>"+"<br>";
                     }
                     document.getElementById("ques").innerHTML=tableData;
-
-                    console.log(this.total)
-                    console.log("to"+total)
+                    type='title';
+                    getTotal(title);
                 })
             }
-            function searchByCategoryId(categoryId) {
-                categoryId='&categoryId='+categoryId;
+            function searchByCategoryId(categoryId){
                 current=1;
+                searchByCategory(categoryId)
+            }
+            function searchByCategory(categoryId) {
+                category=categoryId;
                 axios({
                     method:'get',
-                    url:'/project_war_exploded/api/question/getQuestionByCategory?page='+current+'&size='+pageSize+categoryId
+                    url:'/project_war_exploded/api/question/getQuestionByCategory?page='+current+'&size='+pageSize+'&categoryId='+categoryId
                 }).then(function (resp) {
                     if(resp.data==null){
                         alert("还没有问题哦")
@@ -312,13 +361,8 @@ function getTotal(condition) {
                             "                        </p>"+"<br>";
                     }
                     document.getElementById("ques").innerHTML=tableData;
-                    getTotal('ByCategory',"categoryId="+(i+1)).then(total1 => {
-                        console.log("222222222="+total1); // 这里可以获取到返回值
-                        total=total1;
-                    }).catch(error => {
-                        console.error(error);
-                    });
-                    console.log("to"+total)
+                    type='category';
+                    getTotal(categoryId);
                 })
             }
 
@@ -335,6 +379,9 @@ function searchUser() {
         url:'/project_war_exploded/api/home/getUser?username='+username
     }).then(function (resp) {
         let users = resp.data;
+        if(users==null){
+            document.getElementById("ques").innerHTML='没有查到'
+        }
         console.log(users)
         let tableData="";
         for (let i = 0; i < users.length; i++) {
@@ -343,9 +390,8 @@ function searchUser() {
                 user.username+ "</a><br>";
         }
         document.getElementById("ques").innerHTML=tableData;
-
-        console.log(this.total)
-        console.log("to"+total)
+        type='user';
+        document.getElementById("total").innerHTML=users.length;
     })
 }
 function formatDate(timestamp) {

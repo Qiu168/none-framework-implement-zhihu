@@ -8,6 +8,7 @@ public class XSSDefenceUtils {
         if (input == null) {
             return null;
         }
+        input=input.trim();
         StringBuilder filtered = new StringBuilder(input.length());
         char c;
         for (int i = 0; i < input.length(); i++) {

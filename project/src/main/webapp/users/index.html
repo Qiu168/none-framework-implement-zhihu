@@ -11,6 +11,13 @@
         #table-title tr th{
             border: none;
         }
+        .text-container {
+            display: -webkit-box;
+            -webkit-line-clamp: 3;  /* 控制到第3行，根据需要更改 */
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
     </style>
 </head>
 <body style="background: #f2f2f2;">
@@ -43,7 +50,7 @@
 
                         <p class="text-center">
                             <small id="info">info</small><br>
-                            <button id="black-list">拉黑</button>
+                            <button onclick="blackList()" id="black-list">拉黑</button>
                         </p>
                         <p>
                             fans<span id="fans" class="badge badge-light mr-1">fans</span>
@@ -107,27 +114,6 @@
                 </h6>
 
                 <div id="table" >
-<!--                    &lt;!&ndash; 头像 &ndash;&gt;-->
-<!--                    <img th:src="${blog.getAuthorAvatar()}" style="border-radius: 5px " width="32" height="32">-->
-<!--                    <p class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray" style="margin-left: 5px">-->
-<!--                        &lt;!&ndash; 标题 &ndash;&gt;-->
-<!--                        <a th:text="${blog.getTitle()}"-->
-<!--                           th:href="@{'/blog/read/'+${blog.getBid()}}"-->
-<!--                           class="text-dark font-weight-bold text-decoration-none d-block">-->
-<!--                        </a>-->
-<!--                        &lt;!&ndash; 浏览量 &ndash;&gt;-->
-<!--                        <span>-->
-<!--                            <svg class="bi bi-eye-fill" width="1em" height="1em" viewBox="0 0 16 16" fill="currentColor" xmlns="http://www.w3.org/2000/svg">-->
-<!--                              <path d="M10.5 8a2.5 2.5 0 1 1-5 0 2.5 2.5 0 0 1 5 0z"/>-->
-<!--                              <path fill-rule="evenodd" d="M0 8s3-5.5 8-5.5S16 8 16 8s-3 5.5-8 5.5S0 8 0 8zm8 3.5a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"/>-->
-<!--                            </svg>-->
-<!--                            浏览量-->
-<!--                        </span>-->
-<!--                        &lt;!&ndash; 时间 &ndash;&gt;-->
-<!--                        <span th:text="${#dates.format(blog.getGmtUpdate(),'yyyy-MM-dd')}"-->
-<!--                              class="badge badge-light float-right">时间-->
-<!--                        </span>-->
-<!--                    </p>-->
                 </div>
 
                 <!--分页-->
@@ -164,6 +150,7 @@
     let questions;
     let current=1;
     let pageSize=5;
+    let black;
     function sameFollow() {
         let a=sessionStorage.getItem(`token`);
         if(a==null){
@@ -201,7 +188,11 @@
                 for (let i = 0; i < answers.length; i++){
                     let answer=answers[i];
                     html+="<a href="+"readQuestion.html#"+answer.questionId+"><b>"+answer.questionTitle+"</b></a><br>" +
-                        "<a href="+'readAnswer.html#'+answer.id+">"+answer.content+ "  点赞数："+answer.likes+"</a>";
+                        "<a href="+'readAnswer.html#'+answer.id+">"
+                        +" <span class='text-container'>\n" +
+                        answer.content+
+                        "      </span><br>\n" +
+                        "  点赞数："+answer.likes+"</a>";
                 }
             }
             document.getElementById("table").innerHTML=html;
@@ -258,11 +249,40 @@
         })
     }
     function blackList() {
+        let url='/project_war_exploded/api/black/addBlackList?userId='+userId;
+        if(black){
+            url='/project_war_exploded/api/black/deleteBlackList?userId='+userId;
+        }
         axios({
             method:'get',
-            url:'/project_war_exploded/api/black/addBlackList?userId='+userId
+            url:url
         }).then(function (resp) {
             let data=resp.data;
+            alert(data.message);
+            let innerHTML = document.getElementById("black-list").innerHTML;
+            if(innerHTML=='已拉黑'){
+                document.getElementById("black-list").innerHTML='拉黑';
+                black=false;
+            }else{
+                document.getElementById("black-list").innerHTML="已拉黑";
+                black=true;
+            }
+        })
+    }
+
+    function isBlack() {
+        let token =sessionStorage.getItem("token");
+        if(token==null){
+            return;
+        }
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/black/isBlack?userId='+userId
+        }).then(function (resp) {
+            if(resp.data.success==true){
+                document.getElementById("black-list").innerHTML="已拉黑";
+                black=true;
+            }
         })
     }
     function Paging(){
@@ -311,6 +331,7 @@
         Paging();
         getUser();
         isFollow();
+        isBlack();
     }
     function stateDescribe(state) {
         if(state==0){
@@ -319,6 +340,8 @@
             return "审核不通过";
         } else if(state==3){
             return "被举报";
+        }else{
+            return '';
         }
     }
 </script>

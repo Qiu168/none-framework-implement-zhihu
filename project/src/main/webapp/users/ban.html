@@ -1,10 +1,131 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Title</title>
+    <title>User Permissions</title>
+    <meta charset="utf-8" />
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            padding: 8px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+    </style>
 </head>
+<script src="../js/axios.js"></script>
+<script src="../js/common.js"></script>
+<script src="../js/http_apps.bdimg.com_libs_jquery_2.1.4_jquery.js"></script>
+<script src="https://cdn.staticfile.org/twitter-bootstrap/3.3.7/js/bootstrap.min.js"></script>
 <body>
-    查询用户，查看被封禁的用户，显示用户的权限。封禁用户的权限，封禁用户
+<h1>User Permissions</h1>
+<p>Manage user permissions.</p>
+<input placeholder="username" id="select-username"><button onclick="getUserRight()">用户名查询</button>
+<table>
+    <thead>
+    <tr>
+        <th>User Name</th>
+        <th>Permission A</th>
+        <th>Permission B</th>
+        <th>Permission C</th>
+        <th>Action</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>John</td>
+        <td><input type="checkbox" name="permissionA"></td>
+        <td><input type="checkbox" name="permissionB"></td>
+        <td><input type="checkbox" name="permissionC"></td>
+        <td><button onclick="submitPermissions(this)">Submit</button></td>
+    </tr>
+    <tr>
+        <td>Jane</td>
+        <td><input type="checkbox" name="permissionA"></td>
+        <td><input type="checkbox" name="permissionB"></td>
+        <td><input type="checkbox" name="permissionC"></td>
+        <td><button onclick="submitPermissions(this)">Submit</button></td>
+    </tr>
+    <tr>
+        <td>Mike</td>
+        <td><input type="checkbox" name="permissionA"></td>
+        <td><input type="checkbox" name="permissionB"></td>
+        <td><input type="checkbox" name="permissionC"></td>
+        <td><button onclick="submitPermissions(this)">Submit</button></td>
+    </tr>
+    <!-- Add more users here -->
+    </tbody>
+</table>
+<div id="ban-user-right">
+
+</div>
+
+<script>
+    function submitPermissions(button) {
+        let row = button.parentNode.parentNode;
+        let username = row.cells[0].textContent;
+        let permissions = [];
+        for (let i = 1; i <= 3; i++) {
+            let checkbox = row.cells[i].querySelector('input[name^="permission"]');
+            if (checkbox.checked) {
+                permissions.push(checkbox.name);
+            }
+        }
+        alert(permissions)
+        axios.post('/permissions', {username: username, permissions: permissions})
+            .then(response => {
+                console.log(response.data);
+            })
+            .catch(error => {
+                console.error(error);
+            });
+    }
+    function getUserRight() {
+        let value = document.getElementById('select-username').value;
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/right/getRightByUsername?username='+value
+        }).then(function (resp){
+            let data =resp.data;
+            if(data==null){
+                alert("没有该用户或该用户没有任何权限");
+                return;
+            }
+            let innerHTML=`封禁${value}<select id="rightId">`;
+            for(let i=0;i<data.length;i++){
+                let DATA=data[i];
+                innerHTML+=`<option value="${DATA}">权限${DATA}</option>`;
+            }
+            innerHTML+=`</select><input id="time" placeholder="封禁时间" type="number" >单位min<button onclick="banUserRight('${value}')">submit</button>
+            <button onclick="banUser('${value}')">将该用户变为游客</button>`
+            document.getElementById("ban-user-right").innerHTML=innerHTML;
+        })
+    }
+    function banUser(username) {
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/right/banUser?username='+username
+        }).then(function (resp) {
+            alert(resp.data)
+        })
+    }
+    function banUserRight(username){
+        let banRightId = document.getElementById("rightId").value;
+        let banTime = document.getElementById("time").value;
+        axios({
+            method:'get',
+            url:'/project_war_exploded/api/right/banRight?username='+username+'&banTime='+banTime+'&right='+banRightId
+        }).then(function (resp) {
+            alert(resp.data)
+        })
+    }
+</script>
 </body>
 </html>

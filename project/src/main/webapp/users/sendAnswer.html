@@ -123,6 +123,8 @@
         }
       }).then(function (resp){
         alert(resp.data.message)
+      }).catch(function (err){
+        alert(err)
       })
     }
     window.onload=function (){

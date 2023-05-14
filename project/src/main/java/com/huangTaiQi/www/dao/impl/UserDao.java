@@ -14,6 +14,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.huangTaiQi.www.constant.EntityAttributeConstants.ID;
+
 /**
  * @author 14629
  */
@@ -81,7 +83,7 @@ public class UserDao implements IUserDao {
     public UserEntity getUserById(String id) throws Exception {
         String sql=new SQLBuilder("user")
                 .select("*")
-                .where("id")
+                .where(ID)
                 .buildSelect();
         return baseDao.selectOne(sql, UserEntity.class,id);
     }
@@ -93,7 +95,7 @@ public class UserDao implements IUserDao {
                 .update(UserEntity::getEmail)
                 .update(UserEntity::getIntroduce)
                 .update(UserEntity::getAvatar)
-                .where("id")
+                .where(ID)
                 .buildUpdate();
         baseDao.updateCommon(sql,username,gender,email,introduce,imgPath, UserHolder.getUser().getId());
     }
@@ -124,6 +126,19 @@ public class UserDao implements IUserDao {
     @Override
     public void updateFollowee(Long uid, int addCount) throws SQLException {
         String sql="UPDATE user SET followee = followee + "+addCount+" WHERE id = ?";
+        baseDao.updateCommon(sql,uid);
+    }
+
+    public void updateRole(Long uid, int role) throws SQLException {
+        String sql=new SQLBuilder("user")
+                .update(UserEntity::getRoleId)
+                .where(ID)
+                .buildUpdate();
+        baseDao.updateCommon(sql,role,uid);
+    }
+
+    public void updateFans(Long uid, int addCount) throws SQLException {
+        String sql="UPDATE user SET fans = fans + "+addCount+" WHERE id = ?";
         baseDao.updateCommon(sql,uid);
     }
 }

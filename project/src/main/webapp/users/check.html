@@ -133,11 +133,11 @@
             method:'get',
             url:'/project_war_exploded/api/question/getUncheckedQuestion?page='+current+'&size='+pageSize
         }).then(function (resp) {
-            let question=resp.data[0];
-            if(question==null){
-                document.getElementById("message").innerHTML="还没有需要审核的问题";
+            if(resp.data==null){
+                document.getElementById("message").innerHTML="还没有需要审核的问题"
                 return;
             }
+            let question=resp.data[0];
             messageId=question.id;
             currentMessageUserId=question.userId;
             document.getElementById("message").innerHTML="<a href=" + 'index.html#' + question.userId + "><img src=" + question.avatar + " alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
@@ -166,11 +166,11 @@
             method: 'get',
             url:'/project_war_exploded/api/answer/getUncheckedAnswer?page='+current+'&size='+pageSize
         }).then(function (resp) {
-            let message=resp.data[0];
-            if(message==null){
-                document.getElementById("message").innerHTML="还没有人回答"
+            if(resp.data==null){
+                document.getElementById("message").innerHTML="还没有需要审核的"
                 return;
             }
+            let message=resp.data[0];
             messageId=message.id;
             currentMessageUserId=message.userId;
             document.getElementById("message").innerHTML="<a href=" + "index.html#" + message.userId + "\n" +
@@ -192,6 +192,10 @@
             method:'get',
             url:'/project_war_exploded/api/comment/getUncheckedComment?page='+current+'&size='+pageSize
         }).then(function (resp) {
+            if(resp.data==null){
+                document.getElementById("message").innerHTML="还没有需要审核的评论"
+                return;
+            }
             let comment=resp.data[0];
             if(comment!=null){
                 messageId=comment.id;

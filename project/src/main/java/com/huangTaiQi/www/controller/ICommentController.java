@@ -3,6 +3,7 @@ package com.huangTaiQi.www.controller;
 
 import javax.servlet.http.HttpServletResponse;
 
+import java.sql.SQLException;
 /**
  * @author 14629
  */
@@ -12,9 +13,10 @@ public interface ICommentController {
      * @param content 内容
      * @param answerId 回答id
      * @param pid 父评论id
+     * @param response response
      * @throws Exception 异常
      */
-    void sendComment( String content, String answerId, String pid) throws Exception;
+    void sendComment( String content, String answerId, String pid,HttpServletResponse response) throws Exception;
 
     /**
      * 获取comment
@@ -56,4 +58,29 @@ public interface ICommentController {
      * @throws Exception 异常
      */
     void getCommentById(String id,HttpServletResponse response) throws Exception;
+
+    /**
+     * 获取被举报的评论
+     * @param page 页数
+     * @param size 大小
+     * @param response resp
+     * @throws Exception 异常
+     */
+    void getReportedComment( int page,int size, HttpServletResponse response) throws Exception;
+
+    /**
+     * 获取被举报的总数
+     * @param response resp
+     * @throws Exception 异常
+     */
+    void getReportedTotal(HttpServletResponse response) throws Exception;
+
+    /**
+     * 通过
+     * @param commentId id
+     * @param id uid
+     * @param intentional 是否恶意
+     * @throws SQLException 异常
+     */
+    void passReported( String commentId,Long id,String intentional) throws SQLException;
 }

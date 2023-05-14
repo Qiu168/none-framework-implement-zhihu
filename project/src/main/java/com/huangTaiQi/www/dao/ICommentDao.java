@@ -56,7 +56,7 @@ public interface ICommentDao {
      * @param commentId 评论id
      * @throws SQLException 异常
      */
-    void updateCommentState(int state, long commentId) throws SQLException;
+    void updateCommentState(int state, String commentId) throws SQLException;
 
     /**
      * 根据state获取评论的数量

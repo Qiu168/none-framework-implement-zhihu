@@ -11,6 +11,8 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.huangTaiQi.www.constant.EntityAttributeConstants.ALL;
+
 /**
  * @author 14629
  */
@@ -21,7 +23,7 @@ public class BlackListDao implements IBlackListDao {
     @Override
     public List<BlackListEntity> getBlackListByUid(Long uid) throws Exception {
         String sql=new SQLBuilder("black_list")
-                .select("*")
+                .select(ALL)
                 .where("uid")
                 .buildSelect();
         return baseDao.selectByParams(sql,BlackListEntity.class,uid);
@@ -45,7 +47,7 @@ public class BlackListDao implements IBlackListDao {
 
     public BlackListEntity selectBlackList(Long userId, String bid) throws Exception {
         String sql=new SQLBuilder("black_list")
-                .select("*")
+                .select(ALL)
                 .where("uid")
                 .where("bid")
                 .buildSelect();

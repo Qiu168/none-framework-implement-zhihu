@@ -1,7 +1,6 @@
 package com.huangTaiQi.www.controller;
 
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
+
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -27,6 +26,9 @@ public interface IAnswerController {
      */
     void getAnswerByQuestionId(String questionId, HttpServletResponse response) throws Exception;
 
+
+    void getAnswerByQuestionIdAndPage(String questionId, int page, int size, HttpServletResponse response) throws Exception;
+
     /**
      * 根据id获取回答
      * @param id id
@@ -44,7 +46,7 @@ public interface IAnswerController {
      * @throws SQLException 异常
      * @throws IOException 异常
      */
-    void sendAnswer(String title, String content, String questionId, HttpServletResponse response) throws SQLException, IOException;
+    void sendAnswer(String title, String content, String questionId, HttpServletResponse response) throws Exception;
 
     /**
      * 审核通过回答
@@ -69,4 +71,29 @@ public interface IAnswerController {
      * @throws Exception 异常
      */
     void getUncheckedTotal(HttpServletResponse response) throws Exception;
+
+    /**
+     * 获取被举报的信息
+     * @param page 页数
+     * @param size 大小
+     * @param response resp
+     * @throws Exception 异常
+     */
+    void getReportedAnswer( int page, int size, HttpServletResponse response) throws Exception;
+
+    /**
+     * 获取被举报的总数
+     * @param response resp
+     * @throws Exception 异常
+     */
+    void getReportedTotal(HttpServletResponse response) throws Exception;
+
+    /**
+     * 审核通过
+     * @param answerId id
+     * @param id uid
+     * @param intentional 是否恶意
+     * @throws SQLException 异常
+     */
+    void passReported( String answerId, Long id, String intentional) throws SQLException;
 }

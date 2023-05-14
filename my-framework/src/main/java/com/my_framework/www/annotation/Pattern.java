@@ -13,6 +13,6 @@ public @interface Pattern {
      * 默认为非空
      * @return 正则
      */
-    String regex() default "/^.+$/";
+    String regex() default ".+";
     String message() default "notNull";
 }

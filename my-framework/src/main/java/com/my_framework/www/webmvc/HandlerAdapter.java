@@ -5,6 +5,7 @@ import com.alibaba.fastjson.*;
 import com.my_framework.www.annotation.*;
 import com.my_framework.www.exception.AccessDeniedException;
 import com.my_framework.www.exception.ApiRequestFrequencyException;
+import com.my_framework.www.exception.ParameterInvalidException;
 import com.my_framework.www.utils.CastUtil;
 import com.my_framework.www.utils.StringUtil;
 import com.my_framework.www.utils.XSSDefenceUtils;
@@ -178,10 +179,10 @@ public class HandlerAdapter {
                 //不匹配,不访问接口
                 try {
                     response.getWriter().write("");
+                    throw new ParameterInvalidException("参数不符合要求，请检查后重试");
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                return;
             }
             //类型转换
             paramValues[index] = parseStringValue(value, paramsTypes[index]);
@@ -208,6 +209,12 @@ public class HandlerAdapter {
         }
     }
 
+    /**
+     * Thread.UncaughtExceptionHandler可以做到一样的事情
+     * @param e 异常
+     * @param cls 产生异常的类
+     * @param response resp
+     */
     private void handleException(Exception e, Class<?> cls, HttpServletResponse response) {
         try {
             if(e instanceof NoSuchMethodException ||e instanceof IllegalAccessException){
@@ -233,7 +240,7 @@ public class HandlerAdapter {
                 logger.log(Level.WARNING,"An error occurred in "+cls.getName()+" e = {0}", e.getMessage());
                 response.sendRedirect("http://localhost:8080/project_war_exploded/html/error/404.html");
             } else {
-                logger.log(Level.WARNING,"An error occurred in "+cls.getName()+" e = {0}", e);
+                logger.log(Level.WARNING, "An error occurred in " + cls.getName(), e);
                 response.sendRedirect("http://localhost:8080/project_war_exploded/html/error/404.html");
             }
         }catch (IOException ex){

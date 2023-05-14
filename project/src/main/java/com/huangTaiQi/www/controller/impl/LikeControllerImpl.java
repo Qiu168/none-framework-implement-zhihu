@@ -3,12 +3,11 @@ package com.huangTaiQi.www.controller.impl;
 import com.huangTaiQi.www.controller.BaseController;
 import com.huangTaiQi.www.controller.ILikeController;
 import com.huangTaiQi.www.service.impl.LikeServiceImpl;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Controller;
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
+import com.my_framework.www.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+
+import static com.huangTaiQi.www.constant.RegexConstants.NUMBER_REGEX;
 
 /**
  * @author 14629
@@ -20,16 +19,17 @@ public class LikeControllerImpl extends BaseController implements ILikeControlle
     LikeServiceImpl likeService;
     @Override
     @RequestMapping
-    public void isLike(@RequestParam("answerId") String answerId, HttpServletResponse response) throws Exception {
+    public void isLike(@Pattern(regex = NUMBER_REGEX) @RequestParam("answerId") String answerId,
+                       HttpServletResponse response) throws Exception {
         String like = likeService.isLike(answerId);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(like);
     }
+    @Limit(maxToken = 10,ratePerSecond = 1,costPerRequest = 1)
     @Override
     @RequestMapping
-    public void likeAnswer(@RequestParam("answerId") String answerId, HttpServletResponse response) throws Exception {
+    public void likeAnswer(@Pattern(regex = NUMBER_REGEX) @RequestParam("answerId") String answerId,
+                           HttpServletResponse response) throws Exception {
         String json = likeService.likeAnswer(answerId);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(json);
     }
 
