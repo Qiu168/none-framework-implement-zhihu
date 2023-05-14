@@ -5,12 +5,11 @@ import com.huangTaiQi.www.controller.IFollowController;
 import com.huangTaiQi.www.model.dto.UserDTO;
 import com.huangTaiQi.www.service.impl.FollowServiceImpl;
 import com.huangTaiQi.www.utils.UserHolder;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Controller;
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
+import com.my_framework.www.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
+
+import static com.huangTaiQi.www.constant.RegexConstants.NUMBER_REGEX;
 
 
 /**
@@ -23,19 +22,19 @@ public class FollowControllerImpl extends BaseController implements IFollowContr
     FollowServiceImpl followService;
     @Override
     @RequestMapping
-    public void isFollowed(@RequestParam("id") String userId, HttpServletResponse response) throws Exception {
+    public void isFollowed(@Pattern(regex = NUMBER_REGEX) @RequestParam("id") String userId, HttpServletResponse response) throws Exception {
         String json=followService.isFollowed(userId);
         response.getWriter().write(json);
     }
     @Override
     @RequestMapping
-    public void follow(@RequestParam("id") Long userId,HttpServletResponse response) throws Exception {
+    public void follow(@Pattern(regex = NUMBER_REGEX) @RequestParam("id") Long userId,HttpServletResponse response) throws Exception {
         String json=followService.follow(userId);
         response.getWriter().write(json);
     }
     @Override
     @RequestMapping
-    public void getSameFollow(@RequestParam("id") Long userId,HttpServletResponse response) throws Exception {
+    public void getSameFollow(@Pattern(regex = NUMBER_REGEX) @RequestParam("id") Long userId,HttpServletResponse response) throws Exception {
         UserDTO user = UserHolder.getUser();
         if(user==null){
             return;

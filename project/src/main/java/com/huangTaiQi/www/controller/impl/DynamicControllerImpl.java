@@ -4,14 +4,12 @@ import com.huangTaiQi.www.constant.enums.MessageType;
 import com.huangTaiQi.www.controller.BaseController;
 import com.huangTaiQi.www.controller.IDynamicController;
 import com.huangTaiQi.www.service.impl.DynamicServiceImpl;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Controller;
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
+import com.my_framework.www.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+import static com.huangTaiQi.www.constant.RegexConstants.NUMBER_REGEX;
 import static com.huangTaiQi.www.constant.TypeConstants.ANSWER;
 
 /**
@@ -24,19 +22,25 @@ public class DynamicControllerImpl extends BaseController implements IDynamicCon
     DynamicServiceImpl dynamicService;
     @Override
     @RequestMapping
-    public void getDynamicQuestion(@RequestParam("offset")Integer offset,@RequestParam("max") Long max, @RequestParam("pageSize") Integer pageSize, HttpServletResponse response) throws Exception {
+    public void getDynamicQuestion(@Pattern(regex = NUMBER_REGEX) @RequestParam("offset")Integer offset,
+                                   @Pattern(regex = NUMBER_REGEX) @RequestParam("max") Long max,
+                                   @Pattern(regex = NUMBER_REGEX) @RequestParam("pageSize") Integer pageSize,
+                                   HttpServletResponse response) throws Exception {
         String dynamicJson = dynamicService.getDynamic(MessageType.QUESTION, max, offset, pageSize);
         response.getWriter().write(dynamicJson);
     }
     @Override
     @RequestMapping
-    public void getDynamicAnswer(@RequestParam("offset")Integer offset,@RequestParam("max") Long max,@RequestParam("pageSize") Integer pageSize,HttpServletResponse response) throws Exception {
+    public void getDynamicAnswer(@Pattern(regex = NUMBER_REGEX) @RequestParam("offset")Integer offset,
+                                 @Pattern(regex = NUMBER_REGEX) @RequestParam("max") Long max,
+                                 @Pattern(regex = NUMBER_REGEX) @RequestParam("pageSize") Integer pageSize,
+                                 HttpServletResponse response) throws Exception {
         String dynamicJson = dynamicService.getDynamic(MessageType.ANSWER, max, offset, pageSize);
         response.getWriter().write(dynamicJson);
     }
     @Override
     @RequestMapping()
-    public void getDynamicTotal(@RequestParam("type") String type,HttpServletResponse response) throws IOException {
+    public void getDynamicTotal(@Pattern @RequestParam("type") String type,HttpServletResponse response) throws IOException {
         Long dynamicCount;
         if(ANSWER.equalsIgnoreCase(type)){
             dynamicCount = dynamicService.getDynamicCount(MessageType.ANSWER);

@@ -1,20 +1,22 @@
 package com.huangTaiQi.www.controller.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.huangTaiQi.www.constant.enums.MessageType;
 import com.huangTaiQi.www.controller.BaseController;
 import com.huangTaiQi.www.controller.IAnswerController;
+import com.huangTaiQi.www.model.entity.AnswerEntity;
 import com.huangTaiQi.www.service.impl.AnswerServiceImpl;
 import com.huangTaiQi.www.service.impl.DynamicServiceImpl;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Controller;
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
+import com.my_framework.www.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.sql.SQLException;
 
+import java.sql.SQLException;
+import java.util.List;
+
+import static com.huangTaiQi.www.constant.RegexConstants.NUMBER_REGEX;
 import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_CHECKING;
+import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
 
 /**
  * @author 14629
@@ -28,38 +30,47 @@ public class AnswerControllerImpl extends BaseController implements IAnswerContr
     DynamicServiceImpl dynamicService;
     @Override
     @RequestMapping
-    public void getUserAnswer(@RequestParam("id") String userId, HttpServletResponse response) throws Exception {
+    public void getUserAnswer(@Pattern(regex = NUMBER_REGEX,message = "数字")@RequestParam("id") String userId,
+                              HttpServletResponse response) throws Exception {
         String json = answerService.getUserAnswer(userId);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(json);
     }
     @Override
     @RequestMapping
-    public void getAnswerByQuestionId(@RequestParam("id") String questionId,HttpServletResponse response) throws Exception {
+    public void getAnswerByQuestionId(@Pattern(regex = NUMBER_REGEX) @RequestParam("id") String questionId,
+                                      HttpServletResponse response) throws Exception {
         String answer = answerService.getAnswerByQuestionId(questionId);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(answer);
     }
     @Override
     @RequestMapping
-    public void getAnswerById(@RequestParam("answerId") String id,HttpServletResponse response) throws Exception {
+    public void getAnswerByQuestionIdAndPage(@Pattern(regex = NUMBER_REGEX) @RequestParam("id") String questionId,
+                                             @Pattern(regex = NUMBER_REGEX) @RequestParam("page") int page,
+                                             @Pattern(regex = NUMBER_REGEX) @RequestParam("size") int size,
+                                             HttpServletResponse response) throws Exception {
+        List<AnswerEntity> answer = answerService.getAnswerByQuestionIdByPage(questionId, page, size);
+        response.getWriter().write(JSON.toJSONString(answer));
+    }
+    @Override
+    @RequestMapping
+    public void getAnswerById(@Pattern(regex = NUMBER_REGEX)@RequestParam("answerId") String id,
+                              HttpServletResponse response) throws Exception {
         String answer = answerService.getAnswerById(id);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(answer);
     }
     @Override
     @RequestMapping(method = "post")
-    public void sendAnswer(@RequestParam("title") String title,
-                           @RequestParam("content") String content,
-                           @RequestParam("questionId") String questionId,
-                           HttpServletResponse response) throws SQLException, IOException {
+    public void sendAnswer(@Pattern @RequestParam("title") String title,
+                           @Pattern @RequestParam("content") String content,
+                           @Pattern(regex = NUMBER_REGEX) @RequestParam("questionId") String questionId,
+                           HttpServletResponse response) throws Exception {
         String message = answerService.addAnswer(questionId, title, content);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(message);
     }
     @Override
     @RequestMapping("pass")
-    public void passAnswer(@RequestParam("answerId")String answerId,@RequestParam("userId") Long id) throws Exception {
+    public void passAnswer(@Pattern(regex = NUMBER_REGEX)@RequestParam("id")String answerId,
+                           @Pattern(regex = NUMBER_REGEX)@RequestParam("userId") Long id) throws Exception {
         //改变answer的state
         answerService.passAnswer(answerId);
         //发送动态
@@ -69,9 +80,10 @@ public class AnswerControllerImpl extends BaseController implements IAnswerContr
 
     @Override
     @RequestMapping
-    public void getUncheckedAnswer(@RequestParam("page") int page,@RequestParam("size") int size, HttpServletResponse response) throws Exception {
+    public void getUncheckedAnswer(@Pattern(regex = NUMBER_REGEX) @RequestParam("page") int page,
+                                   @Pattern(regex = NUMBER_REGEX) @RequestParam("size") int size,
+                                   HttpServletResponse response) throws Exception {
         String answers=answerService.getUncheckedAnswer(page,size);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(answers);
     }
     @Override
@@ -80,5 +92,27 @@ public class AnswerControllerImpl extends BaseController implements IAnswerContr
         int count=answerService.getAnswerCountByState(MESSAGE_CHECKING);
         response.setContentType("text/html;charset=utf-8");
         response.getWriter().write(String.valueOf(count));
+    }
+    @Override
+    @RequestMapping
+    public void getReportedAnswer(@Pattern(regex = NUMBER_REGEX) @RequestParam("page") int page,
+                                  @Pattern(regex = NUMBER_REGEX) @RequestParam("size") int size,
+                                  HttpServletResponse response) throws Exception {
+        String question=answerService.getReportedAnswer(page,size);
+        response.getWriter().write(question);
+    }
+    @Override
+    @RequestMapping
+    public void getReportedTotal(HttpServletResponse response) throws Exception {
+        int count=answerService.getAnswerCountByState(MESSAGE_REPORTED);
+        response.getWriter().write(String.valueOf(count));
+    }
+    @Override
+    @RequestMapping
+    public void passReported(@Pattern(regex = NUMBER_REGEX) @RequestParam("id")String answerId,
+                             @Pattern(regex = NUMBER_REGEX) @RequestParam("userId") Long id,
+                             @Pattern(regex = NUMBER_REGEX) @RequestParam("intentional") String intentional) throws SQLException {
+        answerService.passReportedAnswer(answerId);
+
     }
 }
