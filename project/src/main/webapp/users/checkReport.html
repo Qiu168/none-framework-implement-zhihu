@@ -53,7 +53,15 @@
                     <div id="message">
                         内容
                     </div>
-                    <button onclick="pass()">pass</button><br>
+                    <button onclick="pass()">pass</button>
+                    是否恶意举报？<select id="isIntentional">
+                        <option value="1">
+                            否
+                        </option>
+                        <option value="2">
+                            是
+                        </option>
+                    </select><br>
                     <button onclick="unPass()">不通过</button>
                     不通过原因：<br>
                     <textarea required name="message-unPass" id="message-unPass"  rows="3" class="form-control"> </textarea><br>
@@ -133,11 +141,11 @@
             method:'get',
             url:'/project_war_exploded/api/question/getReportedQuestion?page='+current+'&size='+pageSize
         }).then(function (resp) {
-            let question=resp.data[0];
-            if(question==null){
-                document.getElementById("message").innerHTML="还没有动态";
+            if(resp.data==null){
+                document.getElementById("message").innerHTML="还没有"
                 return;
             }
+            let question=resp.data[0];
             messageId=question.id;
             currentMessageUserId=question.userId;
             document.getElementById("message").innerHTML="<a href=" + 'index.html#' + question.userId + "><img src=" + question.avatar + " alt=\"avatar\" style=\"border-radius: 5px \" width=\"32\" height=\"32\">\n" +
@@ -166,11 +174,11 @@
             method: 'get',
             url:'/project_war_exploded/api/answer/getReportedAnswer?page='+current+'&size='+pageSize
         }).then(function (resp) {
-            let message=resp.data[0];
-            if(message==null){
-                document.getElementById("message").innerHTML="还没有人回答"
+            if(resp.data==null){
+                document.getElementById("message").innerHTML="还没有"
                 return;
             }
+            let message=resp.data[0];
             messageId=message.id;
             currentMessageUserId=message.userId;
             document.getElementById("message").innerHTML="<a href=" + "index.html#" + message.userId + "\n" +
@@ -192,6 +200,10 @@
             method:'get',
             url:'/project_war_exploded/api/comment/getReportedComment?page='+current+'&size='+pageSize
         }).then(function (resp) {
+            if(resp.data==null){
+                document.getElementById("message").innerHTML="还没有"
+                return;
+            }
             let comment=resp.data[0];
             if(comment!=null){
                 messageId=comment.id;
@@ -202,9 +214,10 @@
         })
     }
     function pass() {
+        let value = document.getElementById("isIntentional").value;
         axios({
             method:'get',
-            url:'/project_war_exploded/api/'+checkType+'/passReported?id='+messageId+"&userId="+currentMessageUserId
+            url:'/project_war_exploded/api/'+checkType+'/passReported?id='+messageId+"&userId="+currentMessageUserId+"&intentional="+value
         }).then(function (resp) {
             alert("ok")
         })
