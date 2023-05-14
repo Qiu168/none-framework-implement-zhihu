@@ -76,7 +76,7 @@ public class RightServiceImpl implements RightService {
             }
         }
     }
-
+    @Override
     public String getRightByUsername(String username) throws Exception {
         UserEntity userByUsername = userDao.getUserByUsername(username);
         if(userByUsername!=null){
@@ -99,7 +99,7 @@ public class RightServiceImpl implements RightService {
         getRightMapAfterBan(rightMap, jedis, uid.toString());
         return new ArrayList<>(rightMap.keySet());
     }
-
+    @Override
     public void banUserByUsername(String username) throws Exception {
         UserEntity userByUsername = userDao.getUserByUsername(username);
         userDao.updateRole(userByUsername.getId(),VISITOR);

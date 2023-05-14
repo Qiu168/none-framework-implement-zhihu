@@ -115,13 +115,13 @@ public class CommentServiceImpl implements CommentService {
     public int getCommentCountByState(int state) throws Exception {
         return commentDao.getCommentCountByState(state);
     }
-
+    @Override
     public String getReportedComment(int page, int size) throws Exception {
         List<CommentEntity> commentByState = commentDao.getCommentByState(page, size, MESSAGE_REPORTED);
         updateUserSettingsHelper.checkUserSettings(COMMENT,commentByState);
         return JSON.toJSONString(commentByState);
     }
-
+    @Override
     public void passReportedComment(String commentId, String intentional) throws SQLException {
         commentDao.updateCommentState(MESSAGE_CHECKED, commentId);
         //todo:

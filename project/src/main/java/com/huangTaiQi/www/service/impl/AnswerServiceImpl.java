@@ -1,10 +1,7 @@
 package com.huangTaiQi.www.service.impl;
 
 import com.alibaba.fastjson.JSON;
-import com.huangTaiQi.www.dao.impl.AnswerDao;
-import com.huangTaiQi.www.dao.impl.BlackListDao;
-import com.huangTaiQi.www.dao.impl.QuestionDao;
-import com.huangTaiQi.www.dao.impl.UserDao;
+import com.huangTaiQi.www.dao.impl.*;
 import com.huangTaiQi.www.helper.CheckBlackListHelper;
 import com.huangTaiQi.www.helper.UpdateUserSettingsHelper;
 import com.huangTaiQi.www.model.dto.UserDTO;
@@ -41,6 +38,8 @@ public class AnswerServiceImpl implements AnswerService {
     QuestionDao questionDao;
     @Autowired
     BlackListDao blackListDao;
+    @Autowired
+    ReportDao reportDao;
     @Autowired
     UpdateUserSettingsHelper updateUserSettingsHelper;
     @Override
@@ -99,19 +98,20 @@ public class AnswerServiceImpl implements AnswerService {
     public int getAnswerCountByState(int state) throws Exception {
         return answerDao.getAnswerCountByState(state);
     }
-
+    @Override
     public List<AnswerEntity> getAnswerByQuestionIdByPage(String questionId, int page, int size) throws Exception {
         return answerDao.getAnswerByQuestionIdByPage(questionId,page,size);
     }
-
+    @Override
     public String getReportedAnswer(int page, int size) throws Exception {
         List<AnswerEntity> answer = answerDao.getAnswerByState(page, size, MESSAGE_REPORTED);
         updateUserSettingsHelper.checkUserSettings(ANSWER,answer);
         return JSON.toJSONString(answer);
     }
-
-    public void passReportedAnswer(String answerId) throws SQLException {
+    @Override
+    public void passReportedAnswer(String answerId, String intentional) throws SQLException {
         answerDao.updateAnswerState(MESSAGE_CHECKED, CastUtil.castLong(answerId));
         //todo:
+        reportDao.updateLegal(intentional,answerId,ANSWER);
     }
 }

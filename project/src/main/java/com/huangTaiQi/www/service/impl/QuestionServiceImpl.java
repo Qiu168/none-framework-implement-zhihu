@@ -3,6 +3,7 @@ package com.huangTaiQi.www.service.impl;
 import com.alibaba.fastjson.JSON;
 import com.huangTaiQi.www.dao.impl.AnswerDao;
 import com.huangTaiQi.www.dao.impl.QuestionDao;
+import com.huangTaiQi.www.dao.impl.ReportDao;
 import com.huangTaiQi.www.dao.impl.UserDao;
 import com.huangTaiQi.www.helper.UpdateUserSettingsHelper;
 import com.huangTaiQi.www.model.dto.UserDTO;
@@ -36,6 +37,8 @@ public class QuestionServiceImpl implements QuestionService {
     AnswerDao answerDao;
     @Autowired
     UserDao userDao;
+    @Autowired
+    ReportDao reportDao;
     @Autowired
     UpdateUserSettingsHelper updateUserSettingsHelper;
     @Override
@@ -122,14 +125,15 @@ public class QuestionServiceImpl implements QuestionService {
     public int getQuestionCountByState(int state) throws Exception {
         return questionDao.getQuestionCountByState(state);
     }
-
+    @Override
     public String getReportedQuestion(int page, int size) throws Exception {
         List<QuestionEntity> questionReported = questionDao.getQuestionByState(page, size, MESSAGE_REPORTED);
         return JSON.toJSONString(questionReported);
     }
-
-    public void passReportedQuestion(String questionId) throws SQLException {
+    @Override
+    public void passReportedQuestion(String questionId, String intentional) throws SQLException {
         questionDao.updateQuestionState(MESSAGE_CHECKED, CastUtil.castLong(questionId));
         //TODO:
+        reportDao.updateLegal(intentional,questionId,QUESTION);
     }
 }
