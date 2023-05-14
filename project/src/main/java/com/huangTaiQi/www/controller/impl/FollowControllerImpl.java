@@ -26,6 +26,7 @@ public class FollowControllerImpl extends BaseController implements IFollowContr
         String json=followService.isFollowed(userId);
         response.getWriter().write(json);
     }
+    @Limit(maxToken = 10,ratePerSecond = 1,costPerRequest = 1)
     @Override
     @RequestMapping
     public void follow(@Pattern(regex = NUMBER_REGEX) @RequestParam("id") Long userId,HttpServletResponse response) throws Exception {

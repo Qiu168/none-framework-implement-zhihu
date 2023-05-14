@@ -18,6 +18,7 @@ public class RightControllerImpl extends BaseController implements IRightControl
     RightServiceImpl rightService;
     @Autowired
     UserServiceImpl userService;
+    @Access(rightName = 5L)
     @Override
     @RequestMapping
     public void banRight(@Pattern @RequestParam("username") String username,
@@ -27,15 +28,17 @@ public class RightControllerImpl extends BaseController implements IRightControl
         rightService.banUserRight(username,right,banTime);
         response.getWriter().write("ok");
     }
+    @Access(rightName = 5L)
     @Override
     @RequestMapping
     public void getRightByUsername(@Pattern @RequestParam("username") String username, HttpServletResponse response) throws Exception {
         String rightByUsername = rightService.getRightByUsername(username);
         response.getWriter().write(rightByUsername);
     }
+    @Access(rightName = 5L)
     @Override
     @RequestMapping
-    public void banUser(@Pattern @RequestParam("username") String username,HttpServletResponse response) throws Exception {
+    public void banUser(@Pattern @RequestParam("username") String username, HttpServletResponse response) throws Exception {
         rightService.banUserByUsername(username);
         response.getWriter().write("ok");
     }

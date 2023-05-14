@@ -24,6 +24,7 @@ public class LikeControllerImpl extends BaseController implements ILikeControlle
         String like = likeService.isLike(answerId);
         response.getWriter().write(like);
     }
+    @Limit(maxToken = 10,ratePerSecond = 1,costPerRequest = 1)
     @Override
     @RequestMapping
     public void likeAnswer(@Pattern(regex = NUMBER_REGEX) @RequestParam("answerId") String answerId,
