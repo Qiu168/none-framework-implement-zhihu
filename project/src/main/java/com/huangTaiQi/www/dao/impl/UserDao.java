@@ -134,4 +134,9 @@ public class UserDao implements IUserDao {
                 .buildUpdate();
         baseDao.updateCommon(sql,role,uid);
     }
+
+    public void updateFans(Long uid, int addCount) throws SQLException {
+        String sql="UPDATE user SET fans = fans + "+addCount+" WHERE id = ?";
+        baseDao.updateCommon(sql,uid);
+    }
 }
