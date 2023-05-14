@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.controller;
 
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
+
+import javax.servlet.http.HttpServletResponse;
 
 /**
  * @author 14629
@@ -12,5 +12,11 @@ public interface IRightController {
      * @param right 权限
      * @param banTime 禁用时间
      */
-    void banRight(Integer right,Long banTime);
+    void banRight(String username, Integer right, Long banTime, HttpServletResponse response) throws Exception;
+
+
+    void getRightByUsername(String username, HttpServletResponse response) throws Exception;
+
+
+    void banUser( String username, HttpServletResponse response) throws Exception;
 }

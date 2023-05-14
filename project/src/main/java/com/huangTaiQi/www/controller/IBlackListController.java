@@ -1,7 +1,6 @@
 package com.huangTaiQi.www.controller;
 
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
+
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -18,12 +17,15 @@ public interface IBlackListController {
      * @throws SQLException 异常
      * @throws IOException 异常
      */
-    void addBlackList(String bid, HttpServletResponse response) throws SQLException, IOException;
+    void addBlackList(String bid, HttpServletResponse response) throws Exception;
 
     /**
      * 取消拉黑
      * @param bid id
      * @throws SQLException 异常
      */
-    void deleteBlackList(String bid) throws SQLException;
+    void deleteBlackList(String bid,HttpServletResponse response) throws SQLException, IOException;
+
+
+    void isBlack(String bid, HttpServletResponse response) throws Exception;
 }

@@ -1,8 +1,5 @@
 package com.huangTaiQi.www.controller;
 
-import com.my_framework.www.annotation.Access;
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
@@ -133,4 +130,13 @@ public interface IQuestionController {
      * @throws Exception 异常
      */
     void getUncheckedTotal(HttpServletResponse response) throws Exception;
+
+
+    void getReportedQuestion(int page,int size, HttpServletResponse response) throws Exception;
+
+
+    void getReportedTotal(HttpServletResponse response) throws Exception;
+
+
+    void passReported(String questionId, Long id,String intentional) throws SQLException;
 }
