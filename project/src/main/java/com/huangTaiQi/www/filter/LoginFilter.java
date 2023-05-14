@@ -24,8 +24,10 @@ public class LoginFilter extends BaseFilter{
         //忽略请求地址
         List<String> ignoreUrl
                 = Arrays.asList(
-                "/adminService/auth/token",
-                "/adminService/auth/refreshToken");
+                "/api/like/isLike",
+                "/api/home/",
+                "/api/follow/isFollowed"
+        );
         //判断是否需要拦截（ThreadLocal中是否有用户）
         if (UserHolder.getUser() == null) {
             // 没有，需要拦截，设置状态码

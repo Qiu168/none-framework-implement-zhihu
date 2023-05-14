@@ -36,7 +36,7 @@ public class ARefreshTokenFilter extends BaseFilter{
         String rightKey = USER_RIGHT_KEY + token;
         Map<String, String> userMap = jedis.hgetAll(userKey);
         String rightJson = jedis.get(rightKey);
-        if(userMap.isEmpty()){
+        if(userMap.isEmpty()||rightJson==null){
             return true;
         }
         // 将查询到的hash数据转为UserDTO
