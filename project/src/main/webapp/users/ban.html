@@ -113,7 +113,7 @@
             method:'get',
             url:'/project_war_exploded/api/right/banUser?username='+username
         }).then(function (resp) {
-
+            alert(resp.data)
         })
     }
     function banUserRight(username){
@@ -123,7 +123,7 @@
             method:'get',
             url:'/project_war_exploded/api/right/banRight?username='+username+'&banTime='+banTime+'&right='+banRightId
         }).then(function (resp) {
-
+            alert(resp.data)
         })
     }
 </script>
