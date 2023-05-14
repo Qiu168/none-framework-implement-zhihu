@@ -22,14 +22,12 @@ public class LikeControllerImpl extends BaseController implements ILikeControlle
     @RequestMapping
     public void isLike(@RequestParam("answerId") String answerId, HttpServletResponse response) throws Exception {
         String like = likeService.isLike(answerId);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(like);
     }
     @Override
     @RequestMapping
     public void likeAnswer(@RequestParam("answerId") String answerId, HttpServletResponse response) throws Exception {
         String json = likeService.likeAnswer(answerId);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(json);
     }
 

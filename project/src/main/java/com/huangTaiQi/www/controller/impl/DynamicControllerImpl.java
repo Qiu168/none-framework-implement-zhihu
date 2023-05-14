@@ -26,14 +26,12 @@ public class DynamicControllerImpl extends BaseController implements IDynamicCon
     @RequestMapping
     public void getDynamicQuestion(@RequestParam("offset")Integer offset,@RequestParam("max") Long max, @RequestParam("pageSize") Integer pageSize, HttpServletResponse response) throws Exception {
         String dynamicJson = dynamicService.getDynamic(MessageType.QUESTION, max, offset, pageSize);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(dynamicJson);
     }
     @Override
     @RequestMapping
     public void getDynamicAnswer(@RequestParam("offset")Integer offset,@RequestParam("max") Long max,@RequestParam("pageSize") Integer pageSize,HttpServletResponse response) throws Exception {
         String dynamicJson = dynamicService.getDynamic(MessageType.ANSWER, max, offset, pageSize);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(dynamicJson);
     }
     @Override

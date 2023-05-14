@@ -25,14 +25,12 @@ public class FollowControllerImpl extends BaseController implements IFollowContr
     @RequestMapping
     public void isFollowed(@RequestParam("id") String userId, HttpServletResponse response) throws Exception {
         String json=followService.isFollowed(userId);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(json);
     }
     @Override
     @RequestMapping
     public void follow(@RequestParam("id") Long userId,HttpServletResponse response) throws Exception {
         String json=followService.follow(userId);
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(json);
     }
     @Override
@@ -43,7 +41,6 @@ public class FollowControllerImpl extends BaseController implements IFollowContr
             return;
         }
         String json=followService.getSameFollow(userId,user.getId());
-        response.setContentType("text/json;charset=utf-8");
         response.getWriter().write(json);
     }
 }
