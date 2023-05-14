@@ -23,6 +23,7 @@ import java.awt.image.BufferedImage;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
 import java.sql.SQLException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -147,15 +148,22 @@ public class UserServiceImpl implements UserService {
         jedis.hmset(tokenKey,userMap);
         // 设置token有效期
         jedis.expire(tokenKey, LOGIN_USER_TTL);
-        // TODO:获取用户权限
+        // 获取用户权限
         List<RoleRightRelationEntity> userRight = rightDao.getUserRight(user.getRoleId());
-        // TODO:制作成权限表
-        Map<Long, Boolean> rightMap = userRight.stream().collect(Collectors.toMap(RoleRightRelationEntity::getRightId, right -> true));
+        // 制作成权限表
+        Map<Long, Boolean> rightMap;
+        if(userRight!=null){
+            rightMap = userRight.stream().collect(Collectors.toMap(RoleRightRelationEntity::getRightId, right -> true));
+            // 查询并删除被封禁的权限
+            RightServiceImpl.getRightMapAfterBan(rightMap, jedis,user.getId().toString());
+        }else{
+            rightMap=new HashMap<>();
+        }
         UserHolder.saveUserRight(rightMap);
-        // TODO:存储到redis,存JSON
+        // 存储到redis,存JSON
         String rightKey = USER_RIGHT_KEY + token;
         jedis.set(rightKey,JSON.toJSONString(rightMap));
-        // TODO：设置有效期
+        // 设置有效期
         jedis.expire(rightKey, USER_RIGHT_TTL);
         // 返回token
         return TOKEN+token;
@@ -203,6 +211,10 @@ public class UserServiceImpl implements UserService {
     }
     @Override
     public void updateUserSettings(String username, String gender, String email, String introduce, String imgPath) throws SQLException {
+        if(imgPath==null){
+            //如果没有跟新图片
+            imgPath= UserHolder.getUser().getAvatar();
+        }
         userDao.updateUserSettings(username,gender,email,introduce,imgPath);
     }
 

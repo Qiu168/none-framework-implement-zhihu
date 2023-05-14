@@ -11,8 +11,6 @@ import com.my_framework.www.annotation.Autowired;
 import com.my_framework.www.annotation.Service;
 
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
 import static com.huangTaiQi.www.constant.TypeConstants.*;
 
@@ -22,20 +20,30 @@ import static com.huangTaiQi.www.constant.TypeConstants.*;
 @Service
 public class ReportServiceImpl implements ReportService {
     @Autowired
-    QuestionDao questionDao;
+    private QuestionDao questionDao;
     @Autowired
-    AnswerDao answerDao;
+    private AnswerDao answerDao;
     @Autowired
-    CommentDao commentDao;
+    private CommentDao commentDao;
     @Autowired
-    ReportDao reportDao;
+    private ReportDao reportDao;
 
+    private ReportAble getReportableDao(String type){
+        switch (type) {
+            case ANSWER:
+                return answerDao;
+            case COMMENT:
+                return commentDao;
+            case QUESTION:
+                return questionDao;
+            default:
+                throw new IllegalArgumentException(type + " is not a valid reportable object type.");
+        }
+    }
+
+    @Override
     public void reportMessage(String type, String messageId, String content) throws SQLException {
-        Map<String, ReportAble> reportDaoMap=new HashMap<>(3);
-        reportDaoMap.put(ANSWER,answerDao);
-        reportDaoMap.put(COMMENT,commentDao);
-        reportDaoMap.put(QUESTION,questionDao);
-        ReportAble reportAbleDao = reportDaoMap.get(type);
+        ReportAble reportAbleDao = getReportableDao(type);
         Long reporterId = UserHolder.getUser().getId();
         //改变状态
         reportAbleDao.report(messageId,reporterId);
