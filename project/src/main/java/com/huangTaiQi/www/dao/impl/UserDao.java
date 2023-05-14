@@ -126,4 +126,12 @@ public class UserDao implements IUserDao {
         String sql="UPDATE user SET followee = followee + "+addCount+" WHERE id = ?";
         baseDao.updateCommon(sql,uid);
     }
+
+    public void updateRole(Long uid, int role) throws SQLException {
+        String sql=new SQLBuilder("user")
+                .update(UserEntity::getRoleId)
+                .where("id")
+                .buildUpdate();
+        baseDao.updateCommon(sql,role,uid);
+    }
 }

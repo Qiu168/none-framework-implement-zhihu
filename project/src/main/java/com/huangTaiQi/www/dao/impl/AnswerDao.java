@@ -1,9 +1,6 @@
 package com.huangTaiQi.www.dao.impl;
 
-import com.huangTaiQi.www.dao.BaseDao;
-import com.huangTaiQi.www.dao.IAnswerDao;
-import com.huangTaiQi.www.dao.ReportAble;
-import com.huangTaiQi.www.dao.UpdateUserSettings;
+import com.huangTaiQi.www.dao.*;
 import com.huangTaiQi.www.model.UserSettings;
 import com.huangTaiQi.www.model.entity.AnswerEntity;
 import com.huangTaiQi.www.model.vo.QuestionAnswer;
@@ -21,7 +18,7 @@ import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
  * @author 14629
  */
 @Repository
-public class AnswerDao implements IAnswerDao , ReportAble, UpdateUserSettings {
+public class AnswerDao implements IAnswerDao , ReportAble, UpdateUserSettings, SelectById {
     private final Connection connection = DataBaseUtil.getConnection();
     private final BaseDao baseDao=new BaseDao(connection);
     @Override
@@ -122,5 +119,20 @@ public class AnswerDao implements IAnswerDao , ReportAble, UpdateUserSettings {
                 .where("user_id")
                 .buildUpdate();
         baseDao.updateCommon(sql,avatar,username,id);
+    }
+
+    @Override
+    public UserSettings selectById(String id) throws Exception {
+        return getAnswerById(id);
+    }
+
+    public List<AnswerEntity> getAnswerByQuestionIdByPage(String questionId, int page, int size) throws Exception {
+        String sql=new SQLBuilder("answer")
+                .select("*")
+                .limit(size)
+                .offset((page-1)*size)
+                .where("question_id")
+                .buildSelect();
+        return baseDao.selectByParams(sql,AnswerEntity.class,questionId);
     }
 }

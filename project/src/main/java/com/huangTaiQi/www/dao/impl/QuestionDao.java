@@ -1,9 +1,7 @@
 package com.huangTaiQi.www.dao.impl;
 
-import com.huangTaiQi.www.dao.BaseDao;
-import com.huangTaiQi.www.dao.IQuestionDao;
-import com.huangTaiQi.www.dao.ReportAble;
-import com.huangTaiQi.www.dao.UpdateUserSettings;
+import com.huangTaiQi.www.dao.*;
+import com.huangTaiQi.www.model.UserSettings;
 import com.huangTaiQi.www.model.entity.AnswerEntity;
 import com.huangTaiQi.www.model.entity.CategoryEntity;
 import com.huangTaiQi.www.model.entity.QuestionEntity;
@@ -21,7 +19,7 @@ import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
  * @author 14629
  */
 @Repository
-public class QuestionDao implements IQuestionDao , ReportAble, UpdateUserSettings {
+public class QuestionDao implements IQuestionDao , ReportAble, UpdateUserSettings, SelectById {
     private final Connection connection = DataBaseUtil.getConnection();
     private final  BaseDao baseDao=new BaseDao(connection);
 
@@ -176,5 +174,10 @@ public class QuestionDao implements IQuestionDao , ReportAble, UpdateUserSetting
                 .where("user_id")
                 .buildUpdate();
         baseDao.updateCommon(sql,avatar,username,id);
+    }
+
+    @Override
+    public UserSettings selectById(String id) throws Exception {
+        return getQuestionById(id);
     }
 }

@@ -1,9 +1,7 @@
 package com.huangTaiQi.www.dao.impl;
 
-import com.huangTaiQi.www.dao.BaseDao;
-import com.huangTaiQi.www.dao.ICommentDao;
-import com.huangTaiQi.www.dao.ReportAble;
-import com.huangTaiQi.www.dao.UpdateUserSettings;
+import com.huangTaiQi.www.dao.*;
+import com.huangTaiQi.www.model.UserSettings;
 import com.huangTaiQi.www.model.entity.AnswerEntity;
 import com.huangTaiQi.www.model.entity.CommentEntity;
 import com.huangTaiQi.www.utils.sql.SQLBuilder;
@@ -20,7 +18,7 @@ import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
  * @author 14629
  */
 @Repository
-public class CommentDao implements ICommentDao , ReportAble , UpdateUserSettings {
+public class CommentDao implements ICommentDao , ReportAble , UpdateUserSettings , SelectById {
     private final Connection connection = DataBaseUtil.getConnection();
     private final BaseDao baseDao=new BaseDao(connection);
     @Override
@@ -65,7 +63,7 @@ public class CommentDao implements ICommentDao , ReportAble , UpdateUserSettings
         return baseDao.selectByParams(sql, CommentEntity.class,state);
     }
     @Override
-    public void updateCommentState(int state, long commentId) throws SQLException {
+    public void updateCommentState(int state, String commentId) throws SQLException {
         String sql=new SQLBuilder("comment")
                 .update(CommentEntity::getState)
                 .where("id")
@@ -98,5 +96,10 @@ public class CommentDao implements ICommentDao , ReportAble , UpdateUserSettings
                 .where("user_id")
                 .buildUpdate();
         baseDao.updateCommon(sql,avatar,username,id);
+    }
+
+    @Override
+    public UserSettings selectById(String id) throws Exception {
+        return getCommentById(id);
     }
 }

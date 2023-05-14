@@ -2,6 +2,7 @@ package com.huangTaiQi.www.dao.impl;
 
 import com.huangTaiQi.www.dao.BaseDao;
 import com.huangTaiQi.www.dao.IReportDao;
+import com.huangTaiQi.www.model.entity.ReportEntity;
 import com.huangTaiQi.www.utils.sql.SQLBuilder;
 import com.my_framework.www.annotation.Repository;
 import com.my_framework.www.pool.DataBaseUtil;
@@ -25,5 +26,14 @@ public class ReportDao implements IReportDao {
                 .insert("content")
                 .buildInsert();
         baseDao.updateCommon(sql,reporterId,messageId,type,System.currentTimeMillis(),content);
+    }
+
+    public void updateLegal(String intentional, String messageId, String type) throws SQLException {
+        String sql=new SQLBuilder("report")
+                .update(ReportEntity::getLegal)
+                .where("message_id")
+                .where("type")
+                .buildUpdate();
+        baseDao.updateCommon(sql,intentional,messageId,type);
     }
 }
