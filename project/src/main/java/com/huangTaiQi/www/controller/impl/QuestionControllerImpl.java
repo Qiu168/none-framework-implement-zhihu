@@ -5,7 +5,12 @@ import com.huangTaiQi.www.controller.BaseController;
 import com.huangTaiQi.www.controller.IQuestionController;
 import com.huangTaiQi.www.service.impl.DynamicServiceImpl;
 import com.huangTaiQi.www.service.impl.QuestionServiceImpl;
-import com.my_framework.www.annotation.*;
+import com.my_framework.www.security.annotation.Access;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Controller;
+import com.my_framework.www.webmvc.annotation.Pattern;
+import com.my_framework.www.webmvc.annotation.RequestMapping;
+import com.my_framework.www.webmvc.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;

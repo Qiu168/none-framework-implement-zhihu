@@ -1,6 +1,6 @@
 package com.my_framework.www.utils;
 
-import com.my_framework.www.context.ApplicationContext;
+import com.my_framework.www.core.context.ApplicationContext;
 
 /**
  * @author 14629

@@ -10,7 +10,11 @@ import com.huangTaiQi.www.service.impl.UserServiceImpl;
 import com.huangTaiQi.www.utils.ImageUploader;
 import com.huangTaiQi.www.utils.ImgVerifyCode;
 import com.huangTaiQi.www.utils.UserHolder;
-import com.my_framework.www.annotation.*;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Controller;
+import com.my_framework.www.webmvc.annotation.Pattern;
+import com.my_framework.www.webmvc.annotation.RequestMapping;
+import com.my_framework.www.webmvc.annotation.RequestParam;
 
 
 import javax.servlet.ServletException;
@@ -38,6 +42,10 @@ public class UserControllerImpl extends BaseController implements IUserControlle
     UserServiceImpl userService;
     @Autowired
     RightServiceImpl rightService;
+    @RequestMapping(value = "hello")
+    public void helloWorld(HttpServletResponse response) throws IOException {
+        response.getWriter().write("helloWorld");
+    }
 
     @Override
     @RequestMapping(value = "getImgVerifyCode")

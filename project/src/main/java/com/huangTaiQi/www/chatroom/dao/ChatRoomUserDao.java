@@ -5,10 +5,10 @@ package com.huangTaiQi.www.chatroom.dao;
 import com.huangTaiQi.www.chatroom.model.entity.ChatRoomUserEntity;
 import com.huangTaiQi.www.chatroom.model.entity.Chatroom;
 import com.huangTaiQi.www.chatroom.model.vo.ChatRoomUserVO;
-import com.huangTaiQi.www.dao.BaseDao;
+import com.my_framework.www.db.orm.BaseDao;
 import com.huangTaiQi.www.utils.sql.SQLBuilder;
-import com.my_framework.www.annotation.Repository;
-import com.my_framework.www.pool.DataBaseUtil;
+import com.my_framework.www.core.annotation.stereotype.Repository;
+import com.my_framework.www.db.pool.DataBaseUtil;
 
 import java.sql.Connection;
 import java.sql.SQLException;

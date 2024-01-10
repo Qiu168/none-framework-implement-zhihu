@@ -2,13 +2,18 @@ package com.my_framework.www.webmvc;
 
 
 import com.alibaba.fastjson.*;
-import com.my_framework.www.annotation.*;
+import com.my_framework.www.security.annotation.Access;
+import com.my_framework.www.security.annotation.Limit;
 import com.my_framework.www.exception.AccessDeniedException;
 import com.my_framework.www.exception.ApiRequestFrequencyException;
 import com.my_framework.www.exception.ParameterInvalidException;
+import com.my_framework.www.security.RightGet;
 import com.my_framework.www.utils.CastUtil;
 import com.my_framework.www.utils.StringUtil;
 import com.my_framework.www.utils.XSSDefenceUtils;
+import com.my_framework.www.webmvc.annotation.Pattern;
+import com.my_framework.www.webmvc.annotation.RequestMapping;
+import com.my_framework.www.webmvc.annotation.RequestParam;
 import com.my_framework.www.webmvc.rate.RateLimiter;
 
 import javax.servlet.http.HttpServletRequest;
@@ -42,7 +47,7 @@ public class HandlerAdapter {
     public static HandlerAdapter getAdapter() {
         return HANDLER_ADAPTER;
     }
-
+    //todo: 解耦
     public void handle(HttpServletRequest request, HttpServletResponse response, HandlerMapping handlerMapping) {
         Method method = handlerMapping.getMethod();
         //权限管理
@@ -52,6 +57,7 @@ public class HandlerAdapter {
             long rightName = access.rightName();
             RightGet obj;
             try {
+                //todo: 这里有bug吧
                 //这里可以设计成读取xml，这里先这样
                 Class<?> clz=Class.forName("com.huangTaiQi.www.utils.UserHolder");
                 obj = (RightGet) clz.newInstance();

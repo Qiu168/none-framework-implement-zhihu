@@ -8,8 +8,8 @@ import com.huangTaiQi.www.dao.impl.QuestionDao;
 import com.huangTaiQi.www.model.UserSettings;
 import com.huangTaiQi.www.model.dto.UserDTO;
 import com.huangTaiQi.www.utils.UserHolder;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Component;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Component;
 import com.my_framework.www.utils.CollectionUtil;
 
 import java.sql.SQLException;

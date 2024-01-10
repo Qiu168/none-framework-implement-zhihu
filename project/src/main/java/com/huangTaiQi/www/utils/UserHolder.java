@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.utils;
 
 import com.huangTaiQi.www.model.dto.UserDTO;
-import com.my_framework.www.webmvc.RightGet;
+import com.my_framework.www.security.RightGet;
 
 import java.util.Map;
 

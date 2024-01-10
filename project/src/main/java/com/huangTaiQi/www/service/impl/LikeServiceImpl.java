@@ -8,8 +8,8 @@ import com.huangTaiQi.www.model.entity.LikeEntity;
 import com.huangTaiQi.www.model.vo.IsSuccessVO;
 import com.huangTaiQi.www.service.LikeService;
 import com.huangTaiQi.www.utils.UserHolder;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Service;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Service;
 
 /**
  * @author 14629

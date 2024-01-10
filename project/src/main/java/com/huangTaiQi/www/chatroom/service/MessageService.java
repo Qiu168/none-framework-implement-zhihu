@@ -11,8 +11,8 @@ import com.huangTaiQi.www.chatroom.model.entity.ChatRoomUserEntity;
 import com.huangTaiQi.www.chatroom.model.entity.Message;
 import com.huangTaiQi.www.chatroom.model.OnlineUser;
 import com.huangTaiQi.www.chatroom.model.vo.ChatRoomUserVO;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Service;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Service;
 
 import java.util.List;
 

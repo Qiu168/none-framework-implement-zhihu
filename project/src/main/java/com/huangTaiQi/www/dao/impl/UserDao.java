@@ -1,13 +1,13 @@
 package com.huangTaiQi.www.dao.impl;
 
-import com.huangTaiQi.www.dao.BaseDao;
+import com.my_framework.www.db.orm.BaseDao;
 import com.huangTaiQi.www.dao.IUserDao;
 import com.huangTaiQi.www.model.entity.UserEntity;
 import com.huangTaiQi.www.utils.UserHolder;
-import com.my_framework.www.pool.DataBaseUtil;
+import com.my_framework.www.db.pool.DataBaseUtil;
 import com.huangTaiQi.www.utils.RandomUtils;
 import com.huangTaiQi.www.utils.sql.SQLBuilder;
-import com.my_framework.www.annotation.Repository;
+import com.my_framework.www.core.annotation.stereotype.Repository;
 
 
 import java.sql.Connection;

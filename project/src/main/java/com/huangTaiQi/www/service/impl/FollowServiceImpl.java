@@ -10,8 +10,8 @@ import com.huangTaiQi.www.model.vo.IsSuccessVO;
 import com.huangTaiQi.www.service.FollowService;
 import com.huangTaiQi.www.utils.BeanUtil;
 import com.huangTaiQi.www.utils.UserHolder;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Service;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.HashSet;

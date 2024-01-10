@@ -7,7 +7,11 @@ import com.huangTaiQi.www.controller.IAnswerController;
 import com.huangTaiQi.www.model.entity.AnswerEntity;
 import com.huangTaiQi.www.service.impl.AnswerServiceImpl;
 import com.huangTaiQi.www.service.impl.DynamicServiceImpl;
-import com.my_framework.www.annotation.*;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Controller;
+import com.my_framework.www.webmvc.annotation.Pattern;
+import com.my_framework.www.webmvc.annotation.RequestMapping;
+import com.my_framework.www.webmvc.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 

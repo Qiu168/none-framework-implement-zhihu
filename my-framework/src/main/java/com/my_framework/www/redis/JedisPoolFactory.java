@@ -24,11 +24,11 @@ public class JedisPoolFactory {
         jedisPoolConfig.setMinIdle(0);
         //最大等待时间 200ms
         jedisPoolConfig.setMaxWait(Duration.ofMillis(500));
-        JEDIS_POOL=new JedisPool(jedisPoolConfig,"192.168.181.132",6379,1000,"redis");
+        JEDIS_POOL=new JedisPool(jedisPoolConfig,"39.108.105.73",37690,1000,"aliyunbaotaredissz");
     }
     public static Jedis getResource(){
         Jedis jedis = JEDIS_POOL.getResource();
-        jedis.auth("redis");
+        jedis.auth("aliyunbaotaredissz");
         return jedis;
     }
 }

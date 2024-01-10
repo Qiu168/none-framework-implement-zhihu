@@ -44,7 +44,7 @@ public class SQLTest {
 //        System.out.println(messages);
 //        AnswerDao answerDao=new AnswerDao();
 //        answerDao.getUserAnswer("1");
-//        ApplicationContextImpl applicationContext = new ApplicationContextImpl("application.properties");
+//        GenericApplicationContext applicationContext = new GenericApplicationContext("application.properties");
 //        CommentServiceImpl commentServiceImpl = (CommentServiceImpl) applicationContext.getBean("commentServiceImpl");
 //        commentServiceImpl.getCommentTree("1","asc");
 //        String sql=new SQLBuilder("comment")

@@ -13,8 +13,8 @@ import com.huangTaiQi.www.model.vo.IsSuccessVO;
 import com.huangTaiQi.www.service.QuestionService;
 import com.huangTaiQi.www.utils.ACFilter;
 import com.huangTaiQi.www.utils.UserHolder;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Service;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Service;
 import com.my_framework.www.utils.CastUtil;
 import com.my_framework.www.utils.CollectionUtil;
 

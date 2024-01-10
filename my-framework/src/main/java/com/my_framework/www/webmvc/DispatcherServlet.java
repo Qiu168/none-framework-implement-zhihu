@@ -1,16 +1,16 @@
 package com.my_framework.www.webmvc;
 
 
-import com.my_framework.www.annotation.Controller;
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.context.Impl.ApplicationContextImpl;
-import com.my_framework.www.utils.ContextUtil;
+import com.my_framework.www.core.annotation.stereotype.Controller;
+import com.my_framework.www.webmvc.annotation.RequestMapping;
+import com.my_framework.www.core.context.ApplicationContext;
 import com.my_framework.www.utils.StringUtil;
 
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -25,6 +25,7 @@ import java.util.regex.Pattern;
  * @author 14629
  */
 @MultipartConfig
+@WebServlet(urlPatterns = "/api/*")
 public class DispatcherServlet extends HttpServlet {
 
     /**配置文件地址，从web.xml中获取*/
@@ -32,12 +33,15 @@ public class DispatcherServlet extends HttpServlet {
     private static final Logger logger= Logger.getLogger(DispatcherServlet.class.getName());
     private static final Map<HandlerMapping, HandlerAdapter> handlerAdapters = new HashMap<>();
     private static final List<HandlerMapping> handlerMappings = new ArrayList<>();
+    private final ApplicationContext context;
+
+    public DispatcherServlet(ApplicationContext context) {
+        this.context = context;
+    }
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        //1、初始化ApplicationContext，从web.xml中获取参数
-        ApplicationContextImpl context = new ApplicationContextImpl(config.getInitParameter(CONTEXT_CONFIG_LOCATION));
-        ContextUtil.setApplicationContext(context);
+
         //2、初始化Spring MVC
         DispatcherServlet.initStrategies(context);
     }
@@ -65,7 +69,7 @@ public class DispatcherServlet extends HttpServlet {
     /**
      * 初始化策略
      */
-    public static void initStrategies(ApplicationContextImpl context) {
+    public static void initStrategies(ApplicationContext context) {
         //handlerMapping
         initHandlerMappings(context);
         //初始化参数适配器
@@ -73,7 +77,7 @@ public class DispatcherServlet extends HttpServlet {
     }
 
 
-    private static void initHandlerMappings(ApplicationContextImpl context) {
+    private static void initHandlerMappings(ApplicationContext context) {
         //获取ioc容器的类名
         String[] beanNames = context.getBeanDefinitionNames();
         try {

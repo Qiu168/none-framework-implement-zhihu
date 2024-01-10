@@ -4,8 +4,12 @@ package com.huangTaiQi.www.aspect;
 
 
 
-import java.util.Arrays;
+import com.my_framework.www.core.annotation.aop.Aspect;
 
+/**
+ * @author _qiu
+ */
+@Aspect
 public class LogAspect {
 
     //在调用一个方法之前，执行before方法

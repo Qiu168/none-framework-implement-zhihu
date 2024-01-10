@@ -21,4 +21,5 @@ public interface BeanFactory {
      * @throws Exception 异常
      */
     <T> T getBean(Class<T> requiredType) throws Exception;
+    String[] getBeanDefinitionNames();
 }

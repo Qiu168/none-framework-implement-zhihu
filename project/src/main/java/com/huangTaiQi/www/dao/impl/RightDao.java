@@ -1,11 +1,11 @@
 package com.huangTaiQi.www.dao.impl;
 
-import com.huangTaiQi.www.dao.BaseDao;
+import com.my_framework.www.db.orm.BaseDao;
 import com.huangTaiQi.www.dao.IRightDao;
 import com.huangTaiQi.www.model.entity.RoleRightRelationEntity;
 import com.huangTaiQi.www.utils.sql.SQLBuilder;
-import com.my_framework.www.annotation.Repository;
-import com.my_framework.www.pool.DataBaseUtil;
+import com.my_framework.www.core.annotation.stereotype.Repository;
+import com.my_framework.www.db.pool.DataBaseUtil;
 
 import java.sql.Connection;
 import java.util.List;

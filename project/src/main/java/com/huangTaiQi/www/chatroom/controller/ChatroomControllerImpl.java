@@ -8,10 +8,10 @@ import com.huangTaiQi.www.controller.BaseController;
 import com.huangTaiQi.www.model.vo.IsSuccessVO;
 import com.huangTaiQi.www.service.impl.UserServiceImpl;
 import com.huangTaiQi.www.utils.UserHolder;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Controller;
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Controller;
+import com.my_framework.www.webmvc.annotation.RequestMapping;
+import com.my_framework.www.webmvc.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;

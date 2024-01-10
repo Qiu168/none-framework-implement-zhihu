@@ -1,8 +1,5 @@
 package com.huangTaiQi.www.controller;
 
-import com.my_framework.www.annotation.RequestMapping;
-import com.my_framework.www.annotation.RequestParam;
-
 import javax.servlet.http.HttpServletResponse;
 
 /**

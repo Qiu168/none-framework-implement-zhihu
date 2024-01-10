@@ -11,9 +11,9 @@ import com.huangTaiQi.www.model.entity.UserEntity;
 import com.huangTaiQi.www.service.UserService;
 import com.huangTaiQi.www.utils.*;
 import com.huangTaiQi.www.utils.code.Md5Utils;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Service;
-import com.my_framework.www.annotation.Transaction;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Service;
+import com.my_framework.www.db.annotation.Transaction;
 import com.my_framework.www.redis.JedisUtils;
 import redis.clients.jedis.Jedis;
 

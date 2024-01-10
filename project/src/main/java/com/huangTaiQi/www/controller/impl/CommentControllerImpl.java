@@ -6,7 +6,11 @@ import com.huangTaiQi.www.controller.ICommentController;
 import com.huangTaiQi.www.model.entity.CommentEntity;
 import com.huangTaiQi.www.model.vo.IsSuccessVO;
 import com.huangTaiQi.www.service.impl.CommentServiceImpl;
-import com.my_framework.www.annotation.*;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Controller;
+import com.my_framework.www.webmvc.annotation.Pattern;
+import com.my_framework.www.webmvc.annotation.RequestMapping;
+import com.my_framework.www.webmvc.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
 

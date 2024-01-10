@@ -12,8 +12,8 @@ import com.huangTaiQi.www.model.vo.CommentTreeNode;
 import com.huangTaiQi.www.model.vo.IsSuccessVO;
 import com.huangTaiQi.www.service.CommentService;
 import com.huangTaiQi.www.utils.UserHolder;
-import com.my_framework.www.annotation.Autowired;
-import com.my_framework.www.annotation.Service;
+import com.my_framework.www.core.annotation.bean.Autowired;
+import com.my_framework.www.core.annotation.stereotype.Service;
 import com.my_framework.www.redis.LIRSCache;
 
 import java.sql.SQLException;

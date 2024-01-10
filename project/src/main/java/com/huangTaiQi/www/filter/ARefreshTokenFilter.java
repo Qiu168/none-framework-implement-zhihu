@@ -4,7 +4,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.TypeReference;
 import com.huangTaiQi.www.model.dto.UserDTO;
 import com.huangTaiQi.www.utils.*;
-import com.my_framework.www.pool.DataBaseUtil;
+import com.my_framework.www.db.pool.DataBaseUtil;
 import com.my_framework.www.redis.JedisUtils;
 import redis.clients.jedis.Jedis;
 
