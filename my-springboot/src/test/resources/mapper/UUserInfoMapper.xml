@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE mapper>
+<mapper namespace="com.my_framework.www.mybatis.UUserInfoMapper">
+    <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultType="com.my_framework.www.mybatis.UUserInfo">
+        select * from account where id = #{id}
+    </select>
+</mapper>

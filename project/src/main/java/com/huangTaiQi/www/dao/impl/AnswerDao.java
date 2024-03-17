@@ -4,7 +4,7 @@ import com.huangTaiQi.www.dao.*;
 import com.huangTaiQi.www.model.UserSettings;
 import com.huangTaiQi.www.model.entity.AnswerEntity;
 import com.huangTaiQi.www.model.vo.QuestionAnswer;
-import com.huangTaiQi.www.utils.sql.SQLBuilder;
+import com.my_framework.www.db.orm.sql.SQLBuilder;
 import com.my_framework.www.core.annotation.stereotype.Repository;
 import com.my_framework.www.db.orm.BaseDao;
 import com.my_framework.www.db.pool.DataBaseUtil;

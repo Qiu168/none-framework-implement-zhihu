@@ -6,7 +6,7 @@ import com.huangTaiQi.www.chatroom.model.entity.ChatRoomUserEntity;
 import com.huangTaiQi.www.chatroom.model.entity.Chatroom;
 import com.huangTaiQi.www.chatroom.model.vo.ChatRoomUserVO;
 import com.my_framework.www.db.orm.BaseDao;
-import com.huangTaiQi.www.utils.sql.SQLBuilder;
+import com.my_framework.www.db.orm.sql.SQLBuilder;
 import com.my_framework.www.core.annotation.stereotype.Repository;
 import com.my_framework.www.db.pool.DataBaseUtil;
 

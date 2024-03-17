@@ -5,7 +5,7 @@ package com.huangTaiQi.www.chatroom.dao;
 
 import com.huangTaiQi.www.chatroom.model.entity.Message;
 import com.my_framework.www.db.orm.BaseDao;
-import com.huangTaiQi.www.utils.sql.SQLBuilder;
+import com.my_framework.www.db.orm.sql.SQLBuilder;
 import com.my_framework.www.core.annotation.stereotype.Repository;
 import com.my_framework.www.db.pool.DataBaseUtil;
 

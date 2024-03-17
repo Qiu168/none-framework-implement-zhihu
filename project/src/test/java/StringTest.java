@@ -1,9 +1,5 @@
-import com.huangTaiQi.www.controller.impl.UserControllerImpl;
-import com.huangTaiQi.www.utils.ScanText;
-import com.huangTaiQi.www.utils.sql.SQLBuilder;
 import org.junit.Test;
 
-import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 

@@ -14,7 +14,7 @@ import static com.huangTaiQi.www.constant.ImgConstants.*;
 /**
  * @author 14629
  */
-public class ImgVerifyCode {
+public final class ImgVerifyCode {
 
     /**
      *  用来保存验证码的文本内容

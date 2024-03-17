@@ -1,6 +1,6 @@
 
 import com.huangTaiQi.www.model.entity.UserEntity;
-import com.huangTaiQi.www.utils.FieldNameUtil;
+import com.my_framework.www.db.orm.sql.FieldNameUtil;
 import org.junit.Test;
 
 

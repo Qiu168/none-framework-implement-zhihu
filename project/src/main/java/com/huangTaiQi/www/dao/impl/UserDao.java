@@ -6,7 +6,7 @@ import com.huangTaiQi.www.model.entity.UserEntity;
 import com.huangTaiQi.www.utils.UserHolder;
 import com.my_framework.www.db.pool.DataBaseUtil;
 import com.huangTaiQi.www.utils.RandomUtils;
-import com.huangTaiQi.www.utils.sql.SQLBuilder;
+import com.my_framework.www.db.orm.sql.SQLBuilder;
 import com.my_framework.www.core.annotation.stereotype.Repository;
 
 

@@ -1,0 +1,10 @@
+aaa:
+  bbb: cc
+server:
+  port: 79779
+spring:
+  profiles:
+    active: dev
+
+mybatis-plus:
+  mapper-locations: mapper/*.xml
