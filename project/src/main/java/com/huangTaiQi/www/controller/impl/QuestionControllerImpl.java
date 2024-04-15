@@ -21,7 +21,7 @@ import static com.huangTaiQi.www.constant.StateConstants.*;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Controller
 @RequestMapping(value = "question")

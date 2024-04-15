@@ -11,7 +11,7 @@ import java.util.List;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class UserCenter implements IOnlineUser {
     private UserCenter() {}

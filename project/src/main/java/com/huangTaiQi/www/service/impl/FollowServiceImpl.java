@@ -20,7 +20,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class FollowServiceImpl implements FollowService {

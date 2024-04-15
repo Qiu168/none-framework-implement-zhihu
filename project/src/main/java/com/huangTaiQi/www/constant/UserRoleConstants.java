@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.constant;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class UserRoleConstants {
     public static final int ORDINARY_USER=1;

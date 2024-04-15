@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Controller
 @RequestMapping("chatroom")

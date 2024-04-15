@@ -2,7 +2,7 @@ package com.huangTaiQi.www.chatroom.model;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class UserListUser implements Comparable<UserListUser> {
     private Long uid;

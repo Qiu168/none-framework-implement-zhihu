@@ -1,7 +1,7 @@
 package com.my_framework.www.security;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface RightGet {
     /**

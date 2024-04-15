@@ -1,7 +1,7 @@
 package com.my_framework.www.utils;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class XSSDefenceUtils {
     public static String xssFilter(String input) {

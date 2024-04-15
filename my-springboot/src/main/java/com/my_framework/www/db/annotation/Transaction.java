@@ -3,7 +3,7 @@ package com.my_framework.www.db.annotation;
 import java.lang.annotation.*;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Target({ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)

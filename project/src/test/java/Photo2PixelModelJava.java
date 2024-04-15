@@ -237,7 +237,7 @@ class ImageConversion {
 
     public static void main(String[] args) throws IOException {
         // 示例用法
-        BufferedImage originalImage = ImageIO.read(new File("C:\\Users\\14629\\Desktop\\微信图片\\IMG_3075(20231123-225957).JPG"));
+        BufferedImage originalImage = ImageIO.read(new File("C:\\Users\\_qqiu\\Desktop\\微信图片\\IMG_3075(20231123-225957).JPG"));
 
         // 将 BufferedImage 转换为 RealMatrix
         RealMatrix[] matrixArray = convertImageToMatrices(originalImage);

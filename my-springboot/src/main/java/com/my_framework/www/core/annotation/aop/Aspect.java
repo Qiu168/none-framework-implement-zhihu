@@ -5,7 +5,7 @@ import java.lang.annotation.*;
 
 /**
  * 切面注解
- * @author 14629
+ * @author _qqiu
  */
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)

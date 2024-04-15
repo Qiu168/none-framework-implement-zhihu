@@ -17,7 +17,7 @@ import com.my_framework.www.core.annotation.stereotype.Service;
 import java.util.List;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class MessageService implements IMessagePublisher {

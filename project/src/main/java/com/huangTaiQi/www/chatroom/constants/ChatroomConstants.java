@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.chatroom.constants;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class ChatroomConstants {
     public static final int GROUP_MASTER=2;

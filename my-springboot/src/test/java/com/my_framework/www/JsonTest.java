@@ -14,8 +14,8 @@ import java.util.Map;
 public class JsonTest {
     @Test
     public void test(){
-        String s="{\"usernameOrEmail\":[\"1462909477@qq.com\"],\"password\":[\"123456789\"],\"imgCode\":[\"c734\",\"asdafd\"]}";
-        String sb="{\"usernameOrEmail\":\"1462909477@qq.com\",\"password\":\"123456789\",\"imgCode\":\"c734\"}";
+        String s="{\"usernameOrEmail\":[\"_qqiu09477@qq.com\"],\"password\":[\"123456789\"],\"imgCode\":[\"c734\",\"asdafd\"]}";
+        String sb="{\"usernameOrEmail\":\"_qqiu09477@qq.com\",\"password\":\"123456789\",\"imgCode\":\"c734\"}";
         String sb2 = StringUtil.convertToJsonArray(s);
         System.out.println("SB2"+sb2);
         Map<String, String[]> o1 = JSON.parseObject(sb2, new TypeReference<Map<String, String[]>>() {});

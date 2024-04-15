@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.service;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface FollowService {
     /**

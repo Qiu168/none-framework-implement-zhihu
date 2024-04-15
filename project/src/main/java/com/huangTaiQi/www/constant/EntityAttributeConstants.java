@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.constant;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class EntityAttributeConstants {
     public static final String ID="id";

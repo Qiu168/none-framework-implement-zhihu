@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.constant;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class TypeConstants {
     public static final String ANSWER="answer";

@@ -13,7 +13,7 @@ import static javax.websocket.CloseReason.CloseCodes.NORMAL_CLOSURE;
 
 /**
  * 存放session对象
- * @author 14629
+ * @author _qqiu
  */
 
 public class OnlineUser {

@@ -4,7 +4,7 @@ package com.huangTaiQi.www.controller;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface IRightController {
     /**

@@ -17,7 +17,7 @@ import static com.huangTaiQi.www.constant.RegexConstants.NUMBER_REGEX;
 import static com.huangTaiQi.www.constant.TypeConstants.ANSWER;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Controller
 @RequestMapping("dynamic")

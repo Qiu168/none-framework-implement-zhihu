@@ -12,7 +12,7 @@ import java.security.SecureRandom;
 import static com.huangTaiQi.www.constant.ImgConstants.*;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public final class ImgVerifyCode {
 

@@ -2,7 +2,7 @@ package com.huangTaiQi.www.model.dto;
 
 /**
  * 比UserEntity少了密码，创建时间和更新时间
- * @author 14629
+ * @author _qqiu
  */
 @SuppressWarnings("ALL")
 public class UserDTO {

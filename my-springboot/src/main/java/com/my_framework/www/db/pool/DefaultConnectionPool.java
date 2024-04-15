@@ -15,7 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class DefaultConnectionPool implements ConnectionPool {
     private static final Logger logger = Logger.getLogger(DefaultConnectionPool.class.getName());

@@ -5,7 +5,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import java.sql.SQLException;
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface ICommentController {
     /**

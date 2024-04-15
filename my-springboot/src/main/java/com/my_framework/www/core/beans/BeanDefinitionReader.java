@@ -2,6 +2,7 @@ package com.my_framework.www.core.beans;
 
 import com.my_framework.www.core.annotation.Configuration;
 import com.my_framework.www.core.annotation.stereotype.Component;
+import com.my_framework.www.core.beans.factory.BeanLoader;
 import com.my_framework.www.utils.ClassUtil;
 import com.my_framework.www.utils.StringUtil;
 
@@ -12,12 +13,13 @@ import java.util.*;
 /**
  * 读取配置文件，扫描相关的类解析成BeanDefinition
  *
- * @author 14629
+ * @author _qqiu
  */
 public class BeanDefinitionReader {
     private final Properties config = new Properties();
 
     private final List<Class<?>> Configurations = new ArrayList<>();
+    private final List<BeanLoader> beanLoaders=new ArrayList<>();
 
     public Properties getConfig() {
         return config;
@@ -41,27 +43,29 @@ public class BeanDefinitionReader {
                 if (beanClass.isInterface()) {
                     continue;
                 }
-                Annotation[] annotations = beanClass.getAnnotations();
-                for (Annotation annotation : annotations) {
-                    Class<? extends Annotation> annotationType = annotation.annotationType();
-                    //只考虑被@Component注解的class
-                    if (annotationType.isAnnotationPresent(Component.class) || annotation instanceof Component) {
-                        //beanName有三种情况:
-                        //1、默认是类名首字母小写
-                        //2、自定义名字（这里暂不考虑）
-                        //3、接口注入
-                        result.add(doCreateBeanDefinition(StringUtil.toLowerFirstCase(beanClass.getSimpleName()), beanClass.getName()));
-                        if (annotation instanceof Configuration) {
-                            Configurations.add(beanClass);
-                        }
-//                        Class<?>[] interfaces = beanClass.getInterfaces();
-//                        for (Class<?> i : interfaces) {
-//                            //接口和实现类之间的关系也需要封装，作用是可以用接口名获取实现类
-//                            result.add(doCreateBeanDefinition(i.getName(), beanClass.getName()));
-//                        }
-                        break;
+                //todo
+                for (BeanLoader beanLoader : beanLoaders) {
+                    if (beanLoader.isLoad(beanClass)) {
+                        BeanDefinition beanDefinition = beanLoader.loadBean(beanClass);
+                        result.add(beanDefinition);
                     }
                 }
+//                Annotation[] annotations = beanClass.getAnnotations();
+//                for (Annotation annotation : annotations) {
+//                    Class<? extends Annotation> annotationType = annotation.annotationType();
+//                    //只考虑被@Component注解的class
+//                    if (annotationType.isAnnotationPresent(Component.class) || annotation instanceof Component) {
+//                        //beanName有三种情况:
+//                        //1、默认是类名首字母小写
+//                        //2、自定义名字（这里暂不考虑）
+//                        //3、接口注入
+//                        result.add(doCreateBeanDefinition(StringUtil.toLowerFirstCase(beanClass.getSimpleName()), beanClass.getName()));
+//                        if (annotation instanceof Configuration) {
+//                            Configurations.add(beanClass);
+//                        }
+//                        break;
+//                    }
+//                }
             }
         } catch (Exception e) {
             e.printStackTrace();

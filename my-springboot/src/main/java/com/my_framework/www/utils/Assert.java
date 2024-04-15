@@ -7,7 +7,7 @@ import java.util.function.Supplier;
 
 /**
  * copy from spring
- * @author 14629
+ * @author _qqiu
  */
 public abstract class Assert {
 

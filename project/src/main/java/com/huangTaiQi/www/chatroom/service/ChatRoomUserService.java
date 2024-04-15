@@ -25,7 +25,7 @@ import static com.huangTaiQi.www.chatroom.constants.ChatroomConstants.GROUP_USER
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class ChatRoomUserService implements IOnlineUser {

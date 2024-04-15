@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Objects;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 
 public class BeanUtil {

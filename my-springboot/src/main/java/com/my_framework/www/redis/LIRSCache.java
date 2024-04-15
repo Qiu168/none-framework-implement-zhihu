@@ -8,7 +8,7 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class LIRSCache {
     private static volatile LIRSCache instance;

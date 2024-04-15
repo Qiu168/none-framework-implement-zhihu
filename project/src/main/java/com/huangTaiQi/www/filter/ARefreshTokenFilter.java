@@ -18,7 +18,7 @@ import java.util.Map;
 import static com.huangTaiQi.www.constant.JedisConstants.*;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @WebFilter("/api/*")
 public class ARefreshTokenFilter extends BaseFilter{

@@ -5,7 +5,7 @@ import com.huangTaiQi.www.model.entity.LikeEntity;
 import java.sql.SQLException;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface ILikeDao {
     /**

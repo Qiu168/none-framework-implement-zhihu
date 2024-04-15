@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.utils;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class ScanText {
     /**

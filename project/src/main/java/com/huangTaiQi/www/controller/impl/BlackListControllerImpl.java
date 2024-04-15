@@ -20,7 +20,7 @@ import java.sql.SQLException;
 import static com.huangTaiQi.www.constant.RegexConstants.NUMBER_REGEX;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Controller
 @RequestMapping("black")

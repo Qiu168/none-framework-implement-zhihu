@@ -3,7 +3,7 @@ package com.my_framework.www.utils;
 
 /**
  * 类型转换
- * @author 14629
+ * @author _qqiu
  */
 public class CastUtil {
 

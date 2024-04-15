@@ -14,7 +14,7 @@ import com.my_framework.www.webmvc.annotation.RequestParam;
 import javax.servlet.http.HttpServletResponse;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Controller
 @RequestMapping("right")

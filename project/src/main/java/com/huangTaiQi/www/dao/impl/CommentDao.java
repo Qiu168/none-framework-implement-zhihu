@@ -20,7 +20,7 @@ import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
 import static com.huangTaiQi.www.constant.TypeConstants.COMMENT;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Repository
 public class CommentDao implements ICommentDao , ReportAble , UpdateUserSettings , SelectById {

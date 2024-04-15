@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 
 /**
  * 属性文件工具类
- * @author 14629
+ * @author _qqiu
  */
 @Slf4j
 public class PropsUtil {

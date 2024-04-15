@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.constant;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class JedisConstants {
     public static final String LOGIN_CODE_KEY = "login:code:";

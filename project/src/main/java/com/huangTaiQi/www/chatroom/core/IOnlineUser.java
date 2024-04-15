@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface IOnlineUser {
     /**

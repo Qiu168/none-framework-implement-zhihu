@@ -5,7 +5,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class SensitiveWordConstants {
     private static final String[] SET_VALUE={"反对派","暴力","政治犯","异教徒","假冒宗教","恐怖主义","种族歧视","种族主义","种族隔离",

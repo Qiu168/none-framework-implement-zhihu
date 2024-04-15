@@ -32,7 +32,7 @@ import static com.huangTaiQi.www.constant.SessionConstants.IMG_CODE;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Controller
 @RequestMapping(value = "home")

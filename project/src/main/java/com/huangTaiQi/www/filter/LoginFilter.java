@@ -14,7 +14,7 @@ import java.util.List;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 //@WebFilter("/api/user/*")
 public class LoginFilter extends BaseFilter{

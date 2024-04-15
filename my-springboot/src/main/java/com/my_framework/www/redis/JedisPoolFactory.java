@@ -8,8 +8,7 @@ import java.time.Duration;
 
 
 /**
- * TODO:事务
- * @author 14629
+ * @author _qqiu
  */
 public class JedisPoolFactory {
     private static final JedisPool JEDIS_POOL;

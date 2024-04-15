@@ -3,7 +3,7 @@ package com.huangTaiQi.www.model.entity;
 import com.huangTaiQi.www.model.UserSettings;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @SuppressWarnings("ALL")
 public class CommentEntity implements UserSettings {

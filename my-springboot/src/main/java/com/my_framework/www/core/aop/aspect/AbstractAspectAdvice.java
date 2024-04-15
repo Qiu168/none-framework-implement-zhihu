@@ -6,7 +6,7 @@ import java.lang.reflect.Method;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public abstract class AbstractAspectAdvice implements Advice {
 

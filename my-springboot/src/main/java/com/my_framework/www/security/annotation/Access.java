@@ -6,7 +6,7 @@ import java.lang.annotation.*;
 
 /**
  * 权限管理
- * @author 14629
+ * @author _qqiu
  */
 @Retention(RetentionPolicy.RUNTIME)
 @Target(ElementType.METHOD)

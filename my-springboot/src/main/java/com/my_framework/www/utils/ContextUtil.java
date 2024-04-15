@@ -3,7 +3,7 @@ package com.my_framework.www.utils;
 import com.my_framework.www.core.context.ApplicationContext;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class ContextUtil  {
     private static ApplicationContext applicationContext;

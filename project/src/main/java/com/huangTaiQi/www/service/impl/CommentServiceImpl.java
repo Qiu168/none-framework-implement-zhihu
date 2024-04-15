@@ -26,7 +26,7 @@ import static com.huangTaiQi.www.constant.StateConstants.*;
 import static com.huangTaiQi.www.constant.TypeConstants.COMMENT;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class CommentServiceImpl implements CommentService {

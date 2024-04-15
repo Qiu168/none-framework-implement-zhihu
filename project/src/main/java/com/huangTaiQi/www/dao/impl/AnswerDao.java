@@ -19,7 +19,7 @@ import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
 import static com.huangTaiQi.www.constant.TypeConstants.ANSWER;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Repository
 public class AnswerDao implements IAnswerDao , ReportAble, UpdateUserSettings, SelectById {

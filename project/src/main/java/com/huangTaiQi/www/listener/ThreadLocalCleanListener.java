@@ -9,7 +9,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @WebListener
 public class ThreadLocalCleanListener implements ServletRequestListener {

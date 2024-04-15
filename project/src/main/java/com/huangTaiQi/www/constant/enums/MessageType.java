@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.constant.enums;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 
 public enum MessageType {

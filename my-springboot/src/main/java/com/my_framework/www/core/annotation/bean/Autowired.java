@@ -3,7 +3,7 @@ package com.my_framework.www.core.annotation.bean;
 import java.lang.annotation.*;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Target({ElementType.FIELD})
 @Retention(RetentionPolicy.RUNTIME)

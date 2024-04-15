@@ -17,7 +17,7 @@ import java.util.List;
 import static com.huangTaiQi.www.constant.EntityAttributeConstants.ID;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Repository
 public class UserDao implements IUserDao {

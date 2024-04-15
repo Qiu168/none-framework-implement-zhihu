@@ -25,7 +25,7 @@ import static com.huangTaiQi.www.constant.StateConstants.*;
 import static com.huangTaiQi.www.constant.TypeConstants.ANSWER;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class AnswerServiceImpl implements AnswerService {

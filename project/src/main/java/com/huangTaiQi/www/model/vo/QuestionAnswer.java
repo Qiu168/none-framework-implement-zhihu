@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.model.vo;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class QuestionAnswer {
     private Long id;

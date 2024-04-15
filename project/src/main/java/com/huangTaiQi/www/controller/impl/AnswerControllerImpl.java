@@ -23,7 +23,7 @@ import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_CHECKING;
 import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Controller
 @RequestMapping("answer")

@@ -26,7 +26,7 @@ import static com.huangTaiQi.www.constant.JedisConstants.FEED_QUESTION_KEY;
 
 /**
  * 动态
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class DynamicServiceImpl implements DynamicService {

@@ -4,7 +4,7 @@ import javax.annotation.Nullable;
 
 /**
  * Bean的配置信息
- * @author 14629
+ * @author _qqiu
  */
 public class BeanDefinition {
     /**

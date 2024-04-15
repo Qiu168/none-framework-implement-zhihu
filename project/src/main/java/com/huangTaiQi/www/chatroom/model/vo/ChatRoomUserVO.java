@@ -5,7 +5,7 @@ import com.huangTaiQi.www.chatroom.model.entity.ChatRoomUserEntity;
 import java.util.Objects;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @SuppressWarnings("ALL")
 public class ChatRoomUserVO {

@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.model.entity;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class BlackListEntity {
     private Long uid;

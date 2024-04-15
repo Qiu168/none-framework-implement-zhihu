@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface IAnswerDao {
     /**
