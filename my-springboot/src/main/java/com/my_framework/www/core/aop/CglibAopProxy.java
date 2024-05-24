@@ -11,7 +11,9 @@ import java.util.List;
 
 
 /**
- * @author _qiu
+ * CGLIB AOP 代理
+ *
+ * @author _qqiu
  */
 public class CglibAopProxy implements AopProxy {
     private final AdvisedSupport advised;

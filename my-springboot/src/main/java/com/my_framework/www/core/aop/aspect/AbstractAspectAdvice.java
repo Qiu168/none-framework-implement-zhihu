@@ -11,10 +11,10 @@ import java.lang.reflect.Method;
 public abstract class AbstractAspectAdvice implements Advice {
 
     /**通知方法*/
-    private Method aspectMethod;
+    private final Method aspectMethod;
 
     /**切面类*/
-    private Object aspectTarget;
+    private final Object aspectTarget;
 
     public AbstractAspectAdvice(Method aspectMethod, Object aspectTarget) {
         this.aspectMethod = aspectMethod;

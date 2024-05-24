@@ -5,6 +5,7 @@ import com.my_framework.www.core.annotation.stereotype.Component;
 import com.my_framework.www.core.beans.factory.BeanLoader;
 import com.my_framework.www.utils.ClassUtil;
 import com.my_framework.www.utils.StringUtil;
+import lombok.Getter;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -16,14 +17,12 @@ import java.util.*;
  * @author _qqiu
  */
 public class BeanDefinitionReader {
+    @Getter
     private final Properties config = new Properties();
 
+    @Getter
     private final List<Class<?>> Configurations = new ArrayList<>();
     private final List<BeanLoader> beanLoaders=new ArrayList<>();
-
-    public Properties getConfig() {
-        return config;
-    }
 
     private Set<Class<?>> registerBeanClasses = new HashSet<>();
 
@@ -83,7 +82,4 @@ public class BeanDefinitionReader {
         return beanDefinition;
     }
 
-    public List<Class<?>> getConfigurations() {
-        return Configurations;
-    }
 }

@@ -12,7 +12,6 @@ public class AopConfig {
     /**
      * 切点表达式
      */
-
     private String pointCut;
 
     /**

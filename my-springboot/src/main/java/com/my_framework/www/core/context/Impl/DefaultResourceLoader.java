@@ -4,6 +4,7 @@ import com.my_framework.www.core.context.ResourceLoader;
 import com.my_framework.www.core.context.ResourceName;
 import com.my_framework.www.valid.annotation.Nullable;
 import com.sun.istack.internal.NotNull;
+import lombok.Getter;
 import lombok.SneakyThrows;
 import org.yaml.snakeyaml.Yaml;
 
@@ -24,6 +25,7 @@ public class DefaultResourceLoader implements ResourceLoader {
      * false是yaml
      * true是properties
      */
+    @Getter
     boolean fileType = false;
 
     public DefaultResourceLoader() {
@@ -133,7 +135,4 @@ public class DefaultResourceLoader implements ResourceLoader {
         return String.valueOf(resources.get(key));
     }
 
-    public boolean isFileType() {
-        return fileType;
-    }
 }

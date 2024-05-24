@@ -1,5 +1,7 @@
 package com.my_framework.www.redis;
 
+import lombok.Getter;
+import lombok.Setter;
 import redis.clients.jedis.Jedis;
 
 import java.util.*;
@@ -14,6 +16,8 @@ public class LIRSCache {
     private static volatile LIRSCache instance;
     private static final Object LOCK = new Object();
 
+    @Setter
+    @Getter
     private Jedis jedis;
     private final int capacity;
     /**
@@ -47,14 +51,6 @@ public class LIRSCache {
         return instance;
     }
 
-    public Jedis getJedis() {
-        return jedis;
-    }
-
-    public void setJedis(Jedis jedis) {
-        this.jedis = jedis;
-    }
-
     public String get(String key) {
         String value = jedis.get(key);
         if (value != null) {
@@ -82,11 +78,6 @@ public class LIRSCache {
             recency.remove(key);
             lirRecency.remove(key);
         }
-//        ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-//        executor.schedule(() -> {
-//            jedis.del(key);
-//            executor.shutdown();
-//        }, 3, TimeUnit.SECONDS);
     }
     private void updateRecency(String key) {
         int index = recency.get(key);

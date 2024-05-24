@@ -4,6 +4,7 @@ package com.huangTaiQi.www.chatroom.center;
 
 import com.huangTaiQi.www.chatroom.core.IOnlineUser;
 import com.huangTaiQi.www.chatroom.model.OnlineUser;
+import lombok.Getter;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -16,10 +17,8 @@ import java.util.List;
 public class UserCenter implements IOnlineUser {
     private UserCenter() {}
 
+    @Getter
     private static final UserCenter instance = new UserCenter();
-    public static UserCenter getInstance() {
-        return instance;
-    }
 
     /**
      * 创建一个在线用户列表
