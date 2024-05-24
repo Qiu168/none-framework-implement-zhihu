@@ -27,7 +27,7 @@ import static com.huangTaiQi.www.constant.StateConstants.*;
 import static com.huangTaiQi.www.constant.TypeConstants.QUESTION;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class QuestionServiceImpl implements QuestionService {

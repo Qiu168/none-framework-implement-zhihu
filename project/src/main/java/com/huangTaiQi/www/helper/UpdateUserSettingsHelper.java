@@ -21,7 +21,7 @@ import java.util.Objects;
 import static com.huangTaiQi.www.constant.TypeConstants.*;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Component
 public class UpdateUserSettingsHelper {

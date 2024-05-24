@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 
 /**
  * HandlerMapping保存了Controller实例、所有浏览器能访问到的方法，以及使用@RequestMapping定义的URL表达式
- * @author 14629
+ * @author _qqiu
  */
 public class HandlerMapping {
 

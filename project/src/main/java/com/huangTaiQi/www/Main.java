@@ -6,7 +6,7 @@ import com.my_framework.www.core.annotation.SpringBootApplication;
 
 /**
  *
- * @author 14629
+ * @author _qqiu
  */
 @SpringBootApplication
 public class Main {

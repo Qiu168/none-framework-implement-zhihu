@@ -5,6 +5,7 @@ import com.my_framework.www.core.annotation.stereotype.Controller;
 import com.my_framework.www.webmvc.annotation.RequestMapping;
 import com.my_framework.www.core.context.ApplicationContext;
 import com.my_framework.www.utils.StringUtil;
+import lombok.extern.slf4j.Slf4j;
 
 
 import javax.servlet.ServletConfig;
@@ -22,15 +23,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
+@Slf4j
 @MultipartConfig
 @WebServlet(urlPatterns = "/api/*")
 public class DispatcherServlet extends HttpServlet {
 
     /**配置文件地址，从web.xml中获取*/
     private static final String CONTEXT_CONFIG_LOCATION = "contextConfigLocation";
-    private static final Logger logger= Logger.getLogger(DispatcherServlet.class.getName());
     private static final Map<HandlerMapping, HandlerAdapter> handlerAdapters = new HashMap<>();
     private static final List<HandlerMapping> handlerMappings = new ArrayList<>();
     private final ApplicationContext context;
@@ -112,7 +113,7 @@ public class DispatcherServlet extends HttpServlet {
                     String regex = ("/" + baseUrl + "/" + value.replaceAll("\\*", ".*")).replaceAll("/+", "/");
                     Pattern pattern = Pattern.compile(regex);
                     handlerMappings.add(new HandlerMapping(controller, method, pattern));
-                    System.out.println("Mapped " + regex + "," + method);
+                    log.debug("Mapped " + regex + "," + method);
                 }
             }
         } catch (Exception e) {

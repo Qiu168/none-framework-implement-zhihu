@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import static com.huangTaiQi.www.constant.EntityAttributeConstants.ALL;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Repository
 public class LikeDao implements ILikeDao {

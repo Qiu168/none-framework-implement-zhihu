@@ -5,7 +5,7 @@ import com.huangTaiQi.www.model.UserSettings;
 import java.sql.Timestamp;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @SuppressWarnings("ALL")
 public class QuestionEntity implements UserSettings {

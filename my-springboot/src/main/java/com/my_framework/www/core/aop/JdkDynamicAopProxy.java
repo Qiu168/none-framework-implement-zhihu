@@ -1,8 +1,5 @@
 package com.my_framework.www.core.aop;
 
-
-
-
 import com.my_framework.www.core.aop.support.AdvisedSupport;
 
 import java.lang.reflect.InvocationHandler;
@@ -10,6 +7,12 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.util.List;
 
+/**
+ * JDK 动态 AOP 代理
+ *
+ * @author _qqiu
+ * @date
+ */
 public class JdkDynamicAopProxy implements AopProxy, InvocationHandler {
 
     private AdvisedSupport advised;

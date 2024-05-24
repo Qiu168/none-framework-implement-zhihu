@@ -3,7 +3,7 @@ package com.my_framework.www.webmvc.rate;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class RateLimiter {
     private static final ConcurrentHashMap<String, TokenBucket> buckets=new ConcurrentHashMap<>();

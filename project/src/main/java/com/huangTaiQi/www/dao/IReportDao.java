@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.dao;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface IReportDao {
 }

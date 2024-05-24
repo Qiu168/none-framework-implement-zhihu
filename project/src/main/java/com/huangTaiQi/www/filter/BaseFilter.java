@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class BaseFilter implements Filter {
     private static final Logger LOGGER = Logger.getLogger(BaseFilter.class.getName());

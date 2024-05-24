@@ -4,7 +4,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface IDynamicController {
     /**

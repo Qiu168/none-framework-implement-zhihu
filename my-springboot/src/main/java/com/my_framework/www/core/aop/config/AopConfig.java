@@ -4,7 +4,7 @@ package com.my_framework.www.core.aop.config;
 import lombok.Data;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Data
 public class AopConfig {
@@ -12,7 +12,6 @@ public class AopConfig {
     /**
      * 切点表达式
      */
-
     private String pointCut;
 
     /**

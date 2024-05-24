@@ -1,4 +1,4 @@
-package com.my_framework.www.core.factory;
+package com.my_framework.www.core.beans.factory;
 
 import com.my_framework.www.core.annotation.bean.Autowired;
 import com.my_framework.www.core.annotation.bean.Qualifier;
@@ -23,6 +23,7 @@ import com.my_framework.www.utils.Assert;
 import com.my_framework.www.utils.PropsUtil;
 import com.my_framework.www.utils.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import net.sf.cglib.proxy.Enhancer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
@@ -111,6 +112,9 @@ public abstract class AbstractBeanFactory implements BeanFactory{
      */
     private void populateBean(BeanWrapper beanWrapper) {
         Class<?> clazz = beanWrapper.getWrappedClass();
+        if (Enhancer.isEnhanced(clazz)) {
+            //todo 是cglib代理
+        }
         //获得所有的成员变量
         Field[] fields = clazz.getDeclaredFields();
         Class<?> superclass = clazz.getSuperclass();
@@ -130,7 +134,7 @@ public abstract class AbstractBeanFactory implements BeanFactory{
             //拿到需要注入的类名
             String autowiredBeanName = autowired.value().trim();
             Class<?> autowiredBeanType=field.getType();;
-            if ("".equals(autowiredBeanName)) {
+            if (autowiredBeanName.isEmpty()) {
                 autowiredBeanName = autowiredBeanType.getName();
             }
             //log.info(beanWrapper.getWrappedInstance().getClass()+"  autowired:"+autowiredBeanName);
@@ -139,7 +143,7 @@ public abstract class AbstractBeanFactory implements BeanFactory{
             if(autowiredBeanType.isInterface()){
                 //todo
                 List<BeanWrapper> instances = interfaceBeanInstanceCache.get(autowiredBeanType);
-                if(instances==null||instances.size()==0){
+                if(instances==null|| instances.isEmpty()){
                     continue;
                 }
                 if(instances.size()!=1&&field.getAnnotation(Qualifier.class)==null){
@@ -201,7 +205,7 @@ public abstract class AbstractBeanFactory implements BeanFactory{
     }
 
     public String[] getBeanDefinitionNames() {
-        return beanDefinitionMap.keySet().toArray(new String[beanDefinitionMap.size()]);
+        return beanDefinitionMap.keySet().toArray(new String[0]);
     }
     /**
      * todo: 重构

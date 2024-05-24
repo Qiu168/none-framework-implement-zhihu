@@ -9,7 +9,7 @@ import com.my_framework.www.core.annotation.stereotype.Service;
 import static com.huangTaiQi.www.chatroom.constants.ChatroomConstants.GROUP_MASTER;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class ChatroomService {

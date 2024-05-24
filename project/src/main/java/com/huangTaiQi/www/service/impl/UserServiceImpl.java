@@ -40,7 +40,7 @@ import static com.huangTaiQi.www.constant.ResponseConstants.*;
 import static com.huangTaiQi.www.constant.SessionConstants.IMG_CODE;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class UserServiceImpl implements UserService {

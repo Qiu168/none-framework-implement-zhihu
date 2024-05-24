@@ -15,7 +15,7 @@ import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class WebSocketContainer {
     /**

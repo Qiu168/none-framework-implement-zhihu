@@ -7,7 +7,7 @@ import com.huangTaiQi.www.chatroom.model.vo.ChatRoomUserVO;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface IMessagePublisher {
     /**

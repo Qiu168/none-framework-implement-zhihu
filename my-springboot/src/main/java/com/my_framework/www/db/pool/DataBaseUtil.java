@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 /**
  * 管理connection和事务
- * @author 14629
+ * @author _qqiu
  */
 
 public class DataBaseUtil {

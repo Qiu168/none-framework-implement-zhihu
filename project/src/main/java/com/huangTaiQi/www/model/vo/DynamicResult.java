@@ -3,7 +3,7 @@ package com.huangTaiQi.www.model.vo;
 import java.util.List;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class DynamicResult {
     private final List<?> list;

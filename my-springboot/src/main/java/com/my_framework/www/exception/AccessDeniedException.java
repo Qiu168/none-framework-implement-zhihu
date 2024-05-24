@@ -1,7 +1,7 @@
 package com.my_framework.www.exception;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class AccessDeniedException extends RuntimeException {
 

@@ -6,7 +6,7 @@ import net.sf.cglib.proxy.CallbackFilter;
 import java.lang.reflect.Method;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class TransactionFilter implements CallbackFilter {
 

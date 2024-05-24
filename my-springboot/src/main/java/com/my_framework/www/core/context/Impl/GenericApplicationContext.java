@@ -1,16 +1,12 @@
 package com.my_framework.www.core.context.Impl;
 
 import com.my_framework.www.core.context.ResourceLoader;
-import com.my_framework.www.core.factory.AbstractBeanFactory;
-import com.my_framework.www.core.beans.BeanDefinition;
-import com.my_framework.www.core.beans.BeanDefinitionReader;
+import com.my_framework.www.core.beans.factory.AbstractBeanFactory;
 import com.my_framework.www.core.context.ApplicationContext;
-
-import java.util.*;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class GenericApplicationContext extends AbstractBeanFactory implements ApplicationContext {
     private final String scanPackage;

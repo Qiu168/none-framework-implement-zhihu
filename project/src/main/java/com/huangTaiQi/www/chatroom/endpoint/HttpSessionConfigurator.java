@@ -8,7 +8,7 @@ import javax.websocket.server.ServerEndpointConfig;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class HttpSessionConfigurator extends ServerEndpointConfig.Configurator {
     @Override

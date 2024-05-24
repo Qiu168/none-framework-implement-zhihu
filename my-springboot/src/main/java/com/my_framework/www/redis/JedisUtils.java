@@ -8,12 +8,11 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class JedisUtils {
     private static final ThreadLocal<Jedis> TL = new ThreadLocal<>();
     private static final ThreadLocal<Transaction> TRAN = new ThreadLocal<>();
-    private static final Logger logger= Logger.getLogger(JedisUtils.class.getName());
     public static Jedis getJedis()  {
         //logger.log(Level.INFO,"获取jedis对象");
         Jedis jedis = TL.get();

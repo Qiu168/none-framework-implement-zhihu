@@ -7,7 +7,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class FieldNameUtil {
     public static <T> String getDBName(SFunction<T, ?> fn) {

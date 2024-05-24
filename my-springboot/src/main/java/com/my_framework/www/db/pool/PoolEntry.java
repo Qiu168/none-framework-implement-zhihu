@@ -4,7 +4,7 @@ import java.sql.Connection;
 
 /**
  * 记录每一个在使用的连接
- * @author 14629
+ * @author _qqiu
  */
 public class PoolEntry {
     private Connection conn;

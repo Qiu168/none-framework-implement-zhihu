@@ -27,7 +27,7 @@ import static javax.websocket.CloseReason.CloseCodes.NORMAL_CLOSURE;
  * websocket在建立连接时，会构造HttpSessionConfigurator对象，并且调用其modifyHandshake方法
  * 先执行modifyHandshake，后执行onOpen
  * 这里是固定用法
- * @author 14629
+ * @author _qqiu
  */
 @ServerEndpoint(value = "/chat", configurator = HttpSessionConfigurator.class)
 public class MessageEndpoint {

@@ -4,7 +4,7 @@ package com.huangTaiQi.www.utils;
 import java.util.Random;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class RandomUtils {
 

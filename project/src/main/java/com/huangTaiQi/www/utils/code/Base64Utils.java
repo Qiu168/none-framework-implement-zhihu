@@ -6,7 +6,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class Base64Utils {
     public static String encode(String str) {

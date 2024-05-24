@@ -25,7 +25,7 @@ import static com.huangTaiQi.www.constant.RightConstants.RIGHTS;
 import static com.huangTaiQi.www.constant.UserRoleConstants.VISITOR;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class RightServiceImpl implements RightService {

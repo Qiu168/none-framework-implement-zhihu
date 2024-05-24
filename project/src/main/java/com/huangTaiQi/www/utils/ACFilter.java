@@ -3,7 +3,7 @@ package com.huangTaiQi.www.utils;
 import java.util.*;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class ACFilter {
     private final TrieNode root;

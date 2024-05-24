@@ -4,7 +4,7 @@ import java.lang.reflect.Method;
 import java.util.Properties;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class DataSourceConfig {
     private String driver;

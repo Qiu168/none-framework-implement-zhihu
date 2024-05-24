@@ -11,7 +11,7 @@ import java.sql.Connection;
 import java.util.List;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Repository
 public class RightDao implements IRightDao {

@@ -4,7 +4,7 @@ package com.my_framework.www.utils;
  
 /**
  * desc : 数组工具类
- * @author 14629
+ * @author _qqiu
  */
 public final class ArrayUtil {
  

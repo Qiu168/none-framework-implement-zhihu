@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
 /**
- * @author 14629
+ * @author _qqiu
  * 网上找的轮子
  */
 public class Md5Utils {

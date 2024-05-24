@@ -19,7 +19,7 @@ import javax.servlet.http.Part;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class ImageUploader {
 

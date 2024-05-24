@@ -4,7 +4,7 @@ package com.huangTaiQi.www.chatroom.model.entity;
 import java.util.Objects;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class ChatRoomUserEntity {
     private Integer id;

@@ -1,6 +1,6 @@
 package com.my_framework.www.core.context;
 
-import com.my_framework.www.core.factory.BeanFactory;
+import com.my_framework.www.core.beans.factory.BeanFactory;
 
 /**
  *

@@ -8,7 +8,7 @@ import java.lang.reflect.Method;
 
 /**
  * 问题：有必要redis事务吗？
- * @author 14629
+ * @author _qqiu
  */
 public class TransactionHandler implements MethodInterceptor {
 

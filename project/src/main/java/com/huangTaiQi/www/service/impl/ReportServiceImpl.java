@@ -15,7 +15,7 @@ import java.sql.SQLException;
 import static com.huangTaiQi.www.constant.TypeConstants.*;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class ReportServiceImpl implements ReportService {

@@ -1,12 +1,12 @@
 package com.my_framework.www.core.aop.support;
 
-
-
 import com.my_framework.www.core.aop.aspect.AfterReturningAdviceInterceptor;
 import com.my_framework.www.core.aop.aspect.AfterThrowingAdviceInterceptor;
 import com.my_framework.www.core.aop.aspect.MethodBeforeAdviceInterceptor;
 import com.my_framework.www.core.aop.config.AopConfig;
 import com.my_framework.www.utils.StringUtil;
+import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.reflect.Method;
 import java.util.HashMap;
@@ -16,35 +16,34 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * 代理类支持
+ * @author _qqiu
+ */
 public class AdvisedSupport {
 
     /**
      * 被代理的类class
      */
+    @Getter
     private Class<?> targetClass;
 
     /**被代理的对象实例*/
+    @Getter
+    @Setter
     private Object target;
 
     /**被代理的方法对应的拦截器集合*/
     private Map<Method, List<Object>> methodCache;
 
     /**AOP外部配置*/
-    private AopConfig config;
+    private final AopConfig config;
 
     /**切点正则表达式*/
     private Pattern pointCutClassPattern;
 
     public AdvisedSupport(AopConfig config) {
         this.config = config;
-    }
-
-    public Class<?> getTargetClass() {
-        return this.targetClass;
-    }
-
-    public Object getTarget() {
-        return this.target;
     }
 
     /**
@@ -66,6 +65,11 @@ public class AdvisedSupport {
         return cached;
     }
 
+    /**
+     * 设置目标类
+     *
+     * @param targetClass 目标类
+     */
     public void setTargetClass(Class<?> targetClass) {
         this.targetClass = targetClass;
         parse();
@@ -147,10 +151,6 @@ public class AdvisedSupport {
             e.printStackTrace();
         }
 
-    }
-
-    public void setTarget(Object target) {
-        this.target = target;
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.my_framework.www.webmvc.annotation;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public @interface ExceptionHandler {
 }

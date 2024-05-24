@@ -19,7 +19,7 @@ public class EncodeTest {
     }
     @Test
     public void testBase64() throws IOException {
-        System.out.println(getImgFileToBase64("C:\\Users\\14629\\Desktop\\微信图片\\身份证\\xsz.jpg"));;
+        System.out.println(getImgFileToBase64("C:\\Users\\_qqiu\\Desktop\\微信图片\\身份证\\xsz.jpg"));;
     }
     /**
      * imgFile 图片本地存储路径

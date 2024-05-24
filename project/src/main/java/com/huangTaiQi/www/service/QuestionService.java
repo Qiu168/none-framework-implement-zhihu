@@ -3,7 +3,7 @@ package com.huangTaiQi.www.service;
 import java.sql.SQLException;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface QuestionService {
     /**

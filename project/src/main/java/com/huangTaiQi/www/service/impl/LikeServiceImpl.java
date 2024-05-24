@@ -12,7 +12,7 @@ import com.my_framework.www.core.annotation.bean.Autowired;
 import com.my_framework.www.core.annotation.stereotype.Service;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class LikeServiceImpl implements LikeService {

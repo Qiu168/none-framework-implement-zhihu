@@ -1,7 +1,7 @@
-package com.my_framework.www.core.factory;
+package com.my_framework.www.core.beans.factory;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface BeanFactory {
 

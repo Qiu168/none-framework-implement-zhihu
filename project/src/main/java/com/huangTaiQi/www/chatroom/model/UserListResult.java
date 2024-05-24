@@ -5,7 +5,7 @@ import java.util.List;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class UserListResult {
     private Integer onlineCount;

@@ -9,7 +9,7 @@ import static com.huangTaiQi.www.constant.MailConstants.*;
 
 /**
  * 发邮件工具类
- * @author 14629
+ * @author _qqiu
  */
 public final class MailUtils {
     /**

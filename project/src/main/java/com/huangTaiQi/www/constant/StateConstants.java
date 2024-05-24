@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.constant;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class StateConstants {
     public static final int MESSAGE_CHECKING=0;

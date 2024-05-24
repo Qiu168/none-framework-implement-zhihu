@@ -12,7 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class ConnectionPoolManager {
 

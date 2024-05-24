@@ -2,7 +2,7 @@ package com.huangTaiQi.www.model;
 
 /**
  * 有user冗余字段的类要实现这个接口
- * @author 14629
+ * @author _qqiu
  */
 public interface UserSettings {
     /**

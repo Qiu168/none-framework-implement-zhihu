@@ -14,7 +14,7 @@ import java.util.List;
 import static com.huangTaiQi.www.constant.EntityAttributeConstants.ALL;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Repository
 public class BlackListDao implements IBlackListDao {

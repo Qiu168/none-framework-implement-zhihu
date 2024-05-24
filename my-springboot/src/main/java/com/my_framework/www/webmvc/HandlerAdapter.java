@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class HandlerAdapter {
     private final Logger logger= Logger.getLogger(HandlerAdapter.class.getName());
@@ -57,8 +57,6 @@ public class HandlerAdapter {
             long rightName = access.rightName();
             RightGet obj;
             try {
-                //todo: 这里有bug吧
-                //这里可以设计成读取xml，这里先这样
                 Class<?> clz=Class.forName("com.huangTaiQi.www.utils.UserHolder");
                 obj = (RightGet) clz.newInstance();
             } catch (ClassNotFoundException | InstantiationException | IllegalAccessException e) {
@@ -106,7 +104,7 @@ public class HandlerAdapter {
             for (Annotation a : pa[i]) {
                 if (a instanceof RequestParam) {
                     String paramName = ((RequestParam) a).value();
-                    if (!"".equals(paramName.trim())) {
+                    if (!paramName.trim().isEmpty()) {
                         //RequestParam参数不为空，代表要注入，paramName代表前端传过来的参数名，i代表是第几个参数
                         paramIndexMapping.put(paramName, i);
                     }

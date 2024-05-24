@@ -4,16 +4,19 @@ package com.my_framework.www.core.aop.aspect;
 
 import com.my_framework.www.core.aop.intercept.MethodInterceptor;
 import com.my_framework.www.core.aop.MethodInvocation;
+import lombok.Setter;
 
 import java.lang.reflect.Method;
 
 /**
  * 异常通知
+ *
+ * @author _qqiu
  */
+@Setter
 public class AfterThrowingAdviceInterceptor extends AbstractAspectAdvice implements MethodInterceptor {
 
-
-    private String throwingName;
+    private String throwName;
 
     public AfterThrowingAdviceInterceptor(Method aspectMethod, Object aspectTarget) {
         super(aspectMethod, aspectTarget);
@@ -31,7 +34,4 @@ public class AfterThrowingAdviceInterceptor extends AbstractAspectAdvice impleme
         }
     }
 
-    public void setThrowName(String throwName) {
-        this.throwingName = throwName;
-    }
 }

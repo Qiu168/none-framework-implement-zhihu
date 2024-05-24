@@ -4,7 +4,7 @@ package com.huangTaiQi.www.model.entity;
 import java.sql.Timestamp;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @SuppressWarnings("all")
 public class UserEntity {

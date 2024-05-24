@@ -4,7 +4,7 @@ import java.util.regex.Pattern;
 
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class RegexUtils {
     public static boolean check(String regex,String str){

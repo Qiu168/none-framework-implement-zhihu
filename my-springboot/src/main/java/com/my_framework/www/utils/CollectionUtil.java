@@ -3,7 +3,7 @@ package com.my_framework.www.utils;
 import java.util.*;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class CollectionUtil {
     

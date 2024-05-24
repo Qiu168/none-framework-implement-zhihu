@@ -5,7 +5,7 @@ import java.lang.reflect.Method;
 
 /**
  * todo
- * @author 14629
+ * @author _qqiu
  */
 public class ProceedingJoinPoint implements JoinPoint{
     public Object proceed() throws Throwable {

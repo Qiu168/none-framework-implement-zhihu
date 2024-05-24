@@ -1,7 +1,7 @@
 package com.huangTaiQi.www.constant;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class ResponseConstants {
     public static final String WRONG_EMAIL="邮箱输入错误，请查看邮箱是否输入正确";

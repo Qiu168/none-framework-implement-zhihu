@@ -20,7 +20,7 @@ import static com.huangTaiQi.www.constant.StateConstants.MESSAGE_REPORTED;
 import static com.huangTaiQi.www.constant.TypeConstants.QUESTION;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Repository
 public class QuestionDao implements IQuestionDao , ReportAble, UpdateUserSettings, SelectById {

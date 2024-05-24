@@ -9,7 +9,7 @@ import com.huangTaiQi.www.model.vo.IsSuccessVO;
 import com.huangTaiQi.www.utils.UserHolder;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class CheckBlackListHelper {
     public static IsSuccessVO checkBlackList(BlackListDao blackListDao, SelectById userSettingsDao, String id) throws Exception {

@@ -3,7 +3,7 @@ package com.huangTaiQi.www.service;
 import com.huangTaiQi.www.constant.enums.MessageType;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface DynamicService {
     /**

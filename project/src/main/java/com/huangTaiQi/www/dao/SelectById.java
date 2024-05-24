@@ -3,7 +3,7 @@ package com.huangTaiQi.www.dao;
 import com.huangTaiQi.www.model.UserSettings;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public interface SelectById {
     /**

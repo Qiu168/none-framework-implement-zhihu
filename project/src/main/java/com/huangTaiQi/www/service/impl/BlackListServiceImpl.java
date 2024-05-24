@@ -16,7 +16,7 @@ import com.my_framework.www.utils.CastUtil;
 import java.sql.SQLException;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 @Service
 public class BlackListServiceImpl implements BlackListService {

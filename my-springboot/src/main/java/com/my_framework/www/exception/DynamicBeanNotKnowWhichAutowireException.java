@@ -3,7 +3,7 @@ package com.my_framework.www.exception;
 import java.util.List;
 
 /**
- * @author 14629
+ * @author _qqiu
  */
 public class DynamicBeanNotKnowWhichAutowireException extends RuntimeException{
     private final List<Class<?>> beans;

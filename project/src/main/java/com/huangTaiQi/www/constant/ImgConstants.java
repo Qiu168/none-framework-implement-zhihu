@@ -2,7 +2,7 @@ package com.huangTaiQi.www.constant;
 
 /**
  * 图片验证码的常量
- * @author 14629
+ * @author _qqiu
  */
 public class ImgConstants {
     /**
