@@ -6,6 +6,7 @@ import com.my_framework.www.core.beans.factory.BeanLoader;
 import com.my_framework.www.utils.ClassUtil;
 import com.my_framework.www.utils.StringUtil;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.lang.annotation.Annotation;
 import java.util.*;
@@ -23,8 +24,8 @@ public class BeanDefinitionReader {
     @Getter
     private final List<Class<?>> Configurations = new ArrayList<>();
     private final List<BeanLoader> beanLoaders=new ArrayList<>();
-
-    private Set<Class<?>> registerBeanClasses = new HashSet<>();
+    @Getter
+    private final Set<Class<?>> registerBeanClasses;
 
     public BeanDefinitionReader(String scanPackage) {
         //扫描，扫描资源文件(class)，并保存到集合中
@@ -42,29 +43,12 @@ public class BeanDefinitionReader {
                 if (beanClass.isInterface()) {
                     continue;
                 }
-                //todo
                 for (BeanLoader beanLoader : beanLoaders) {
                     if (beanLoader.isLoad(beanClass)) {
                         BeanDefinition beanDefinition = beanLoader.loadBean(beanClass);
                         result.add(beanDefinition);
                     }
                 }
-//                Annotation[] annotations = beanClass.getAnnotations();
-//                for (Annotation annotation : annotations) {
-//                    Class<? extends Annotation> annotationType = annotation.annotationType();
-//                    //只考虑被@Component注解的class
-//                    if (annotationType.isAnnotationPresent(Component.class) || annotation instanceof Component) {
-//                        //beanName有三种情况:
-//                        //1、默认是类名首字母小写
-//                        //2、自定义名字（这里暂不考虑）
-//                        //3、接口注入
-//                        result.add(doCreateBeanDefinition(StringUtil.toLowerFirstCase(beanClass.getSimpleName()), beanClass.getName()));
-//                        if (annotation instanceof Configuration) {
-//                            Configurations.add(beanClass);
-//                        }
-//                        break;
-//                    }
-//                }
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -73,13 +57,10 @@ public class BeanDefinitionReader {
     }
 
     /**
-     * 相关属性封装到BeanDefinition
+     * 添加 Bean Loader
      */
-    private BeanDefinition doCreateBeanDefinition(String factoryBeanName, String beanClassName) {
-        BeanDefinition beanDefinition = new BeanDefinition();
-        beanDefinition.setFactoryBeanName(factoryBeanName);
-        beanDefinition.setBeanClassName(beanClassName);
-        return beanDefinition;
+    public void addBeanLoader(BeanLoader beanLoader){
+        beanLoaders.add(beanLoader);
     }
 
 }

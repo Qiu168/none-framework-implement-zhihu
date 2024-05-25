@@ -1,8 +1,10 @@
 package com.my_framework.www.core.beans.factory;
 
+import com.my_framework.www.core.annotation.Configuration;
 import com.my_framework.www.core.annotation.bean.Autowired;
 import com.my_framework.www.core.annotation.bean.Qualifier;
 import com.my_framework.www.core.annotation.bean.Value;
+import com.my_framework.www.core.annotation.stereotype.Component;
 import com.my_framework.www.core.annotation.stereotype.Service;
 import com.my_framework.www.core.aop.AopProxy;
 import com.my_framework.www.core.aop.CglibAopProxy;
@@ -12,6 +14,7 @@ import com.my_framework.www.core.aop.support.AdvisedSupport;
 import com.my_framework.www.core.beans.BeanDefinition;
 import com.my_framework.www.core.beans.BeanDefinitionReader;
 import com.my_framework.www.core.beans.BeanWrapper;
+import com.my_framework.www.core.beans.ConfigurationExecution;
 import com.my_framework.www.core.context.Impl.DefaultResourceLoader;
 import com.my_framework.www.core.context.ResourceHolder;
 import com.my_framework.www.core.context.ResourceLoader;
@@ -27,10 +30,7 @@ import net.sf.cglib.proxy.Enhancer;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Properties;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -42,6 +42,11 @@ public abstract class AbstractBeanFactory implements BeanFactory{
     private final Map<String, BeanDefinition> beanDefinitionMap = new ConcurrentHashMap<>();
     private final Map<String, BeanWrapper> factoryBeanInstanceCache = new ConcurrentHashMap<>();
     private final Map<Class<?>, List<BeanWrapper>> interfaceBeanInstanceCache = new ConcurrentHashMap<>();
+//    private final List<Object> configurations= new ArrayList<>();
+    /**
+     * 配置执行链
+     */
+    private final List<ConfigurationExecution> configurationExecutionChain=new ArrayList<>();
     protected ResourceLoader resourceLoader;
 
     /**
@@ -278,7 +283,10 @@ public abstract class AbstractBeanFactory implements BeanFactory{
         //1、定位，定位配置文件
         resourceLoader=new DefaultResourceLoader();
         ResourceHolder.setResourceLoader(resourceLoader);
+        //包扫描
         BeanDefinitionReader reader = new BeanDefinitionReader(scanPackage);
+        //先解析Configuration
+        registerConfigBean(reader.getRegisterBeanClasses());
         //2、加载配置文件，扫描相关的类，把它们封装成BeanDefinition
         List<BeanDefinition> beanDefinitions = reader.loadBeanDefinitions();
         //3、注册，把配置信息放到容器里面(伪IOC容器)
@@ -287,5 +295,20 @@ public abstract class AbstractBeanFactory implements BeanFactory{
         doAutowired();
         log.info("refresh finish");
         log.info(factoryBeanInstanceCache.toString());
+    }
+
+    /**
+     * 注册配置Bean Configuration
+     */
+    private void registerConfigBean(Set<Class<?>> registerBeanClasses) throws InstantiationException, IllegalAccessException {
+        for (Class<?> clz : registerBeanClasses) {
+            if(clz.isAnnotationPresent(Configuration.class)){
+                //解析Configuration
+                Object instance = clz.newInstance();
+                for (ConfigurationExecution configurationExecution : configurationExecutionChain) {
+                    configurationExecution.execute(instance);
+                }
+            }
+        }
     }
 }

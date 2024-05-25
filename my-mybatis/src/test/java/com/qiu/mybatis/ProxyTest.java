@@ -8,9 +8,11 @@ import java.util.Arrays;
 
 public class ProxyTest {
     @Test
-    public void testJdkProxy(){
+    public void testJdkProxy() throws InstantiationException, IllegalAccessException {
         UserMapper instance =(UserMapper) Proxy.newProxyInstance(this.getClass().getClassLoader(),new Class[]{UserMapper.class}, new MapperHandler());
-        instance.selectUserId("123");
-        instance.insert(new User());
+        System.out.println(instance);
+        System.out.println(instance.getClass());
+        UserMapper userMapper = instance.getClass().newInstance();
+        System.out.println(userMapper);
     }
 }

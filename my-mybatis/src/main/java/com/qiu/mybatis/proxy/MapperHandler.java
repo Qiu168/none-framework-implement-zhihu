@@ -1,8 +1,10 @@
 package com.qiu.mybatis.proxy;
 
 import com.qiu.mybatis.annotation.Select;
+import com.qiu.mybatis.annotation.TableName;
 import com.qiu.mybatis.annotation.Update;
 import com.qiu.mybatis.plus.BaseMapper;
+import com.qiu.mybatis.util.Assert;
 import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
@@ -24,8 +26,10 @@ public class MapperHandler implements InvocationHandler {
         }
         if(method.getDeclaringClass().equals(BaseMapper.class)){
             log.info("baseMapper");
-            System.out.println(getInterfaceT(proxy));
-            return 1;
+            Class<?> entityClass = getInterfaceT(proxy);
+            Assert.notNull(entityClass,"BaseMapper<?> entity not find");
+            TableName tableName = entityClass.getAnnotation(TableName.class);
+
         }
         Select select = method.getAnnotation(Select.class);
         if(select!=null){

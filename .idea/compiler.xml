@@ -8,8 +8,9 @@
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
         <module name="project" />
-        <module name="my-springboot" />
         <module name="my-rpc" />
+        <module name="my-mybatis" />
+        <module name="my-springboot" />
       </profile>
     </annotationProcessing>
     <bytecodeTargetLevel>
