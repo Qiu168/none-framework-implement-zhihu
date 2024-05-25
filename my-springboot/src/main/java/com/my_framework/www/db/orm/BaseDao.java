@@ -101,7 +101,7 @@ public class BaseDao {
      * @param sql 修改的sql
      * @param args 参数
      */
-    public void updateCommon(String sql, Object ...args) throws SQLException {
+    public int updateCommon(String sql, Object ...args) throws SQLException {
         PreparedStatement ps = null;
         ps = connection.prepareStatement(sql);
         for (int i = 0; i < args.length; i++) {
@@ -110,7 +110,8 @@ public class BaseDao {
         if(sqlPrint){
             log.info(sql);
         }
-        ps.execute();
+//        ps.execute();
+        return ps.executeUpdate();
     }
 
 //    /**

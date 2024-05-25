@@ -7,6 +7,8 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 
 /**
@@ -22,6 +24,7 @@ public class MapperHandler implements InvocationHandler {
         }
         if(method.getDeclaringClass().equals(BaseMapper.class)){
             log.info("baseMapper");
+            System.out.println(getInterfaceT(proxy));
             return 1;
         }
         Select select = method.getAnnotation(Select.class);
@@ -33,6 +36,23 @@ public class MapperHandler implements InvocationHandler {
             return doUpdate(update.value(),args);
         }
 
+        return null;
+    }
+    /**
+     * 获取BaseMapper接口上的泛型T
+     *
+     * @param o     接口
+     */
+    public static Class<?> getInterfaceT(Object o) {
+        Class<?>[] interfaces = o.getClass().getInterfaces();
+        Type[] types = interfaces[0].getGenericInterfaces();
+        for (Type type : types) {
+            if (type.getTypeName().startsWith("com.qiu.mybatis.plus.BaseMapper")&&type instanceof ParameterizedType) {
+                ParameterizedType parameterizedType = (ParameterizedType) type;
+                Type[] actualTypeArguments = parameterizedType.getActualTypeArguments();
+                return (Class<?>) actualTypeArguments[0];
+            }
+        }
         return null;
     }
 
